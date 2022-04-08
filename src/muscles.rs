@@ -1,25 +1,7 @@
-use crate::weight::WeightType;
-
-#[derive(Debug)]
-pub struct Exercise {
-    pub name: String,
-    pub MUSCLE_SUB_GROUPS: Vec<String>,
-    pub recommended_rep_range: [u32; 2],
-}
-
-#[derive(Debug)]
-pub struct ExerciseEntry {
-    pub exercise: Exercise,
-    pub reps: u32,
-    pub weight: f32,
-    pub weight_unit: WeightType,
-    pub comments: String,
-}
-
-type MUSCLE_GROUP = Vec<String>;
+type MUSCLE_GROUP = Vec<&'static str>;
 
 // just an example for now. Complete this later
-const MUSCLE_SUB_GROUPS: [&str; 13] = [
+const MUSCLE_SUB_GROUPS: [&'static str; 13] = [
     "Pectoralis Major", // Chest, Shoulders
     "Pectoralis Minor", // Chest
     "Deltoid",          // Shoulders
