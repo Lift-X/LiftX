@@ -1,8 +1,4 @@
-#[derive(Debug)]
-pub enum WeightUnit {
-    Pounds,
-    Kilograms,
-}
+use crate::weight::WeightType;
 
 #[derive(Debug)]
 pub struct Exercise {
@@ -16,7 +12,7 @@ pub struct ExerciseEntry {
     pub exercise: Exercise,
     pub reps: u32,
     pub weight: f32,
-    pub weight_unit: WeightUnit,
+    pub weight_unit: WeightType,
     pub comments: String,
 }
 
