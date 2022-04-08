@@ -3,7 +3,7 @@ use crate::weight::WeightType;
 #[derive(Debug)]
 pub struct Exercise {
     pub name: &'static str,
-    pub MUSCLE_SUB_GROUPS: Vec<&'static str>,
+    pub MUSCLE_SUB_GROUPS: &'static [&'static str], // https://stackoverflow.com/questions/42764016/creating-a-static-const-vecstring
     pub recommended_rep_range: [u32; 2],
 }
 
@@ -16,8 +16,8 @@ pub struct ExerciseEntry {
     pub comments: String,
 }
 
-pub const exercise_bench_press: Exercise = Exercise {
+pub const EXERCISE_BENCH_PRESS: Exercise = Exercise {
     name: "Bench Press",
-    MUSCLE_SUB_GROUPS: ["Pectoralis Major", "Pectoralis Minor"],
+    MUSCLE_SUB_GROUPS: &["Pectoralis Major", "Pectoralis Minor"],
     recommended_rep_range: [8, 12],
 };

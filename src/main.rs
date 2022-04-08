@@ -11,7 +11,7 @@ const GLOBAL_WEIGHT_UNIT: WeightType = weight::POUNDS;
 
 fn main() {
     let bench_press = ExerciseEntry {
-        exercise: exercise_bench_press,
+        exercise: EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: 135.0,
         comments: "".to_string(),
