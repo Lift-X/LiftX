@@ -1,13 +1,13 @@
-pub mod weight;
+pub mod equipment;
 pub mod muscles;
 mod exercises;
 
-use weight::WeightType;
+use equipment::WeightType;
 
 use exercises::*;
 
 // Global Preference for weight, implement configuration later
-const GLOBAL_WEIGHT_UNIT: WeightType = weight::POUNDS;
+const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
 
 fn main() {
     let bench_press = ExerciseEntry {
