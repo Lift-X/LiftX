@@ -10,18 +10,19 @@ use exercises::*;
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
 
 fn main() {
-    let bench_press = ExerciseEntry {
+    let bench_press = SetEntry {
         exercise: EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: 135.0,
-        comments: "".to_string(),
         weight_unit: GLOBAL_WEIGHT_UNIT,
+        reps_in_reserve: 1.5,
     };
     println!(
-        "{} was done for {} reps with {}{}",
+        "{} was done for {} reps with {}{} and {} reps in reserve",
         bench_press.exercise.name,
         bench_press.reps,
         bench_press.weight,
-        GLOBAL_WEIGHT_UNIT.short_name
+        GLOBAL_WEIGHT_UNIT.short_name,
+        bench_press.reps_in_reserve
     );
 }

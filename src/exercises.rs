@@ -9,11 +9,19 @@ pub struct Exercise {
 }
 
 #[derive(Debug)]
-pub struct ExerciseEntry {
+pub struct SetEntry {
     pub exercise: Exercise,
     pub reps: u32,
     pub weight: f32,
     pub weight_unit: WeightType,
+    pub reps_in_reserve: f32, // how many more reps you feel you could've done
+}
+
+
+#[derive(Debug)]
+pub struct ExerciseEntry {
+    pub exercise: Exercise,
+    pub sets: Vec<SetEntry>,
     pub comments: String,
 }
 
@@ -23,6 +31,13 @@ pub struct WorkoutEntry {
     pub exercises: Vec<ExerciseEntry>,
     pub comments: String,
     pub user: String,
+}
+
+fn exercise_to_string_summary(exercise: &Exercise) -> String {
+    format!(
+        "{}",
+        todo!()
+    )
 }
 
 pub const EXERCISE_BENCH_PRESS: Exercise = Exercise {
