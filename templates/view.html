@@ -1,6 +1,14 @@
-<div class="card">
-    <div class="card-body">
-      <h5 class="card-title" style="font-size: 0.9em">{{ workout.date }}</h5>
-      <p class="card-text" style="font-size: 1.2em">{{ workout.body }}</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %}WLRS - My Site{% endblock %}</title>
+    {% block head %}{% endblock %}
+  </head>
+  <body>
+    <div id="content">
+      {% block content %}
+      {{ stringed_bench }}
+      {% endblock %}
     </div>
-  </div>
+  </body>
+</html>

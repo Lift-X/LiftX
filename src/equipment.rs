@@ -1,4 +1,4 @@
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct WeightType {
     pub long_name: &'static str,
     pub short_name: &'static str,
