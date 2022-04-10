@@ -6,8 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = { version = "0.5.1", features = ["headers"] }
+axum = { version = "0.4", features = ["headers"] }
 askama = "0.11.1"
+maud = { git = "https://github.com/lambda-fairy/maud", branch = "main", features = ["axum"] }
 
 [profile.release]
 panic = "abort"

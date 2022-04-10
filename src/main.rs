@@ -1,16 +1,15 @@
 pub mod equipment;
 mod exercises;
+pub mod handlers;
 pub mod muscles;
 
-use axum::{
-    body::Body,
-    http::Request,
-    Router,
-    service
-};
+use std::sync::Arc;
+
+use axum::{body::Body, http::Request, routing::get, Router, extract::Extension};
 use equipment::WeightType;
 
 use exercises::*;
+use maud::html;
 
 // Global Preference for weight, implement configuration later
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
@@ -42,11 +41,5 @@ fn main() {
     println!("{}", exercises::exercise_to_string_summary(&bench_set));
     let stringed_bench = exercises::exercise_to_string_summary(&bench_set);
 
-    let mut router = Router::new().route(
-        "/",
-        service::any(service_fn(|_: Request<Body>| async {
-            let res = Response::new(Body::from("Hi from `GET /`"));
-            Ok(res)
-        })),
-    );
+    let mut router = Router::new().route("/", get(handlers::view));
 }
