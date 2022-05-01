@@ -1,10 +1,6 @@
-use std::collections::HashMap;
+use crate::database::WorkoutID;
 
-use axum::extract::{Extension, Form, Path, Query};
-use maud::{html, Markup};
-
-pub async fn view(Query(params): Query<HashMap<String, String>>) -> Markup {
-    html! {
-        h1 { "Hello, world!" }
-    }
+#[get("/workout/<id>")]
+pub fn hello(id: String) -> String {
+    format!("Hello, year old named {}!", id)
 }

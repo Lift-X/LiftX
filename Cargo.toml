@@ -6,9 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = { version = "0.4", features = ["headers"] }
-askama = "0.11.1"
-maud = { git = "https://github.com/lambda-fairy/maud", branch = "main", features = ["axum"] }
+rocket = { git = "https://github.com/SergioBenitez/Rocket"}
+#skytable = { version = "0.7.0", features = ["aio", "const-gen"], default-features = false }
+serde_json = "1.0.68"
+serde = { version = "1.0.130", features = ["derive"] }
+sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
+rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
 
 [profile.release]
 panic = "abort"

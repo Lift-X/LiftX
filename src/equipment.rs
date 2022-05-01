@@ -1,4 +1,6 @@
-#[derive(Debug, Clone, Copy)]
+use serde::{Deserialize, Serialize};
+
+#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
 pub struct WeightType {
     pub long_name: &'static str,
     pub short_name: &'static str,
@@ -13,6 +15,12 @@ pub const POUNDS: WeightType = WeightType {
     long_name: "Pounds",
     short_name: "lbs",
 };
+
+#[derive(PartialEq, Debug, Clone, Copy)]
+pub struct Weight {
+    pub weight: f32,
+    pub weight_unit: WeightType,
+}
 
 #[derive(Debug)]
 pub struct EquipmentType {

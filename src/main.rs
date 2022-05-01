@@ -1,3 +1,7 @@
+#[macro_use]
+extern crate rocket;
+
+pub mod database;
 pub mod equipment;
 mod exercises;
 pub mod handlers;
@@ -5,21 +9,27 @@ pub mod muscles;
 
 use std::sync::Arc;
 
-use axum::{body::Body, http::Request, routing::get, Router, extract::Extension};
 use equipment::WeightType;
+use rocket_db_pools::Database;
+
+use crate::{equipment::Weight, handlers::hello};
 
 use exercises::*;
-use maud::html;
 
 // Global Preference for weight, implement configuration later
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
+const DATABASE_IP: &str = "127.0.0.1";
+const DATABASE_PORT: u16 = 2003;
 
-fn main() {
+#[launch]
+async fn rocket() -> _ {
     let bench_press = SetEntry {
         exercise: EXERCISE_BENCH_PRESS,
         reps: 8,
-        weight: 135.0,
-        weight_unit: GLOBAL_WEIGHT_UNIT,
+        weight: Weight {
+            weight: 135.0,
+            weight_unit: GLOBAL_WEIGHT_UNIT,
+        },
         reps_in_reserve: 1.5,
     };
     let mut bench_set = ExerciseEntry {
@@ -41,5 +51,14 @@ fn main() {
     println!("{}", exercises::exercise_to_string_summary(&bench_set));
     let stringed_bench = exercises::exercise_to_string_summary(&bench_set);
 
-    let mut router = Router::new().route("/", get(handlers::view));
+    // connect to DB
+
+    // launch web server
+    let shield = rocket::shield::Shield::default()
+        .enable(rocket::shield::Referrer::NoReferrer)
+        .enable(rocket::shield::XssFilter::EnableBlock);
+    rocket::build()
+        .attach(shield)
+        .attach(database::Db::init())
+        .mount("/", routes![hello])
 }

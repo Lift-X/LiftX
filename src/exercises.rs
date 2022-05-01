@@ -1,4 +1,4 @@
-use crate::equipment::{self, EquipmentType, WeightType};
+use crate::equipment::{self, EquipmentType, Weight};
 
 #[derive(Debug, Copy, Clone)]
 pub struct Exercise {
@@ -13,8 +13,7 @@ pub struct Exercise {
 pub struct SetEntry {
     pub exercise: Exercise,
     pub reps: u32,
-    pub weight: f32,
-    pub weight_unit: WeightType,
+    pub weight: Weight,
     pub reps_in_reserve: f32, // how many more reps you feel you could've done
 }
 
@@ -41,7 +40,7 @@ pub fn exercise_to_string_summary(exercise: &ExerciseEntry) -> String {
     for set in exercise.sets.iter() {
         let _a = format!(
             " - {} Reps ({}{}, {}RiR)",
-            set.reps, set.weight, set.weight_unit.short_name, set.reps_in_reserve
+            set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
         );
         stringified_exercise.push_str(&_a);
     }
