@@ -44,7 +44,7 @@ pub fn exercise_to_string_summary(exercise: &ExerciseEntry) -> String {
         );
         stringified_exercise.push_str(&_a);
     }
-    return stringified_exercise;
+    return stringified_exercise.trim().to_string();
 }
 
 pub const EXERCISE_BENCH_PRESS: Exercise = Exercise {

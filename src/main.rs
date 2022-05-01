@@ -1,3 +1,6 @@
+// clippy
+#![allow(clippy::dead_code)]
+
 #[macro_use]
 extern crate rocket;
 
@@ -7,19 +10,16 @@ mod exercises;
 pub mod handlers;
 pub mod muscles;
 
-use std::sync::Arc;
-
 use equipment::WeightType;
 use rocket_db_pools::Database;
+use sqlx::ConnectOptions;
 
-use crate::{equipment::Weight, handlers::hello};
+use crate::{database::create_connection, equipment::Weight, handlers::hello};
 
 use exercises::*;
 
 // Global Preference for weight, implement configuration later
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
-const DATABASE_IP: &str = "127.0.0.1";
-const DATABASE_PORT: u16 = 2003;
 
 #[launch]
 async fn rocket() -> _ {
@@ -52,6 +52,26 @@ async fn rocket() -> _ {
     let stringed_bench = exercises::exercise_to_string_summary(&bench_set);
 
     // connect to DB
+    let mut conn =
+        <sqlx::sqlite::SqliteConnectOptions as std::str::FromStr>::from_str("sqlite://data.db")
+            .unwrap()
+            .create_if_missing(true)
+            .connect()
+            .await
+            .unwrap();
+
+    //28fcad1c-0f5b-49d1-8d5c-2286f15ff99a
+
+    // EX: Create workout table
+    /*sqlx::query!("CREATE TABLE workout (id TINYTEXT PRIMARY KEY, date char(10), user TINYTEXT, data MEDIUMTEXT, comments TEXT)")
+    .execute(&mut conn)
+    .await
+    .unwrap();*/
+
+    // EX: Create workout entry
+    /*sqlx::query!(
+        "INSERT INTO workout (id, date, user, data, comments) VALUES ('28fcad1c-0f5b-49d1-8d5c-2286f15ff99a', '2020-01-01', 'John Doe', 'Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)', 'comment')",
+    ).execute(&mut conn).await.unwrap();*/
 
     // launch web server
     let shield = rocket::shield::Shield::default()

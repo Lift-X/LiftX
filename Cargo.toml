@@ -13,6 +13,14 @@ serde = { version = "1.0.130", features = ["derive"] }
 sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
 rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
 
+[dependencies.uuid]
+version = "1.0.0"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
+
 [profile.release]
 panic = "abort"
 codegen-units = 1

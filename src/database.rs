@@ -1,12 +1,13 @@
 use crate::{equipment::Weight, exercises::WorkoutEntry};
+use rocket::request::FromRequest;
 use serde::{Deserialize, Serialize};
 
 use rocket_db_pools::{sqlx, Database};
-use sqlx::{SqliteConnection, Connection, SqlitePool};
+use sqlx::{Connection, SqliteConnection, SqlitePool};
 
 #[derive(Database)]
 #[database("sqlite_db")]
-pub struct Db(sqlx::SqlitePool);
+pub struct Db(sqlx::sqlite::SqlitePool);
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct WorkoutID {
