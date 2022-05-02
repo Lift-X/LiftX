@@ -27,7 +27,7 @@ pub struct ExerciseEntry {
 
 // Absolutely scuffed, feel free to PR :D
 impl ExerciseEntry {
-    fn from_string(string: &str) -> ExerciseEntry {
+    pub fn from_string(string: &str) -> ExerciseEntry {
         // iter over string, separated by;
         let split = string.split_terminator(';').collect::<Vec<_>>();
         let mut gen_set_entry: ExerciseEntry = ExerciseEntry {
@@ -46,7 +46,7 @@ impl ExerciseEntry {
         for excercise in EXCERCISES_LIST {
             let mut gen_vec = Vec::new();
             if excercise.name == split[0] {
-                for set in split[2..].iter() {
+                for set in split[1..].iter() {
                     let proc_set = set.split_terminator(',').collect::<Vec<_>>();
                     let gen_set = SetEntry {
                         exercise: excercise,
@@ -66,6 +66,30 @@ impl ExerciseEntry {
         }
         gen_set_entry
     }
+
+    pub fn to_string(&self) -> String {
+        let mut stringified_exercise = self.exercise.name.to_string();
+        for set in self.sets.iter() {
+            let _a = format!(
+                ";{},{}{},{}",
+                set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
+            );
+            stringified_exercise.push_str(&_a);
+        }
+        return stringified_exercise.trim().to_string();
+    }
+
+    pub fn to_string_readable(&self) -> String {
+        let mut stringified_exercise = self.exercise.name.to_string();
+        for set in self.sets.iter() {
+            let _a = format!(
+                " - {} Reps ({}{}, {}RiR)",
+                set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
+            );
+            stringified_exercise.push_str(&_a);
+        }
+        return stringified_exercise.trim().to_string();
+    }
 }
 
 #[cfg(test)]
@@ -84,10 +108,21 @@ mod tests {
         assert_eq!(e.exercise.recommended_rep_range[0], 8);
         assert_eq!(e.exercise.recommended_rep_range[1], 12);
         assert_eq!(e.sets[0].reps, 8);
+        assert_eq!(e.sets.len(), 3);
         assert_eq!(e.sets[0].weight.weight, 135.0);
         assert_eq!(e.sets[0].weight.weight_unit, equipment::POUNDS);
         assert_eq!(e.sets[0].reps_in_reserve, 1.5);
     }
+
+    // Test conversion from a parseable string to a readable string
+    #[test]
+    fn test_string_parseable_exercise_to_summary() {
+        let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5;";
+        let e = ExerciseEntry::from_string(t);
+        assert_eq!(e.sets.len(), 3);
+        assert_eq!(e.to_string_readable(), "Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)");
+    }
+
 }
 
 // WorkoutEntry is a set of exercise entries
@@ -97,30 +132,6 @@ pub struct WorkoutEntry {
     pub exercises: Vec<ExerciseEntry>,
     pub comments: String,
     pub user: String,
-}
-
-pub fn exercise_to_string_summary(exercise: &ExerciseEntry) -> String {
-    let mut stringified_exercise = exercise.exercise.name.to_string();
-    for set in exercise.sets.iter() {
-        let _a = format!(
-            " - {} Reps ({}{}, {}RiR)",
-            set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
-        );
-        stringified_exercise.push_str(&_a);
-    }
-    return stringified_exercise.trim().to_string();
-}
-
-pub fn exercise_to_string_parseable(exercise: &ExerciseEntry) -> String {
-    let mut stringified_exercise = exercise.exercise.name.to_string();
-    for set in exercise.sets.iter() {
-        let _a = format!(
-            ";{},{}{},{}",
-            set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
-        );
-        stringified_exercise.push_str(&_a);
-    }
-    return stringified_exercise.trim().to_string();
 }
 
 pub const EXCERCISES_LIST: [Exercise; 2] = [EXERCISE_BENCH_PRESS, EXERCISE_DUMBBELL_BENCH_PRESS];

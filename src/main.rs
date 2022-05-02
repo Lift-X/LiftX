@@ -38,7 +38,8 @@ async fn rocket() -> _ {
         bench_set.sets.push(bench_press);
     }
     //println!("{}", exercises::exercise_to_string_summary(&bench_set));
-    let stringed_bench = exercises::exercise_to_string_summary(&bench_set);
+    let stringed_bench = bench_set.to_string_readable();
+    println!("{}", stringed_bench);
 
     // connect to DB
     let conn =
@@ -52,7 +53,7 @@ async fn rocket() -> _ {
     //28fcad1c-0f5b-49d1-8d5c-2286f15ff99a
     let uuid = uuid::Uuid::new_v4();
 
-    println!("{}", exercise_to_string_parseable(&bench_set));
+    println!("{}", &bench_set.to_string());
 
     // launch web server
     let shield = rocket::shield::Shield::default()
