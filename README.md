@@ -1,4 +1,4 @@
-# WLRS
+# WLRS [![codecov](https://codecov.io/gh/Zusier/wlrs/branch/main/graph/badge.svg?token=JQX7FH4WL5)](https://codecov.io/gh/Zusier/wlrs)
 
 First time trying to make a "full stack" web application. Goal is to track workouts
 
