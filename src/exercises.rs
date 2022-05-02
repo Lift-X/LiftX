@@ -21,8 +21,70 @@ pub struct SetEntry {
 #[derive(Debug, Clone)]
 pub struct ExerciseEntry {
     pub exercise: Exercise,
-    pub sets: Vec<SetEntry>,
     pub comments: String,
+    pub sets: Vec<SetEntry>,
+}
+
+// Absolutely scuffed, feel free to PR :D
+impl ExerciseEntry {
+    fn from_string(string: &str) -> ExerciseEntry {
+        // iter over string, separated by;
+        let split = string.split_terminator(";").collect::<Vec<_>>();
+        let mut gen_set_entry: ExerciseEntry = ExerciseEntry {
+            exercise: Exercise {
+                name: "",
+                muscle_sub_groups: &[],
+                recommended_rep_range: [0, 0],
+                equipment: &equipment::NONE,
+            },
+            comments: "".to_string(),
+            sets: vec![],
+        };
+
+        // iterate over excercises, see if "split[0]" is in the name of an exercise
+        // could be very taxing as list of exercises grows.. maybe use a hashmap?
+        for excercise in EXCERCISES_LIST {
+            let mut gen_vec = Vec::new();
+            if excercise.name == split[0] {
+                for set in split[2..].iter() {
+                    let proc_set = set.split_terminator(",").collect::<Vec<_>>();
+                    let mut gen_set = SetEntry {
+                        exercise: excercise,
+                        reps: proc_set[0].parse::<u32>().unwrap(),
+                        weight: Weight::from_string(proc_set[1]),
+                        reps_in_reserve: proc_set[2].parse::<f32>().unwrap(),
+                    };
+                    gen_vec.push(gen_set);
+                }
+                gen_set_entry = ExerciseEntry {
+                    exercise: excercise,
+                    comments: split[1].to_string(),
+                    sets: gen_vec,
+                };
+                break
+            }
+        }
+        gen_set_entry
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_exercise_string_to_exercise() {
+        let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
+        let e = ExerciseEntry::from_string(t);
+        assert_eq!(e.exercise.name, "Bench Press");
+        assert_eq!(e.exercise.muscle_sub_groups, &["Pectoralis Major", "Pectoralis Minor"]);
+        assert_eq!(e.exercise.recommended_rep_range[0], 8);
+        assert_eq!(e.exercise.recommended_rep_range[1], 12);
+        assert_eq!(e.sets[0].reps, 8);
+        assert_eq!(e.sets[0].weight.weight, 135.0);
+        assert_eq!(e.sets[0].weight.weight_unit, equipment::POUNDS);
+        assert_eq!(e.sets[0].reps_in_reserve, 1.5);
+    }
 }
 
 // WorkoutEntry is a set of exercise entries
@@ -35,7 +97,6 @@ pub struct WorkoutEntry {
 }
 
 pub fn exercise_to_string_summary(exercise: &ExerciseEntry) -> String {
-    //format!("{} {}", exercise.name, exercise.equipment)
     let mut stringified_exercise = format!("{}", exercise.exercise.name);
     for set in exercise.sets.iter() {
         let _a = format!(
@@ -46,6 +107,23 @@ pub fn exercise_to_string_summary(exercise: &ExerciseEntry) -> String {
     }
     return stringified_exercise.trim().to_string();
 }
+
+pub fn exercise_to_string_parseable(exercise: &ExerciseEntry) -> String {
+    let mut stringified_exercise = format!("{}", exercise.exercise.name);
+    for set in exercise.sets.iter() {
+        let _a = format!(
+            ";{},{}{},{}",
+            set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
+        );
+        stringified_exercise.push_str(&_a);
+    }
+    return stringified_exercise.trim().to_string();
+}
+
+pub const EXCERCISES_LIST: [Exercise; 2] = [
+    EXERCISE_BENCH_PRESS,
+    EXERCISE_DUMBBELL_BENCH_PRESS
+];
 
 pub const EXERCISE_BENCH_PRESS: Exercise = Exercise {
     name: "Bench Press",

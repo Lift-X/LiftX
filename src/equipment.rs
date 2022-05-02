@@ -22,11 +22,53 @@ pub struct Weight {
     pub weight_unit: WeightType,
 }
 
+impl Weight {
+    pub fn from_string(string: &str) -> Weight {
+        // collect only alphabetical characters
+        let split = string.chars().filter(|c| c.is_alphabetic()).collect::<String>();
+        match split.as_ref() {
+            "kgs" => Weight {
+                weight: string.split_terminator("kgs").collect::<Vec<_>>()[0].parse::<f32>().unwrap(),
+                weight_unit: KILOGRAMS,
+            },
+            "lbs" => Weight {
+                weight: string.split_terminator("lbs").collect::<Vec<_>>()[0].parse::<f32>().unwrap(),
+                weight_unit: POUNDS,
+            },
+            _ => panic!("Invalid weight unit!"),
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_weight_from_string_lbs() {
+        let weight = Weight::from_string("100lbs");
+        assert_eq!(weight.weight, 100.0);
+        assert_eq!(weight.weight_unit, POUNDS);
+    }
+
+    #[test]
+    fn test_weight_from_string_kgs() {
+        let weight = Weight::from_string("100kgs");
+        assert_eq!(weight.weight, 100.0);
+        assert_eq!(weight.weight_unit, KILOGRAMS);
+    }
+}
+
 #[derive(Debug)]
 pub struct EquipmentType {
     pub name: &'static str,
     rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables
 }
+
+pub const NONE: EquipmentType = EquipmentType {
+    name: "None",
+    rep_multiplier: 0,
+};
 
 pub const BARBELL: EquipmentType = EquipmentType {
     name: "Barbell",

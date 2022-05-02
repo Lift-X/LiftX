@@ -2,6 +2,7 @@
 
 First time trying to make a "full stack" web application. Goal is to track workouts
 
+Never taken a class on "advanced data structures" so feel free to scold me on how I should do it
 
 ## TODO
 

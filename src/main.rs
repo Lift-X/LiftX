@@ -34,21 +34,13 @@ async fn rocket() -> _ {
     };
     let mut bench_set = ExerciseEntry {
         exercise: EXERCISE_BENCH_PRESS,
-        sets: vec![bench_press],
         comments: String::from(""),
+        sets: vec![bench_press],
     };
     for i in 0..2 {
         bench_set.sets.push(bench_press);
     }
-    /*println!(
-        "{} was done for {} reps with {}{} and {} reps in reserve",
-        bench_press.exercise.name,
-        bench_press.reps,
-        bench_press.weight,
-        GLOBAL_WEIGHT_UNIT.short_name,
-        bench_press.reps_in_reserve
-    );*/
-    println!("{}", exercises::exercise_to_string_summary(&bench_set));
+    //println!("{}", exercises::exercise_to_string_summary(&bench_set));
     let stringed_bench = exercises::exercise_to_string_summary(&bench_set);
 
     // connect to DB
@@ -62,16 +54,7 @@ async fn rocket() -> _ {
 
     //28fcad1c-0f5b-49d1-8d5c-2286f15ff99a
 
-    // EX: Create workout table
-    /*sqlx::query!("CREATE TABLE workout (id TINYTEXT PRIMARY KEY, date char(10), user TINYTEXT, data MEDIUMTEXT, comments TEXT)")
-    .execute(&mut conn)
-    .await
-    .unwrap();*/
-
-    // EX: Create workout entry
-    /*sqlx::query!(
-        "INSERT INTO workout (id, date, user, data, comments) VALUES ('28fcad1c-0f5b-49d1-8d5c-2286f15ff99a', '2020-01-01', 'John Doe', 'Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)', 'comment')",
-    ).execute(&mut conn).await.unwrap();*/
+    println!("{}", exercise_to_string_parseable(&bench_set));
 
     // launch web server
     let shield = rocket::shield::Shield::default()
