@@ -25,14 +25,21 @@ pub struct Weight {
 impl Weight {
     pub fn from_string(string: &str) -> Weight {
         // collect only alphabetical characters
-        let split = string.chars().filter(|c| c.is_alphabetic()).collect::<String>();
+        let split = string
+            .chars()
+            .filter(|c| c.is_alphabetic())
+            .collect::<String>();
         match split.as_ref() {
             "kgs" => Weight {
-                weight: string.split_terminator("kgs").collect::<Vec<_>>()[0].parse::<f32>().unwrap(),
+                weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]
+                    .parse::<f32>()
+                    .unwrap(),
                 weight_unit: KILOGRAMS,
             },
             "lbs" => Weight {
-                weight: string.split_terminator("lbs").collect::<Vec<_>>()[0].parse::<f32>().unwrap(),
+                weight: string.split_terminator("lbs").collect::<Vec<_>>()[0]
+                    .parse::<f32>()
+                    .unwrap(),
                 weight_unit: POUNDS,
             },
             _ => panic!("Invalid weight unit!"),

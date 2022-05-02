@@ -3,7 +3,7 @@ type MuscleGroup = Vec<&'static str>;
 
 // just an example for now. Complete this later
 #[allow(dead_code)]
-const MUSCLE_SUB_GROUPS: [&'static str; 13] = [
+const MUSCLE_SUB_GROUPS: [&str; 13] = [
     "Pectoralis Major", // Chest, Shoulders
     "Pectoralis Minor", // Chest
     "Deltoid",          // Shoulders

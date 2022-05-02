@@ -1,6 +1,3 @@
-// clippy
-#![allow(clippy::dead_code)]
-
 #[macro_use]
 extern crate rocket;
 
@@ -44,7 +41,7 @@ async fn rocket() -> _ {
     let stringed_bench = exercises::exercise_to_string_summary(&bench_set);
 
     // connect to DB
-    let mut conn =
+    let conn =
         <sqlx::sqlite::SqliteConnectOptions as std::str::FromStr>::from_str("sqlite://data.db")
             .unwrap()
             .create_if_missing(true)
