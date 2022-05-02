@@ -50,6 +50,7 @@ async fn rocket() -> _ {
             .unwrap();
 
     //28fcad1c-0f5b-49d1-8d5c-2286f15ff99a
+    let uuid = uuid::Uuid::new_v4();
 
     println!("{}", exercise_to_string_parseable(&bench_set));
 

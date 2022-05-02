@@ -11,7 +11,8 @@ pub struct Db(sqlx::sqlite::SqlitePool);
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct WorkoutID {
-    pub id: User,
+    pub id: String, // technically this should be a uuid... (isnt deserializable)
+    pub user: User,
     pub timestamp: String,
 }
 
@@ -20,6 +21,47 @@ pub struct User {
     pub name: String,
     pub email: String,
     pub password: String,
+}
+
+// Is this even needed?
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_user() {
+        let user = User {
+            name: "test".to_string(),
+            email: "test@example.com".to_string(),
+            password: "password".to_string(),
+        };
+        assert_eq!(user.name, "test");
+        assert_eq!(user.email, "test@example.com");
+        assert_eq!(user.password, "password");
+    }
+
+    #[test]
+    fn test_workout_id() {
+        let time = std::time::UNIX_EPOCH
+            .elapsed()
+            .unwrap()
+            .as_secs()
+            .to_string();
+        let uuid = uuid::Uuid::new_v4().to_string();
+        let user = User {
+            name: "test".to_string(),
+            email: "test@example.com".to_string(),
+            password: "password".to_string(),
+        };
+        let workout_id = WorkoutID {
+            id: uuid.clone(),
+            user,
+            timestamp: time.clone(),
+        };
+        assert_eq!(workout_id.id, uuid);
+        assert_eq!(workout_id.user.name, "test");
+        assert_eq!(workout_id.timestamp, time);
+    }
 }
 
 /*pub fn get_workout(id: WorkoutID) -> WorkoutEntry {
