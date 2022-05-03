@@ -1,9 +1,11 @@
+#[allow(unused_imports)]
 use crate::{equipment::Weight, exercises::WorkoutEntry};
-use rocket::request::FromRequest;
 use serde::{Deserialize, Serialize};
 
 use rocket_db_pools::{sqlx, Database};
+#[allow(unused_imports)]
 use sqlx::{Connection, SqliteConnection, SqlitePool};
+
 
 #[derive(Database)]
 #[database("sqlite_db")]

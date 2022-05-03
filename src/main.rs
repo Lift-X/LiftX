@@ -11,6 +11,7 @@ use equipment::WeightType;
 use rocket_db_pools::Database;
 use sqlx::ConnectOptions;
 
+#[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight, handlers::hello};
 
 use exercises::*;

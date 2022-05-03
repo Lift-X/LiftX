@@ -1,6 +1,6 @@
 use rocket_db_pools::Connection;
-use sqlx::database;
 
+#[allow(unused_imports)]
 use crate::database::{Db, WorkoutID};
 
 #[get("/workout/<id>")]
