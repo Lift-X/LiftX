@@ -1,6 +1,9 @@
+use serde::Serialize;
+use serde_json::json;
+
 use crate::equipment::{self, EquipmentType, Weight};
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Serialize)]
 pub struct Exercise {
     pub name: &'static str,
     pub muscle_sub_groups: &'static [&'static str], // https://stackoverflow.com/questions/42764016/creating-a-static-const-vecstring
@@ -9,24 +12,24 @@ pub struct Exercise {
 }
 
 // "Set" as in a set of reps, not the verb "set"
-#[derive(Debug, Clone, Copy)]
-pub struct SetEntry {
+#[derive(Debug, Clone, Serialize)]
+pub struct SetEntry<'a> {
     pub exercise: Exercise,
     pub reps: u32,
-    pub weight: Weight,
+    pub weight: Weight<'a>,
     pub reps_in_reserve: f32, // how many more reps you feel you could've done
 }
 
 // ExerciseEntry is a set of sets
-#[derive(Debug, Clone)]
-pub struct ExerciseEntry {
+#[derive(Debug, Clone, Serialize)]
+pub struct ExerciseEntry<'a> {
     pub exercise: Exercise,
     pub comments: String,
-    pub sets: Vec<SetEntry>,
+    pub sets: Vec<SetEntry<'a>>,
 }
 
 // Absolutely scuffed, feel free to PR :D
-impl ExerciseEntry {
+impl ExerciseEntry<'_> {
     pub fn from_string(string: &str) -> ExerciseEntry {
         // iter over string, separated by;
         let split = string.split_terminator(';').collect::<Vec<_>>();
@@ -90,6 +93,10 @@ impl ExerciseEntry {
         }
         return stringified_exercise.trim().to_string();
     }
+
+    pub fn to_json(&self) -> String {
+        json!(self).to_string()
+    }
 }
 
 #[cfg(test)]
@@ -110,7 +117,7 @@ mod tests {
         assert_eq!(e.sets[0].reps, 8);
         assert_eq!(e.sets.len(), 3);
         assert_eq!(e.sets[0].weight.weight, 135.0);
-        assert_eq!(e.sets[0].weight.weight_unit, equipment::POUNDS);
+        assert_eq!(e.sets[0].weight.weight_unit, &equipment::POUNDS);
         assert_eq!(e.sets[0].reps_in_reserve, 1.5);
     }
 
@@ -127,9 +134,9 @@ mod tests {
 
 // WorkoutEntry is a set of exercise entries
 #[derive(Debug, Clone)]
-pub struct WorkoutEntry {
+pub struct WorkoutEntry<'a> {
     pub date: String,
-    pub exercises: Vec<ExerciseEntry>,
+    pub exercises: Vec<ExerciseEntry<'a>>,
     pub comments: String,
     pub user: String,
 }

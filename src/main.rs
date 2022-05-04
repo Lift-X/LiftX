@@ -17,7 +17,7 @@ use crate::{database::create_connection, equipment::Weight, handlers::hello};
 use exercises::*;
 
 // Global Preference for weight, implement configuration later
-const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
+const GLOBAL_WEIGHT_UNIT: WeightType = *equipment::POUNDS;
 
 #[launch]
 async fn rocket() -> _ {
@@ -33,10 +33,10 @@ async fn rocket() -> _ {
     let mut bench_set = ExerciseEntry {
         exercise: EXERCISE_BENCH_PRESS,
         comments: String::from(""),
-        sets: vec![bench_press],
+        sets: vec![bench_press.clone()],
     };
     for i in 0..2 {
-        bench_set.sets.push(bench_press);
+        bench_set.sets.push(bench_press.clone());
     }
     //println!("{}", exercises::exercise_to_string_summary(&bench_set));
     let stringed_bench = bench_set.to_string_readable();
@@ -55,6 +55,8 @@ async fn rocket() -> _ {
     let uuid = uuid::Uuid::new_v4();
 
     println!("{}", &bench_set.to_string());
+
+
 
     // launch web server
     let shield = rocket::shield::Shield::default()

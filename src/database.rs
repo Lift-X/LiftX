@@ -13,7 +13,7 @@ pub struct Db(sqlx::sqlite::SqlitePool);
 
 #[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
 pub struct WorkoutID {
-    pub id: String, // technically this should be a uuid... (isnt deserializable)
+    pub uuid: String, // could be a plain uuid::Uuid but it's not deserializable
     pub user: User,
     pub timestamp: String,
 }
@@ -56,11 +56,11 @@ mod tests {
             password: "password".to_string(),
         };
         let workout_id = WorkoutID {
-            id: uuid.clone(),
+            uuid: uuid.clone(),
             user,
             timestamp: time.clone(),
         };
-        assert_eq!(workout_id.id, uuid);
+        assert_eq!(workout_id.uuid, uuid);
         assert_eq!(workout_id.user.name, "test");
         assert_eq!(workout_id.timestamp, time);
     }
