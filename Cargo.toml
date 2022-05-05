@@ -14,6 +14,7 @@ serde = { version = "1.0.137", features = ["derive"] }
 sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
 rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
 lazy_static = "1.4.0"
+ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
 
 [dependencies.uuid]
 version = "1.0.0"
