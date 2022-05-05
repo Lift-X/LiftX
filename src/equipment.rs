@@ -67,19 +67,19 @@ impl Weight {
         }
     }
 
-    pub fn to_kilograms(&self) -> f32 {
+    pub fn to_kilograms(&self) -> Result<f32, String> {
         match self.weight_unit {
-            KILOGRAMS => self.weight,
-            POUNDS => self.weight * 0.45359237,
-            _ => self.weight, // For now, just return the original weight
+            KILOGRAMS => Ok(self.weight),
+            POUNDS => Ok(self.weight * 0.45359237),
+            _ => Err("Invalid Weight Type!".to_string()),
         }
     }
 
-    pub fn to_pounds(&self) -> f32 {
+    pub fn to_pounds(&self) -> Result<f32, String> {
         match self.weight_unit {
-            KILOGRAMS => self.weight * 2.204623,
-            POUNDS => self.weight,
-            _ => self.weight, // For now, just return the original weight
+            KILOGRAMS => Ok(self.weight * 2.204623),
+            POUNDS => Ok(self.weight),
+            _ => Err("Invalid Weight Type!".to_string()),
         }
     }
 }
@@ -102,6 +102,12 @@ mod tests {
         assert_eq!(weight.weight_unit, KILOGRAMS);
     }
 
+    #[test]
+    fn test_weight_from_string_fail() {
+        let weight = Weight::from_string("FAIL");
+        assert_eq!(weight.is_err(), true);
+    }
+
 
     #[test]
     fn test_weight_to_kilograms() {
@@ -109,7 +115,7 @@ mod tests {
             weight: 45.0,
             weight_unit: POUNDS,
         };
-        assert_eq!(OrderedFloat(weight.to_kilograms()),  OrderedFloat(20.411655));
+        assert_eq!(OrderedFloat(weight.to_kilograms().unwrap()),  OrderedFloat(20.411655));
     }
 
     #[test]
@@ -118,7 +124,7 @@ mod tests {
             weight: 25.0,
             weight_unit: KILOGRAMS,
         };
-        assert_eq!(OrderedFloat(weight.to_pounds()), OrderedFloat(55.115574));
+        assert_eq!(OrderedFloat(weight.to_pounds().unwrap()), OrderedFloat(55.115574));
     }
 }
 

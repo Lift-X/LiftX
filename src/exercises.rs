@@ -126,6 +126,28 @@ mod tests {
         assert_eq!(e.to_string_readable(), "Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)");
     }
 
+    #[test]
+    fn test_exercise_to_string() {
+        let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
+        let bench_press = SetEntry {
+            exercise: EXERCISE_BENCH_PRESS,
+            reps: 8,
+            weight: Weight {
+                weight: 135.0,
+                weight_unit: equipment::POUNDS,
+            },
+            reps_in_reserve: 1.5,
+        };
+        let mut bench_set = ExerciseEntry {
+            exercise: EXERCISE_BENCH_PRESS,
+            comments: String::from(""),
+            sets: vec![bench_press.clone()],
+        };
+        for i in 0..2 {
+            bench_set.sets.push(bench_press.clone());
+        }
+        assert_eq!(bench_set.to_string(), t);
+    }
 }
 
 /// WorkoutEntry is a collection of exercise entries
