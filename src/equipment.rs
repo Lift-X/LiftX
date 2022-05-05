@@ -1,49 +1,49 @@
-use serde::{Deserialize, Serialize};
-use lazy_static::lazy_static;
+use ordered_float::OrderedFloat;
 
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
-pub struct WeightType<'a, 'b> {
-    #[serde(borrow)]
-    pub long_name: &'a str,
-    #[serde(borrow)]
-    pub short_name: &'b str,
+
+/// Either Kilograms or Pounds.
+/// Contains a long and short name for the weight unit
+#[derive(PartialEq, Debug, Clone, Copy, Eq)]
+pub struct WeightType {
+    pub long_name: &'static str,
+    pub short_name: &'static str,
 }
 
-/*
 pub const KILOGRAMS: WeightType = WeightType {
-    long_name: "Kilograms".to_string(),
-    short_name: "kgs".to_string(),
+    long_name: "Kilograms",
+    short_name: "kgs",
 };
 
 pub const POUNDS: WeightType = WeightType {
-    long_name: "Pounds".to_string(),
-    short_name: "lbs".to_string(),
+    long_name: "Pounds",
+    short_name: "lbs",
 };
-*/
 
+/* deserializable *kind of*
 lazy_static!(
     #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
-    pub static ref POUNDS: WeightType<'static, 'static> = WeightType {
+    pub static ref POUNDS: WeightType = WeightType {
         long_name: "Pounds",
         short_name: "lbs",
     };
 );
 
 lazy_static!(
-    #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
-    pub static ref KILOGRAMS: WeightType<'static, 'static> = WeightType {
+    #[derive(PartialEq, Debug, Clone, Copy)]
+    pub static ref KILOGRAMS: WeightType = WeightType {
         long_name: "Kilograms",
         short_name: "kgs",
     };
 );
+*/
 
-#[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
-pub struct Weight<'a> {
+#[derive(PartialEq, Debug, Clone)]
+pub struct Weight {
     pub weight: f32,
-    pub weight_unit: &'a WeightType<'a, 'a>,
+    pub weight_unit: WeightType,
 }
 
-impl Weight<'_> {
+impl Weight {
     pub fn from_string(string: &str) -> Weight {
         // collect only alphabetical characters
         let split = string
@@ -55,15 +55,31 @@ impl Weight<'_> {
                 weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
                     .unwrap(),
-                weight_unit: &KILOGRAMS,
+                weight_unit: KILOGRAMS,
             },
             "lbs" => Weight {
                 weight: string.split_terminator("lbs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
                     .unwrap(),
-                weight_unit: &POUNDS,
+                weight_unit: POUNDS,
             },
             _ => panic!("Invalid weight unit!"),
+        }
+    }
+
+    pub fn to_kilograms(&self) -> f32 {
+        match self.weight_unit {
+            KILOGRAMS => self.weight,
+            POUNDS => self.weight * 0.45359237,
+            _ => self.weight, // For now, just return the original weight
+        }
+    }
+
+    pub fn to_pounds(&self) -> f32 {
+        match self.weight_unit {
+            KILOGRAMS => self.weight * 2.204623,
+            POUNDS => self.weight,
+            _ => self.weight, // For now, just return the original weight
         }
     }
 }
@@ -76,18 +92,39 @@ mod tests {
     fn test_weight_from_string_lbs() {
         let weight = Weight::from_string("100lbs");
         assert_eq!(weight.weight, 100.0);
-        assert_eq!(weight.weight_unit, *POUNDS);
+        assert_eq!(weight.weight_unit, POUNDS);
     }
 
     #[test]
     fn test_weight_from_string_kgs() {
         let weight = Weight::from_string("100kgs");
         assert_eq!(weight.weight, 100.0);
-        assert_eq!(weight.weight_unit, *KILOGRAMS);
+        assert_eq!(weight.weight_unit, KILOGRAMS);
+    }
+
+
+    #[test]
+    fn test_weight_to_kilograms() {
+        let weight = Weight {
+            weight: 45.0,
+            weight_unit: POUNDS,
+        };
+        assert_eq!(OrderedFloat(weight.to_kilograms()),  OrderedFloat(20.411655));
+    }
+
+    #[test]
+    fn test_weight_to_pounds() {
+        let weight = Weight {
+            weight: 25.0,
+            weight_unit: KILOGRAMS,
+        };
+        assert_eq!(OrderedFloat(weight.to_pounds()), OrderedFloat(55.115574));
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
+/// EquipmentType allows for accurate total rep count when accounting for various types of equipment
+/// (i.e. dumbbells, kettlebells, barbells, etc.)
+#[derive(Debug, PartialEq, Clone)]
 pub struct EquipmentType {
     pub name: &'static str,
     rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables
