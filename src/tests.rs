@@ -1,6 +1,6 @@
 use ordered_float::OrderedFloat;
 
-use crate::{*, equipment::{POUNDS, KILOGRAMS, EQUIPMENT_LIST}, database::{User, WorkoutID}, exercises::{ExerciseEntry, SetEntry}};
+use crate::{*, equipment::{POUNDS, KILOGRAMS, EQUIPMENT_LIST}, exercises::{ExerciseEntry, SetEntry}};
 
 /*#[tokio::test]
 async fn test_rocket_and_handlers() {
@@ -120,7 +120,7 @@ fn test_exercise_to_string() {
 
 #[test]
 fn test_user() {
-    let user = User {
+    let user = database::User {
         name: "test".to_string(),
         email: "test@example.com".to_string(),
         password: "password".to_string(),
@@ -138,12 +138,12 @@ fn test_workout_id() {
         .as_secs()
         .to_string();
     let uuid = uuid::Uuid::new_v4().to_string();
-    let user = User {
+    let user = database::User {
         name: "test".to_string(),
         email: "test@example.com".to_string(),
         password: "password".to_string(),
     };
-    let workout_id = WorkoutID {
+    let workout_id = database::WorkoutID {
         uuid: uuid.clone(),
         user,
         timestamp: time.clone(),
@@ -151,4 +151,15 @@ fn test_workout_id() {
     assert_eq!(workout_id.uuid, uuid);
     assert_eq!(workout_id.user.name, "test");
     assert_eq!(workout_id.timestamp, time);
+}
+
+#[test]
+fn test_exercises() {
+    for exercise in exercises::EXCERCISES_LIST {
+        assert_eq!(exercise.name.is_ascii(), true);
+        for muscles in exercise.muscle_sub_groups {
+            assert_eq!(muscles.is_ascii(), true);
+        }
+        assert_eq!(exercise.recommended_rep_range[0] < exercise.recommended_rep_range[1], true);
+    }
 }
