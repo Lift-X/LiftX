@@ -1,9 +1,9 @@
-use serde::Serialize;
 use serde_json::json;
 
 use crate::equipment::{self, EquipmentType, Weight};
 
-#[derive(Debug, Copy, Clone, Serialize)]
+/// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
+#[derive(Debug, Copy, Clone)]
 pub struct Exercise {
     pub name: &'static str,
     pub muscle_sub_groups: &'static [&'static str], // https://stackoverflow.com/questions/42764016/creating-a-static-const-vecstring
@@ -11,25 +11,25 @@ pub struct Exercise {
     pub equipment: &'static EquipmentType,
 }
 
-// "Set" as in a set of reps, not the verb "set"
-#[derive(Debug, Clone, Serialize)]
-pub struct SetEntry<'a> {
+/// "Set" as in a set of reps, not the verb "set"
+#[derive(Debug, Clone)]
+pub struct SetEntry {
     pub exercise: Exercise,
     pub reps: u32,
-    pub weight: Weight<'a>,
+    pub weight: Weight,
     pub reps_in_reserve: f32, // how many more reps you feel you could've done
 }
 
-// ExerciseEntry is a set of sets
-#[derive(Debug, Clone, Serialize)]
-pub struct ExerciseEntry<'a> {
+/// ExerciseEntry is a collection of sets
+#[derive(Debug, Clone)]
+pub struct ExerciseEntry {
     pub exercise: Exercise,
     pub comments: String,
-    pub sets: Vec<SetEntry<'a>>,
+    pub sets: Vec<SetEntry<>>,
 }
 
 // Absolutely scuffed, feel free to PR :D
-impl ExerciseEntry<'_> {
+impl ExerciseEntry {
     pub fn from_string(string: &str) -> ExerciseEntry {
         // iter over string, separated by;
         let split = string.split_terminator(';').collect::<Vec<_>>();
@@ -93,10 +93,6 @@ impl ExerciseEntry<'_> {
         }
         return stringified_exercise.trim().to_string();
     }
-
-    pub fn to_json(&self) -> String {
-        json!(self).to_string()
-    }
 }
 
 #[cfg(test)]
@@ -117,7 +113,7 @@ mod tests {
         assert_eq!(e.sets[0].reps, 8);
         assert_eq!(e.sets.len(), 3);
         assert_eq!(e.sets[0].weight.weight, 135.0);
-        assert_eq!(e.sets[0].weight.weight_unit, &equipment::POUNDS);
+        assert_eq!(e.sets[0].weight.weight_unit, equipment::POUNDS);
         assert_eq!(e.sets[0].reps_in_reserve, 1.5);
     }
 
@@ -132,11 +128,11 @@ mod tests {
 
 }
 
-// WorkoutEntry is a set of exercise entries
+/// WorkoutEntry is a collection of exercise entries
 #[derive(Debug, Clone)]
-pub struct WorkoutEntry<'a> {
+pub struct WorkoutEntry {
     pub date: String,
-    pub exercises: Vec<ExerciseEntry<'a>>,
+    pub exercises: Vec<ExerciseEntry<>>,
     pub comments: String,
     pub user: String,
 }

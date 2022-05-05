@@ -17,7 +17,7 @@ use crate::{database::create_connection, equipment::Weight, handlers::hello};
 use exercises::*;
 
 // Global Preference for weight, implement configuration later
-const GLOBAL_WEIGHT_UNIT: WeightType = *equipment::POUNDS;
+const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
 
 #[launch]
 async fn rocket() -> _ {
