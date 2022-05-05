@@ -95,61 +95,6 @@ impl ExerciseEntry {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_exercise_string_to_exercise() {
-        let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
-        let e = ExerciseEntry::from_string(t);
-        assert_eq!(e.exercise.name, "Bench Press");
-        assert_eq!(
-            e.exercise.muscle_sub_groups,
-            &["Pectoralis Major", "Pectoralis Minor"]
-        );
-        assert_eq!(e.exercise.recommended_rep_range[0], 8);
-        assert_eq!(e.exercise.recommended_rep_range[1], 12);
-        assert_eq!(e.sets[0].reps, 8);
-        assert_eq!(e.sets.len(), 3);
-        assert_eq!(e.sets[0].weight.weight, 135.0);
-        assert_eq!(e.sets[0].weight.weight_unit, equipment::POUNDS);
-        assert_eq!(e.sets[0].reps_in_reserve, 1.5);
-    }
-
-    // Test conversion from a parseable string to a readable string
-    #[test]
-    fn test_string_parseable_exercise_to_summary() {
-        let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5;";
-        let e = ExerciseEntry::from_string(t);
-        assert_eq!(e.sets.len(), 3);
-        assert_eq!(e.to_string_readable(), "Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)");
-    }
-
-    #[test]
-    fn test_exercise_to_string() {
-        let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
-        let bench_press = SetEntry {
-            exercise: EXERCISE_BENCH_PRESS,
-            reps: 8,
-            weight: Weight {
-                weight: 135.0,
-                weight_unit: equipment::POUNDS,
-            },
-            reps_in_reserve: 1.5,
-        };
-        let mut bench_set = ExerciseEntry {
-            exercise: EXERCISE_BENCH_PRESS,
-            comments: String::from(""),
-            sets: vec![bench_press.clone()],
-        };
-        for i in 0..2 {
-            bench_set.sets.push(bench_press.clone());
-        }
-        assert_eq!(bench_set.to_string(), t);
-    }
-}
-
 /// WorkoutEntry is a collection of exercise entries
 #[derive(Debug, Clone)]
 pub struct WorkoutEntry {

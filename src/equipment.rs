@@ -1,5 +1,3 @@
-use ordered_float::OrderedFloat;
-
 /// Either Kilograms or Pounds.
 /// Contains a long and short name for the weight unit
 #[derive(PartialEq, Debug, Clone, Copy, Eq)]
@@ -83,76 +81,12 @@ impl Weight {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_weight_from_string_lbs() {
-        let weight = Weight::from_string("100lbs").unwrap();
-        assert_eq!(weight.weight, 100.0);
-        assert_eq!(weight.weight_unit, POUNDS);
-    }
-
-    #[test]
-    fn test_weight_from_string_kgs() {
-        let weight = Weight::from_string("100kgs").unwrap();
-        assert_eq!(weight.weight, 100.0);
-        assert_eq!(weight.weight_unit, KILOGRAMS);
-    }
-
-    #[test]
-    fn test_weight_from_string_fail() {
-        let weight = Weight::from_string("FAIL");
-        assert_eq!(weight.is_err(), true);
-    }
-
-    #[test]
-    fn test_weight_to_kilograms() {
-        let weight = Weight {
-            weight: 45.0,
-            weight_unit: POUNDS,
-        };
-        assert_eq!(
-            OrderedFloat(weight.to_kilograms().unwrap()),
-            OrderedFloat(20.411655)
-        );
-    }
-
-    #[test]
-    fn test_weight_to_pounds() {
-        let weight = Weight {
-            weight: 25.0,
-            weight_unit: KILOGRAMS,
-        };
-        assert_eq!(
-            OrderedFloat(weight.to_pounds().unwrap()),
-            OrderedFloat(55.115574)
-        );
-    }
-
-    #[test]
-    fn test_parse_equipment() {
-        for equipment in EQUIPMENT_LIST {
-            assert_eq!(equipment.name.is_ascii(), true);
-            match equipment.rep_multiplier {
-                0 => assert_eq!(equipment.rep_multiplier, 0),
-                1 => assert_eq!(equipment.rep_multiplier, 1),
-                2 => assert_eq!(equipment.rep_multiplier, 2),
-                3 => assert_eq!(equipment.rep_multiplier, 3),
-                4 => assert_eq!(equipment.rep_multiplier, 4),
-                _ => panic!("Invalid rep_multiplier!"),
-            }
-        }
-    }
-}
-
 /// EquipmentType allows for accurate total rep count when accounting for various types of equipment
 /// (i.e. dumbbells, kettlebells, barbells, etc.)
 #[derive(Debug, PartialEq, Clone)]
 pub struct EquipmentType {
     pub name: &'static str,
-    rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables
+    pub rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables
 }
 
 pub const NONE: EquipmentType = EquipmentType {

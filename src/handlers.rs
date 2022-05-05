@@ -18,3 +18,9 @@ pub async fn hello(id: String, mut db: Connection<Db>) -> String {
         None => "Workout not found!".to_string(),
     }
 }
+
+#[get("/shutdown")]
+pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {
+    shutdown.notify();
+    "Shutting down..."
+}
