@@ -1,4 +1,4 @@
-use crate::equipment::{self, EquipmentType, Weight};
+use crate::equipment::{self, EquipmentType, Weight, WeightType};
 
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
 #[derive(Debug, Copy, Clone)]
@@ -73,7 +73,7 @@ impl ExerciseEntry {
         for set in self.sets.iter() {
             let _a = format!(
                 ";{},{}{},{}",
-                set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
+                set.reps, set.weight.weight, WeightType::from_string(&set.weight.weight_unit).expect("Invalid Weight Type!").short_name, set.reps_in_reserve
             );
             stringified_exercise.push_str(&_a);
         }
@@ -85,7 +85,7 @@ impl ExerciseEntry {
         for set in self.sets.iter() {
             let _a = format!(
                 " - {} Reps ({}{}, {}RiR)",
-                set.reps, set.weight.weight, set.weight.weight_unit.short_name, set.reps_in_reserve
+                set.reps, set.weight.weight, WeightType::from_string(&set.weight.weight_unit).expect("Invalid Weight Type!").short_name, set.reps_in_reserve
             );
             stringified_exercise.push_str(&_a);
         }

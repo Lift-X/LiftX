@@ -1,6 +1,10 @@
+use serde::{Deserialize, Serialize};
+
 /// Either Kilograms or Pounds.
 /// Contains a long and short name for the weight unit
-#[derive(PartialEq, Debug, Clone, Copy, Eq)]
+/// Strings below can't be indirectly deserialized for some reason. I've tried a bunch of stuff :/
+/// For now in indirect use cases the type will be a string and converted back to a WeightUnit
+#[derive(PartialEq, Debug, Clone, Copy, Eq, Deserialize, Serialize)]
 pub struct WeightType {
     pub long_name: &'static str,
     pub short_name: &'static str,
@@ -34,10 +38,10 @@ lazy_static!(
 );
 */
 
-#[derive(PartialEq, Debug, Clone)]
+#[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
 pub struct Weight {
     pub weight: f32,
-    pub weight_unit: WeightType,
+    pub weight_unit: String,
 }
 
 impl Weight {
@@ -52,34 +56,45 @@ impl Weight {
                 weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
                     .expect("Could not parse weight!"),
-                weight_unit: KILOGRAMS,
+                weight_unit: "kgs".to_string(),
             }),
             "lbs" => Ok(Weight {
                 weight: string.split_terminator("lbs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
                     .expect("Could not parse weight!"),
-                weight_unit: POUNDS,
+                weight_unit: "lbs".to_string(),
             }),
             _ => Err("Invalid weight unit!".to_string()),
         }
     }
 
     pub fn to_kilograms(&self) -> Result<f32, String> {
-        match self.weight_unit {
-            KILOGRAMS => Ok(self.weight),
-            POUNDS => Ok(self.weight * 0.45359237),
+        match self.weight_unit.as_str() {
+            "kgs" => Ok(self.weight),
+            "lbs" => Ok(self.weight * 0.45359237),
             _ => Err("Invalid Weight Type!".to_string()),
         }
     }
 
     pub fn to_pounds(&self) -> Result<f32, String> {
-        match self.weight_unit {
-            KILOGRAMS => Ok(self.weight * 2.204623),
-            POUNDS => Ok(self.weight),
+        match self.weight_unit.as_str() {
+            "kgs" => Ok(self.weight * 2.204623),
+            "lbs" => Ok(self.weight),
             _ => Err("Invalid Weight Type!".to_string()),
         }
     }
 }
+
+impl WeightType {
+    pub fn from_string(string: &str) -> Result<WeightType, String> {
+        match string.as_ref() {
+            "kgs" => Ok(KILOGRAMS),
+            "lbs" => Ok(POUNDS),
+            _ => Err("Invalid Weight Type!".to_string()),
+        }
+    }
+}
+
 
 /// EquipmentType allows for accurate total rep count when accounting for various types of equipment
 /// (i.e. dumbbells, kettlebells, barbells, etc.)

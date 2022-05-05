@@ -13,14 +13,14 @@ async fn test_rocket_and_handlers() {
 fn test_weight_from_string_lbs() {
     let weight = Weight::from_string("100lbs").unwrap();
     assert_eq!(weight.weight, 100.0);
-    assert_eq!(weight.weight_unit, POUNDS);
+    assert_eq!(WeightType::from_string(&weight.weight_unit).unwrap(), POUNDS);
 }
 
 #[test]
 fn test_weight_from_string_kgs() {
     let weight = Weight::from_string("100kgs").unwrap();
     assert_eq!(weight.weight, 100.0);
-    assert_eq!(weight.weight_unit, KILOGRAMS);
+    assert_eq!(WeightType::from_string(&weight.weight_unit).unwrap(), KILOGRAMS);
 }
 
 #[test]
@@ -33,7 +33,7 @@ fn test_weight_from_string_fail() {
 fn test_weight_to_kilograms() {
     let weight = Weight {
         weight: 45.0,
-        weight_unit: POUNDS,
+        weight_unit: "lbs".to_string(),
     };
     assert_eq!(
         OrderedFloat(weight.to_kilograms().unwrap()),
@@ -45,12 +45,19 @@ fn test_weight_to_kilograms() {
 fn test_weight_to_pounds() {
     let weight = Weight {
         weight: 25.0,
-        weight_unit: KILOGRAMS,
+        weight_unit: "kgs".to_string(),
     };
     assert_eq!(
         OrderedFloat(weight.to_pounds().unwrap()),
         OrderedFloat(55.115574)
     );
+}
+
+#[test]
+fn test_weight_type_from_string() {
+    assert_eq!(WeightType::from_string("kgs").unwrap(), KILOGRAMS);
+    assert_eq!(WeightType::from_string("lbs").unwrap(), POUNDS);
+    assert_eq!(WeightType::from_string("ERROR").is_err(), true);
 }
 
 #[test]
@@ -82,7 +89,7 @@ fn test_exercise_string_to_exercise() {
     assert_eq!(e.sets[0].reps, 8);
     assert_eq!(e.sets.len(), 3);
     assert_eq!(e.sets[0].weight.weight, 135.0);
-    assert_eq!(e.sets[0].weight.weight_unit, equipment::POUNDS);
+    assert_eq!(WeightType::from_string(&e.sets[0].weight.weight_unit).unwrap(), equipment::POUNDS);
     assert_eq!(e.sets[0].reps_in_reserve, 1.5);
 }
 
@@ -103,7 +110,7 @@ fn test_exercise_to_string() {
         reps: 8,
         weight: Weight {
             weight: 135.0,
-            weight_unit: equipment::POUNDS,
+            weight_unit: "lbs".to_string(),
         },
         reps_in_reserve: 1.5,
     };
