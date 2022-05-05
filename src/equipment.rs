@@ -44,26 +44,26 @@ pub struct Weight {
 }
 
 impl Weight {
-    pub fn from_string(string: &str) -> Weight {
+    pub fn from_string(string: &str) -> Result<Weight, String> {
         // collect only alphabetical characters
         let split = string
             .chars()
             .filter(|c| c.is_alphabetic())
             .collect::<String>();
         match split.as_ref() {
-            "kgs" => Weight {
+            "kgs" => Ok(Weight {
                 weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
                     .unwrap(),
                 weight_unit: KILOGRAMS,
-            },
-            "lbs" => Weight {
+            }),
+            "lbs" => Ok(Weight {
                 weight: string.split_terminator("lbs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
                     .unwrap(),
                 weight_unit: POUNDS,
-            },
-            _ => panic!("Invalid weight unit!"),
+            }),
+            _ => Err("Invalid weight unit!".to_string()),
         }
     }
 
@@ -91,15 +91,15 @@ mod tests {
     #[test]
     fn test_weight_from_string_lbs() {
         let weight = Weight::from_string("100lbs");
-        assert_eq!(weight.weight, 100.0);
-        assert_eq!(weight.weight_unit, POUNDS);
+        assert_eq!(weight.unwrap().weight, 100.0);
+        assert_eq!(weight.unwrap().weight_unit, POUNDS);
     }
 
     #[test]
     fn test_weight_from_string_kgs() {
         let weight = Weight::from_string("100kgs");
-        assert_eq!(weight.weight, 100.0);
-        assert_eq!(weight.weight_unit, KILOGRAMS);
+        assert_eq!(weight.unwrap().weight, 100.0);
+        assert_eq!(weight.unwrap().weight_unit, KILOGRAMS);
     }
 
 
