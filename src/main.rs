@@ -8,17 +8,12 @@ pub mod handlers;
 pub mod muscles;
 #[cfg(test)] mod tests;
 
-use std::alloc::Layout;
-
 use equipment::WeightType;
-use rocket::{Rocket, Build};
 use rocket_db_pools::Database;
 use sqlx::ConnectOptions;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight, handlers::hello};
-
-use exercises::*;
 
 // Global Preference for weight, implement configuration later
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;

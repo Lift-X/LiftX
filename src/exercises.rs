@@ -1,5 +1,3 @@
-use serde_json::json;
-
 use crate::equipment::{self, EquipmentType, Weight};
 
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
