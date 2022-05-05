@@ -7,7 +7,10 @@ mod exercises;
 pub mod handlers;
 pub mod muscles;
 
+use std::alloc::Layout;
+
 use equipment::WeightType;
+use rocket::{Rocket, Build};
 use rocket_db_pools::Database;
 use sqlx::ConnectOptions;
 
@@ -21,6 +24,7 @@ const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
 
 #[launch]
 async fn rocket() -> _ {
+    /*
     let bench_press = SetEntry {
         exercise: EXERCISE_BENCH_PRESS,
         reps: 8,
@@ -41,6 +45,8 @@ async fn rocket() -> _ {
     //println!("{}", exercises::exercise_to_string_summary(&bench_set));
     let stringed_bench = bench_set.to_string_readable();
     println!("{}", stringed_bench);
+    println!("{}", &bench_set.to_string());
+    */
 
     // connect to DB
     let conn =
@@ -52,18 +58,23 @@ async fn rocket() -> _ {
             .unwrap();
 
     //28fcad1c-0f5b-49d1-8d5c-2286f15ff99a
-    let uuid = uuid::Uuid::new_v4();
+    //let uuid = uuid::Uuid::new_v4();
 
-    println!("{}", &bench_set.to_string());
+    let rocket = launch_web();
+    rocket.await
+}
 
-    // launch web server
-    let shield = rocket::shield::Shield::default()
+
+async fn launch_web() -> Rocket<Build> {
+        // launch web server
+        let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
         .enable(rocket::shield::XssFilter::EnableBlock);
-    rocket::build()
+    let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        .mount("/", routes![hello])
+        .mount("/", routes![hello]);
+    rocket
 }
 
 #[cfg(test)]
