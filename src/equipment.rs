@@ -90,16 +90,16 @@ mod tests {
 
     #[test]
     fn test_weight_from_string_lbs() {
-        let weight = Weight::from_string("100lbs");
-        assert_eq!(weight.unwrap().weight, 100.0);
-        assert_eq!(weight.unwrap().weight_unit, POUNDS);
+        let weight = Weight::from_string("100lbs").unwrap();
+        assert_eq!(weight.weight, 100.0);
+        assert_eq!(weight.weight_unit, POUNDS);
     }
 
     #[test]
     fn test_weight_from_string_kgs() {
-        let weight = Weight::from_string("100kgs");
-        assert_eq!(weight.unwrap().weight, 100.0);
-        assert_eq!(weight.unwrap().weight_unit, KILOGRAMS);
+        let weight = Weight::from_string("100kgs").unwrap();
+        assert_eq!(weight.weight, 100.0);
+        assert_eq!(weight.weight_unit, KILOGRAMS);
     }
 
 

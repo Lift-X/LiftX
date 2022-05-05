@@ -54,7 +54,7 @@ impl ExerciseEntry {
                     let gen_set = SetEntry {
                         exercise: excercise,
                         reps: proc_set[0].parse::<u32>().unwrap(),
-                        weight: Weight::from_string(proc_set[1]),
+                        weight: Weight::from_string(proc_set[1]).expect("Invalid weight"),
                         reps_in_reserve: proc_set[2].parse::<f32>().unwrap(),
                     };
                     gen_vec.push(gen_set);
