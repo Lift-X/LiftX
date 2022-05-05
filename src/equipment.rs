@@ -1,6 +1,5 @@
 use ordered_float::OrderedFloat;
 
-
 /// Either Kilograms or Pounds.
 /// Contains a long and short name for the weight unit
 #[derive(PartialEq, Debug, Clone, Copy, Eq)]
@@ -108,14 +107,16 @@ mod tests {
         assert_eq!(weight.is_err(), true);
     }
 
-
     #[test]
     fn test_weight_to_kilograms() {
         let weight = Weight {
             weight: 45.0,
             weight_unit: POUNDS,
         };
-        assert_eq!(OrderedFloat(weight.to_kilograms().unwrap()),  OrderedFloat(20.411655));
+        assert_eq!(
+            OrderedFloat(weight.to_kilograms().unwrap()),
+            OrderedFloat(20.411655)
+        );
     }
 
     #[test]
@@ -124,7 +125,25 @@ mod tests {
             weight: 25.0,
             weight_unit: KILOGRAMS,
         };
-        assert_eq!(OrderedFloat(weight.to_pounds().unwrap()), OrderedFloat(55.115574));
+        assert_eq!(
+            OrderedFloat(weight.to_pounds().unwrap()),
+            OrderedFloat(55.115574)
+        );
+    }
+
+    #[test]
+    fn test_parse_equipment() {
+        for equipment in EQUIPMENT_LIST {
+            assert_eq!(equipment.name.is_ascii(), true);
+            match equipment.rep_multiplier {
+                0 => assert_eq!(equipment.rep_multiplier, 0),
+                1 => assert_eq!(equipment.rep_multiplier, 1),
+                2 => assert_eq!(equipment.rep_multiplier, 2),
+                3 => assert_eq!(equipment.rep_multiplier, 3),
+                4 => assert_eq!(equipment.rep_multiplier, 4),
+                _ => panic!("Invalid rep_multiplier!"),
+            }
+        }
     }
 }
 
@@ -167,3 +186,6 @@ pub const CABLE_SEPARATE: EquipmentType = EquipmentType {
     name: "Cables (separate)",
     rep_multiplier: 2,
 };
+
+pub const EQUIPMENT_LIST: [EquipmentType; 6] =
+    [NONE, BARBELL, DUMBBELL, DUMBBELLS, CABLE, CABLE_SEPARATE];

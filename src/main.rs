@@ -56,8 +56,6 @@ async fn rocket() -> _ {
 
     println!("{}", &bench_set.to_string());
 
-
-
     // launch web server
     let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
@@ -66,4 +64,22 @@ async fn rocket() -> _ {
         .attach(shield)
         .attach(database::Db::init())
         .mount("/", routes![hello])
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_rocket_and_handlers() {
+        let shield = rocket::shield::Shield::default()
+            .enable(rocket::shield::Referrer::NoReferrer)
+            .enable(rocket::shield::XssFilter::EnableBlock);
+        let rocket = rocket::build()
+            .attach(shield)
+            .attach(database::Db::init())
+            .mount("/", routes![hello])
+            .ignite();
+        assert_eq!(rocket.await.is_ok(), true)
+    }
 }

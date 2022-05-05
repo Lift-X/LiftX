@@ -7,14 +7,14 @@ edition = "2021"
 
 [dependencies]
 rocket = { git = "https://github.com/SergioBenitez/Rocket"}
-#skytable = { version = "0.7.0", features = ["aio", "const-gen"], default-features = false }
-#serde_json = "1.0.68"
 serde_json = { version = "1.0.68" }
 serde = { version = "1.0.137", features = ["derive"] }
 sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
 rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
 lazy_static = "1.4.0"
 ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
+tokio = "1.18.1"
+tokio-test = "0.4.2"
 
 [dependencies.uuid]
 version = "1.0.0"

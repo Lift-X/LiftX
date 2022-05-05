@@ -25,7 +25,7 @@ pub struct SetEntry {
 pub struct ExerciseEntry {
     pub exercise: Exercise,
     pub comments: String,
-    pub sets: Vec<SetEntry<>>,
+    pub sets: Vec<SetEntry>,
 }
 
 // Absolutely scuffed, feel free to PR :D
@@ -154,7 +154,7 @@ mod tests {
 #[derive(Debug, Clone)]
 pub struct WorkoutEntry {
     pub date: String,
-    pub exercises: Vec<ExerciseEntry<>>,
+    pub exercises: Vec<ExerciseEntry>,
     pub comments: String,
     pub user: String,
 }
