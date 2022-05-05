@@ -1,12 +1,13 @@
 use ordered_float::OrderedFloat;
 
-use crate::{*, equipment::{POUNDS, KILOGRAMS, EQUIPMENT_LIST}, database::{User, WorkoutID}};
+use crate::{*, equipment::{POUNDS, KILOGRAMS, EQUIPMENT_LIST}, database::{User, WorkoutID}, exercises::{ExerciseEntry, SetEntry}};
 
-#[tokio::test]
+/*#[tokio::test]
 async fn test_rocket_and_handlers() {
     let rocket = launch_web().await;
     assert_eq!(rocket.is_ok(), true);
 }
+*/
 
 #[test]
 fn test_weight_from_string_lbs() {
@@ -98,7 +99,7 @@ fn test_string_parseable_exercise_to_summary() {
 fn test_exercise_to_string() {
     let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
     let bench_press = SetEntry {
-        exercise: EXERCISE_BENCH_PRESS,
+        exercise: exercises::EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: Weight {
             weight: 135.0,
@@ -107,7 +108,7 @@ fn test_exercise_to_string() {
         reps_in_reserve: 1.5,
     };
     let mut bench_set = ExerciseEntry {
-        exercise: EXERCISE_BENCH_PRESS,
+        exercise: exercises::EXERCISE_BENCH_PRESS,
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };

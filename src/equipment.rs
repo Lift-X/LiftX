@@ -51,13 +51,13 @@ impl Weight {
             "kgs" => Ok(Weight {
                 weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
-                    .unwrap(),
+                    .expect("Could not parse weight!"),
                 weight_unit: KILOGRAMS,
             }),
             "lbs" => Ok(Weight {
                 weight: string.split_terminator("lbs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
-                    .unwrap(),
+                    .expect("Could not parse weight!"),
                 weight_unit: POUNDS,
             }),
             _ => Err("Invalid weight unit!".to_string()),
