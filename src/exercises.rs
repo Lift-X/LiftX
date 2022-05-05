@@ -1,14 +1,15 @@
 use serde::{Serialize, Deserialize};
+use lazy_static::lazy_static;
 use crate::muscles::*;
 use crate::{equipment::{self, EquipmentType, Weight, WeightType}, muscles::MuscleSubGroup};
 
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 pub struct Exercise {
     pub name: &'static str,
-    pub muscle_sub_groups: [MuscleSubGroup], // https://stackoverflow.com/questions/42764016/creating-a-static-const-vecstring
+    pub muscle_sub_groups: [MuscleSubGroup; 2], // Has to be statically sized in order to implement Copy trait (will have to do for now)
     pub recommended_rep_range: [u32; 2],
-    pub equipment: &'static EquipmentType,
+    pub equipment: EquipmentType,
 }
 
 /// "Set" as in a set of reps, not the verb "set"
@@ -36,9 +37,9 @@ impl ExerciseEntry {
         let mut gen_set_entry: ExerciseEntry = ExerciseEntry {
             exercise: Exercise {
                 name: "",
-                muscle_sub_groups: &[],
+                muscle_sub_groups: [crate::muscles::NONE, crate::muscles::NONE],
                 recommended_rep_range: [0, 0],
-                equipment: &equipment::NONE,
+                equipment: equipment::NONE,
             },
             comments: "".to_string(),
             sets: vec![],
@@ -46,13 +47,13 @@ impl ExerciseEntry {
 
         // iterate over excercises, see if "split[0]" is in the name of an exercise
         // could be very taxing as list of exercises grows.. maybe use a hashmap?
-        for excercise in EXCERCISES_LIST {
+        for excercise in EXCERCISES_LIST.iter() {
             let mut gen_vec = Vec::new();
             if excercise.name == split[0] {
                 for set in split[1..].iter() {
                     let proc_set = set.split_terminator(',').collect::<Vec<_>>();
                     let gen_set = SetEntry {
-                        exercise: excercise,
+                        exercise: *excercise,
                         reps: proc_set[0].parse::<u32>().unwrap(),
                         weight: Weight::from_string(proc_set[1]).expect("Invalid weight"),
                         reps_in_reserve: proc_set[2].parse::<f32>().unwrap(),
@@ -60,7 +61,7 @@ impl ExerciseEntry {
                     gen_vec.push(gen_set);
                 }
                 gen_set_entry = ExerciseEntry {
-                    exercise: excercise,
+                    exercise: *excercise,
                     comments: split[1].to_string(),
                     sets: gen_vec,
                 };
@@ -105,18 +106,34 @@ pub struct WorkoutEntry {
     pub user: String,
 }
 
-pub const EXCERCISES_LIST: [Exercise; 2] = [EXERCISE_BENCH_PRESS, EXERCISE_DUMBBELL_BENCH_PRESS];
+lazy_static! {
+    #[derive(Clone, Copy, Serialize, Deserialize)]
+    pub static ref EXCERCISES_LIST: [Exercise; 2] = [EXERCISE_BENCH_PRESS.to_owned(), EXERCISE_DUMBBELL_BENCH_PRESS.to_owned()];
+}
 
-pub const EXERCISE_BENCH_PRESS: Exercise = Exercise {
-    name: "Bench Press",
-    muscle_sub_groups: &[PectoralisMajor, PectoralisMinor],
-    recommended_rep_range: [8, 12],
-    equipment: &equipment::BARBELL,
-};
+lazy_static!(
+    pub static ref EXERCISE_BLANK: Exercise = Exercise {
+        name: "",
+        muscle_sub_groups: [crate::muscles::NONE, crate::muscles::NONE],
+        recommended_rep_range: [0, 0],
+        equipment: equipment::NONE,
+    };
+);
 
-pub const EXERCISE_DUMBBELL_BENCH_PRESS: Exercise = Exercise {
-    name: "Dumbbell Bench Press",
-    muscle_sub_groups: &[PectoralisMajor, PectoralisMinor],
-    recommended_rep_range: [8, 12],
-    equipment: &equipment::DUMBBELLS,
-};
+lazy_static! {
+    pub static ref EXERCISE_BENCH_PRESS: Exercise = Exercise {
+        name: "Bench Press",
+        muscle_sub_groups: [PECTORALIS_MAJOR, PECTORALIS_MINOR].into(),
+        recommended_rep_range: [8, 12],
+        equipment: equipment::DUMBBELLS,
+    };
+}
+
+lazy_static! {
+    pub static ref EXERCISE_DUMBBELL_BENCH_PRESS: Exercise = Exercise {
+        name: "Dumbbell Bench Press",
+        muscle_sub_groups: [PECTORALIS_MAJOR, PECTORALIS_MINOR].into(),
+        recommended_rep_range: [8, 12],
+        equipment: equipment::DUMBBELLS,
+    };
+}
