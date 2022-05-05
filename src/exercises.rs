@@ -1,10 +1,12 @@
-use crate::equipment::{self, EquipmentType, Weight, WeightType};
+use serde::{Serialize, Deserialize};
+use crate::muscles::*;
+use crate::{equipment::{self, EquipmentType, Weight, WeightType}, muscles::MuscleSubGroup};
 
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Exercise {
     pub name: &'static str,
-    pub muscle_sub_groups: &'static [&'static str], // https://stackoverflow.com/questions/42764016/creating-a-static-const-vecstring
+    pub muscle_sub_groups: [MuscleSubGroup], // https://stackoverflow.com/questions/42764016/creating-a-static-const-vecstring
     pub recommended_rep_range: [u32; 2],
     pub equipment: &'static EquipmentType,
 }
@@ -93,6 +95,7 @@ impl ExerciseEntry {
     }
 }
 
+
 /// WorkoutEntry is a collection of exercise entries
 #[derive(Debug, Clone)]
 pub struct WorkoutEntry {
@@ -106,14 +109,14 @@ pub const EXCERCISES_LIST: [Exercise; 2] = [EXERCISE_BENCH_PRESS, EXERCISE_DUMBB
 
 pub const EXERCISE_BENCH_PRESS: Exercise = Exercise {
     name: "Bench Press",
-    muscle_sub_groups: &["Pectoralis Major", "Pectoralis Minor"],
+    muscle_sub_groups: &[PectoralisMajor, PectoralisMinor],
     recommended_rep_range: [8, 12],
     equipment: &equipment::BARBELL,
 };
 
 pub const EXERCISE_DUMBBELL_BENCH_PRESS: Exercise = Exercise {
     name: "Dumbbell Bench Press",
-    muscle_sub_groups: &["Pectoralis Major", "Pectoralis Minor"],
+    muscle_sub_groups: &[PectoralisMajor, PectoralisMinor],
     recommended_rep_range: [8, 12],
     equipment: &equipment::DUMBBELLS,
 };

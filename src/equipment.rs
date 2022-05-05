@@ -98,7 +98,7 @@ impl WeightType {
 
 /// EquipmentType allows for accurate total rep count when accounting for various types of equipment
 /// (i.e. dumbbells, kettlebells, barbells, etc.)
-#[derive(Debug, PartialEq, Clone)]
+#[derive(Debug, PartialEq, Clone, Copy, Serialize, Deserialize)]
 pub struct EquipmentType {
     pub name: &'static str,
     pub rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables

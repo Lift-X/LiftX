@@ -82,7 +82,7 @@ fn test_exercise_string_to_exercise() {
     assert_eq!(e.exercise.name, "Bench Press");
     assert_eq!(
         e.exercise.muscle_sub_groups,
-        &["Pectoralis Major", "Pectoralis Minor"]
+        [muscles::PectoralisMajor, muscles::PectoralisMinor]
     );
     assert_eq!(e.exercise.recommended_rep_range[0], 8);
     assert_eq!(e.exercise.recommended_rep_range[1], 12);
@@ -165,7 +165,7 @@ fn test_exercises() {
     for exercise in exercises::EXCERCISES_LIST {
         assert_eq!(exercise.name.is_ascii(), true);
         for muscles in exercise.muscle_sub_groups {
-            assert_eq!(muscles.is_ascii(), true);
+            assert_eq!(muscles.name.is_ascii(), true);
         }
         assert_eq!(exercise.recommended_rep_range[0] < exercise.recommended_rep_range[1], true);
     }
