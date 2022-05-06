@@ -68,7 +68,7 @@ impl ExerciseEntry<'_> {
         for excercise in EXCERCISES_LIST.iter() {
             let mut gen_vec = Vec::new();
             if excercise.name == split[0] {
-                for set in split[0..].iter() {
+                for set in split[1..].iter() {
                     let proc_set = set.split_terminator(',').collect::<Vec<_>>();
                     let gen_set = SetEntry {
                         exercise: *excercise,
