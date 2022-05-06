@@ -1,11 +1,8 @@
-use crate::exercises::{ExerciseEntry};
-#[allow(unused_imports)]
-use crate::{equipment::Weight, exercises::WorkoutEntry};
+use crate::exercises::WorkoutEntry;
 use serde::{Deserialize, Serialize};
 
 use rocket_db_pools::{sqlx, Database};
-#[allow(unused_imports)]
-use sqlx::{Connection, SqliteConnection, SqlitePool};
+use sqlx::SqliteConnection;
 
 #[derive(Database)]
 #[database("sqlite_db")]
@@ -37,12 +34,24 @@ pub async fn build_tables(mut conn: SqliteConnection) {
         .unwrap();
 }
 
-pub async fn insert_workout(exercise: ExerciseEntry<'_>, mut conn: SqliteConnection) {
+/*pub async fn insert_workout(exercise: ExerciseEntry<'_>, mut conn: SqliteConnection) {
     let id = uuid::Uuid::new_v4().to_string();
     println!("Creating ExerciseEntry with id: {}...", id);
     let query = format!(
         "INSERT INTO workout (id, date, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
-        id, chrono::Utc::today().format("%Y-%m-%d"), exercise.to_json()
+        id, std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(), exercise.to_json()
+    );
+    sqlx::query(&query).execute(&mut conn).await.unwrap();
+}*/
+
+pub async fn insert_workout(exercise: WorkoutEntry<'_>, mut conn: SqliteConnection) {
+    let id = uuid::Uuid::new_v4().to_string();
+    println!("Creating ExerciseEntry with id: {}...", id);
+    let query = format!(
+        "INSERT INTO workout (id, date, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
+        id,
+        std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
+        exercise.to_json()
     );
     sqlx::query(&query).execute(&mut conn).await.unwrap();
 }

@@ -1,7 +1,10 @@
 [default.databases.sqlite_db]
 url = "sqlite://data.db"
 
-min_connections = 64
+min_connections = 8
 max_connections = 1024
 connect_timeout = 5
 idle_timeout = 120
+
+[default]
+template_dir = "templates"

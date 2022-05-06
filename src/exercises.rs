@@ -40,7 +40,8 @@ pub struct ExerciseEntry<'a> {
 /// WorkoutEntry is a collection of exercise entries
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct WorkoutEntry<'a> {
-    pub date: String,
+    pub start_time: u64,
+    pub end_time: u64,
     #[serde(borrow)]
     pub exercises: Vec<ExerciseEntry<'a>>,
     pub comments: String,
@@ -106,13 +107,41 @@ impl ExerciseEntry<'_> {
         return stringified_exercise.trim().to_string();
     }
 
+    pub fn to_string_summary(&self) -> String {
+        let mut stringified_exercise = self.exercise.name.to_string();
+        for set in self.sets.iter() {
+            let _a = format!(
+                "- {}x{}{},{}RiR",
+                set.reps,
+                set.weight.weight,
+                WeightType::from_string(&set.weight.weight_unit)
+                    .expect("Invalid Weight Type!")
+                    .short_name,
+                set.reps_in_reserve
+            );
+            stringified_exercise.push_str(&_a);
+        }
+        return stringified_exercise.trim().to_string();
+    }
+
     pub fn to_json(&self) -> serde_json::Value {
-        json!{self}
+        json! {self}
     }
 
     pub fn from_json(string: &str) -> ExerciseEntry {
         let exercise: ExerciseEntry = serde_json::from_str(string).unwrap();
         exercise
+    }
+}
+
+impl WorkoutEntry<'_> {
+    pub fn to_json(&self) -> serde_json::Value {
+        json! {self}
+    }
+
+    pub fn from_json(string: &str) -> WorkoutEntry {
+        let workout: WorkoutEntry = serde_json::from_str(string).unwrap();
+        workout
     }
 }
 

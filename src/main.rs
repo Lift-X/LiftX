@@ -10,8 +10,9 @@ pub mod muscles;
 mod tests;
 
 use equipment::WeightType;
-use exercises::{ExerciseEntry, SetEntry, EXERCISE_BENCH_PRESS};
+use exercises::{ExerciseEntry, SetEntry, WorkoutEntry, EXERCISE_BENCH_PRESS};
 use rocket_db_pools::Database;
+use rocket_dyn_templates::Template;
 use sqlx::{ConnectOptions, SqliteConnection};
 
 #[allow(unused_imports)]
@@ -45,11 +46,12 @@ async fn launch_web() -> Result<(), rocket::Error> {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        .mount("/", routes![crate::handlers::hello]);
+        //.attach(Template::fairing())
+        .mount("/", routes![crate::handlers::workout_json]);
     rocket.launch().await
 }
 
-/// Stuff not needed for prod, but useful for testing
+// Stuff not needed for prod, but useful for testing
 async fn dev(mut conn: SqliteConnection) {
     let bench_press = SetEntry {
         exercise: *EXERCISE_BENCH_PRESS,
@@ -68,5 +70,13 @@ async fn dev(mut conn: SqliteConnection) {
     for i in 0..2 {
         bench_set.sets.push(bench_press.clone());
     }
-    //database::insert_workout(bench_set, conn).await;
+    let bench_workout = WorkoutEntry {
+        start_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
+        end_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() + 3600,
+        exercises: vec![bench_set.clone()],
+        comments: "".to_string(),
+        user: "John Doe".to_string(),
+    };
+    //database::insert_workout(bench_workout, conn).await;
+    //http://localhost:8000/workout/3293d876-d823-457e-9cec-b1df68de37cf/json
 }
