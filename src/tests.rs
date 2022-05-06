@@ -1,6 +1,10 @@
 use ordered_float::OrderedFloat;
 
-use crate::{*, equipment::{POUNDS, KILOGRAMS, EQUIPMENT_LIST}, exercises::{ExerciseEntry, SetEntry}};
+use crate::{
+    equipment::{EQUIPMENT_LIST, KILOGRAMS, POUNDS},
+    exercises::{ExerciseEntry, SetEntry},
+    *,
+};
 
 /*#[tokio::test]
 async fn test_rocket_and_handlers() {
@@ -13,14 +17,20 @@ async fn test_rocket_and_handlers() {
 fn test_weight_from_string_lbs() {
     let weight = Weight::from_string("100lbs").unwrap();
     assert_eq!(weight.weight, 100.0);
-    assert_eq!(WeightType::from_string(&weight.weight_unit).unwrap(), POUNDS);
+    assert_eq!(
+        WeightType::from_string(&weight.weight_unit).unwrap(),
+        POUNDS
+    );
 }
 
 #[test]
 fn test_weight_from_string_kgs() {
     let weight = Weight::from_string("100kgs").unwrap();
     assert_eq!(weight.weight, 100.0);
-    assert_eq!(WeightType::from_string(&weight.weight_unit).unwrap(), KILOGRAMS);
+    assert_eq!(
+        WeightType::from_string(&weight.weight_unit).unwrap(),
+        KILOGRAMS
+    );
 }
 
 #[test]
@@ -89,7 +99,10 @@ fn test_exercise_string_to_exercise() {
     assert_eq!(e.sets[0].reps, 8);
     assert_eq!(e.sets.len(), 3);
     assert_eq!(e.sets[0].weight.weight, 135.0);
-    assert_eq!(WeightType::from_string(&e.sets[0].weight.weight_unit).unwrap(), equipment::POUNDS);
+    assert_eq!(
+        WeightType::from_string(&e.sets[0].weight.weight_unit).unwrap(),
+        equipment::POUNDS
+    );
     assert_eq!(e.sets[0].reps_in_reserve, 1.5);
 }
 
@@ -99,7 +112,10 @@ fn test_string_parseable_exercise_to_summary() {
     let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5;";
     let e = ExerciseEntry::from_string(t);
     assert_eq!(e.sets.len(), 3);
-    assert_eq!(e.to_string_readable(), "Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)");
+    assert_eq!(
+        e.to_string_readable(),
+        "Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)"
+    );
 }
 
 #[test]
@@ -167,7 +183,10 @@ fn test_exercises() {
         for muscles in exercise.muscle_sub_groups.into_iter() {
             assert_eq!(muscles.name.is_ascii(), true);
         }
-        assert_eq!(exercise.recommended_rep_range[0] <= exercise.recommended_rep_range[1], true);
+        assert_eq!(
+            exercise.recommended_rep_range[0] <= exercise.recommended_rep_range[1],
+            true
+        );
     }
 }
 

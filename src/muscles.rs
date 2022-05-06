@@ -1,12 +1,12 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 #[allow(dead_code)]
-type MuscleGroup = Vec<&'static str>;
+type MuscleGroup<'a> = Vec<&'a str>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-pub struct MuscleSubGroup {
+pub struct MuscleSubGroup<'a> {
     #[serde(borrow)]
-    pub name: &'static str,
+    pub name: &'a str,
 }
 
 pub const NONE: MuscleSubGroup = MuscleSubGroup { name: "None" };
@@ -16,41 +16,19 @@ pub const PECTORALIS_MAJOR: MuscleSubGroup = MuscleSubGroup {
 pub const PECTORALIS_MINOR: MuscleSubGroup = MuscleSubGroup {
     name: "Pectoralis Minor",
 };
-pub const DELTOID: MuscleSubGroup = MuscleSubGroup {
-    name: "Deltoid",
-};
+pub const DELTOID: MuscleSubGroup = MuscleSubGroup { name: "Deltoid" };
 pub const LATISSIMUS_DORSI: MuscleSubGroup = MuscleSubGroup {
     name: "Latissimus Dorsi",
 };
-pub const TRAPEZIUS: MuscleSubGroup = MuscleSubGroup {
-    name: "Trapezius",
-};
-pub const BICEPS: MuscleSubGroup = MuscleSubGroup {
-    name: "Biceps",
-};
-pub const TRICEPS: MuscleSubGroup = MuscleSubGroup {
-    name: "Triceps",
-};
-pub const FOREARMS: MuscleSubGroup = MuscleSubGroup {
-    name: "Forearms",
-};
-pub const QUADRICEPS: MuscleSubGroup = MuscleSubGroup {
-    name: "Quadriceps",
-};
-pub const CALVES: MuscleSubGroup = MuscleSubGroup {
-    name: "Calves",
-};
-pub const HAMSTRINGS: MuscleSubGroup = MuscleSubGroup {
-    name: "Hamstrings",
-};
-pub const GLUTES: MuscleSubGroup = MuscleSubGroup {
-    name: "Glutes",
-};
-pub const OBLIQUES: MuscleSubGroup = MuscleSubGroup {
-    name: "Obliques",
-};
-
-
+pub const TRAPEZIUS: MuscleSubGroup = MuscleSubGroup { name: "Trapezius" };
+pub const BICEPS: MuscleSubGroup = MuscleSubGroup { name: "Biceps" };
+pub const TRICEPS: MuscleSubGroup = MuscleSubGroup { name: "Triceps" };
+pub const FOREARMS: MuscleSubGroup = MuscleSubGroup { name: "Forearms" };
+pub const QUADRICEPS: MuscleSubGroup = MuscleSubGroup { name: "Quadriceps" };
+pub const CALVES: MuscleSubGroup = MuscleSubGroup { name: "Calves" };
+pub const HAMSTRINGS: MuscleSubGroup = MuscleSubGroup { name: "Hamstrings" };
+pub const GLUTES: MuscleSubGroup = MuscleSubGroup { name: "Glutes" };
+pub const OBLIQUES: MuscleSubGroup = MuscleSubGroup { name: "Obliques" };
 
 // just an example for now. Complete this later
 #[allow(dead_code)]

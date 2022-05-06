@@ -5,9 +5,11 @@ use serde::{Deserialize, Serialize};
 /// Strings below can't be indirectly deserialized for some reason. I've tried a bunch of stuff :/
 /// For now in indirect use cases the type will be a string and converted back to a WeightUnit
 #[derive(PartialEq, Debug, Clone, Copy, Eq, Deserialize, Serialize)]
-pub struct WeightType {
-    pub long_name: &'static str,
-    pub short_name: &'static str,
+pub struct WeightType<'a> {
+    #[serde(borrow)]
+    pub long_name: &'a str,
+    #[serde(borrow)]
+    pub short_name: &'a str,
 }
 
 pub const KILOGRAMS: WeightType = WeightType {
@@ -90,7 +92,7 @@ impl Weight {
     }
 }
 
-impl WeightType {
+impl WeightType<'_> {
     pub fn from_string(string: &str) -> Result<WeightType, String> {
         match string.as_ref() {
             "kgs" => Ok(KILOGRAMS),
@@ -103,9 +105,9 @@ impl WeightType {
 /// EquipmentType allows for accurate total rep count when accounting for various types of equipment
 /// (i.e. dumbbells, kettlebells, barbells, etc.)
 #[derive(Debug, PartialEq, Clone, Copy, Serialize, Deserialize)]
-pub struct EquipmentType {
+pub struct EquipmentType<'a> {
     #[serde(borrow)]
-    pub name: &'static str,
+    pub name: &'a str,
     pub rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables
 }
 pub const NONE: EquipmentType = EquipmentType {

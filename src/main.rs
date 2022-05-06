@@ -6,7 +6,8 @@ pub mod equipment;
 mod exercises;
 pub mod handlers;
 pub mod muscles;
-#[cfg(test)] mod tests;
+#[cfg(test)]
+mod tests;
 
 use equipment::WeightType;
 use rocket_db_pools::Database;
@@ -32,10 +33,9 @@ async fn main() {
     let rocket = launch_web().await;
 }
 
-
 async fn launch_web() -> Result<(), rocket::Error> {
-        // launch web server
-        let shield = rocket::shield::Shield::default()
+    // launch web server
+    let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
         .enable(rocket::shield::XssFilter::EnableBlock);
     let rocket = rocket::build()
