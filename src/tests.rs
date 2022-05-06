@@ -106,18 +106,6 @@ fn test_exercise_string_to_exercise() {
     assert_eq!(e.sets[0].reps_in_reserve, 1.5);
 }
 
-// Test conversion from a parseable string to a readable string
-#[test]
-fn test_string_parseable_exercise_to_summary() {
-    let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5;";
-    let e = ExerciseEntry::from_string(t);
-    assert_eq!(e.sets.len(), 3);
-    assert_eq!(
-        e.to_string_readable(),
-        "Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)"
-    );
-}
-
 #[test]
 fn test_exercise_to_string() {
     let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";

@@ -1,3 +1,4 @@
+use crate::exercises::{ExerciseEntry, Exercise};
 #[allow(unused_imports)]
 use crate::{equipment::Weight, exercises::WorkoutEntry};
 use serde::{Deserialize, Serialize};
@@ -33,16 +34,26 @@ pub async fn create_connection() -> sqlx::SqlitePool {
     pool
 }
 
-/*pub fn build_tables() {
-    sqlx::query!("CREATE TABLE workout (id TINYTEXT PRIMARY KEY, date char(10), user TINYTEXT, data MEDIUMTEXT, comments TEXT)")
+pub async fn build_tables(mut conn: SqliteConnection) {
+    sqlx::query!("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, date char(10), user TINYTEXT, data MEDIUMTEXT)")
         .execute(&mut conn)
         .await
         .unwrap();
 }
 
-pub fn example_exercise_entry() {
+
+/*pub fn example_exercise_entry() {
     sqlx::query!(
-        "INSERT INTO workout (id, date, user, data, comments) VALUES ('28fcad1c-0f5b-49d1-8d5c-2286f15ff99a', '2020-01-01', 'John Doe', 'Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)', 'comment')",
+        "INSERT INTO workout (id, date, user, data, comments) VALUES ('28fcad1c-0f5b-49d1-8d5c-2286f15ff99a', '2020-01-01', 'John Doe', 'Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)')",
     ).execute(&mut conn).await.unwrap();
 }
 */
+pub async fn insert_workout(exercise: ExerciseEntry<'_>, mut conn: SqliteConnection) {
+    let id = uuid::Uuid::new_v4().to_string();
+    println!("Creating ExerciseEntry with id: {}...", id);
+    let query = format!(
+        "INSERT INTO workout (id, date, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
+        id, chrono::Utc::today().format("%Y-%m-%d"), exercise.to_json()
+    );
+    sqlx::query(&query).execute(&mut conn).await.unwrap();
+}

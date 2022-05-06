@@ -5,6 +5,7 @@ use crate::{
 };
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
@@ -67,7 +68,7 @@ impl ExerciseEntry<'_> {
         for excercise in EXCERCISES_LIST.iter() {
             let mut gen_vec = Vec::new();
             if excercise.name == split[0] {
-                for set in split[1..].iter() {
+                for set in split[0..].iter() {
                     let proc_set = set.split_terminator(',').collect::<Vec<_>>();
                     let gen_set = SetEntry {
                         exercise: *excercise,
@@ -105,21 +106,13 @@ impl ExerciseEntry<'_> {
         return stringified_exercise.trim().to_string();
     }
 
-    pub fn to_string_readable(&self) -> String {
-        let mut stringified_exercise = self.exercise.name.to_string();
-        for set in self.sets.iter() {
-            let _a = format!(
-                " - {} Reps ({}{}, {}RiR)",
-                set.reps,
-                set.weight.weight,
-                WeightType::from_string(&set.weight.weight_unit)
-                    .expect("Invalid Weight Type!")
-                    .short_name,
-                set.reps_in_reserve
-            );
-            stringified_exercise.push_str(&_a);
-        }
-        return stringified_exercise.trim().to_string();
+    pub fn to_json(&self) -> serde_json::Value {
+        json!{self}
+    }
+
+    pub fn from_json(string: &str) -> ExerciseEntry {
+        let exercise: ExerciseEntry = serde_json::from_str(string).unwrap();
+        exercise
     }
 }
 
@@ -142,7 +135,7 @@ lazy_static! {
         name: "Bench Press",
         muscle_sub_groups: [PECTORALIS_MAJOR, PECTORALIS_MINOR].into(),
         recommended_rep_range: [8, 12],
-        equipment: equipment::DUMBBELLS,
+        equipment: equipment::BARBELL,
     };
 }
 
