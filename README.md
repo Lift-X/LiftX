@@ -10,4 +10,4 @@ Never taken a class on "advanced data structures" so feel free to scold me on ho
 - [x] Json for data stuff
 - [ ] HTML + CSS Templating
 - [ ] Switch from sqlite DB once stuff is working great. (Using sqlite because my dev environment changes frequently)
-- [X] Minimize dependencies
+- [ ] Minimize dependencies
