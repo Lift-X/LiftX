@@ -1,4 +1,4 @@
-use crate::exercises::{ExerciseEntry, Exercise};
+use crate::exercises::{ExerciseEntry};
 #[allow(unused_imports)]
 use crate::{equipment::Weight, exercises::WorkoutEntry};
 use serde::{Deserialize, Serialize};
@@ -25,10 +25,6 @@ pub struct User {
     pub password: String,
 }
 
-/*pub fn get_workout(id: WorkoutID) -> WorkoutEntry {
-    // Get from database
-}*/
-
 pub async fn create_connection() -> sqlx::SqlitePool {
     let pool = sqlx::SqlitePool::connect("sqlite_db").await.unwrap();
     pool
@@ -41,13 +37,6 @@ pub async fn build_tables(mut conn: SqliteConnection) {
         .unwrap();
 }
 
-
-/*pub fn example_exercise_entry() {
-    sqlx::query!(
-        "INSERT INTO workout (id, date, user, data, comments) VALUES ('28fcad1c-0f5b-49d1-8d5c-2286f15ff99a', '2020-01-01', 'John Doe', 'Bench Press - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR) - 8 Reps (135lbs, 1.5RiR)')",
-    ).execute(&mut conn).await.unwrap();
-}
-*/
 pub async fn insert_workout(exercise: ExerciseEntry<'_>, mut conn: SqliteConnection) {
     let id = uuid::Uuid::new_v4().to_string();
     println!("Creating ExerciseEntry with id: {}...", id);

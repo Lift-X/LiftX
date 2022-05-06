@@ -16,14 +16,9 @@ ordered-float = { version = "3.0", default-features = false, features = ["serde"
 tokio = "1.18.1"
 tokio-test = "0.4.2"
 chrono = "0.4"
-
-[dependencies.uuid]
-version = "1.0.0"
-features = [
-    "v4",                # Lets you generate random UUIDs
-    "fast-rng",          # Use a faster (but still sufficiently random) RNG
-    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
-]
+log = "0.4.0"
+env_logger = "0.9"
+uuid = { version = "1.0.0", features = ["v4", "fast-rng"] }
 
 [profile.release]
 panic = "abort"

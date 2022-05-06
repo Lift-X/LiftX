@@ -15,7 +15,7 @@ use rocket_db_pools::Database;
 use sqlx::{ConnectOptions, SqliteConnection};
 
 #[allow(unused_imports)]
-use crate::{database::create_connection, equipment::Weight, handlers::hello};
+use crate::{database::create_connection, equipment::Weight};
 
 // Global Preference for weight, implement configuration later
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
@@ -45,7 +45,7 @@ async fn launch_web() -> Result<(), rocket::Error> {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        .mount("/", routes![hello]);
+        .mount("/", routes![crate::handlers::hello]);
     rocket.launch().await
 }
 
@@ -68,5 +68,5 @@ async fn dev(mut conn: SqliteConnection) {
     for i in 0..2 {
         bench_set.sets.push(bench_press.clone());
     }
-    database::insert_workout(bench_set, conn).await;
+    //database::insert_workout(bench_set, conn).await;
 }
