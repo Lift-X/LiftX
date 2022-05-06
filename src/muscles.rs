@@ -5,6 +5,7 @@ type MuscleGroup = Vec<&'static str>;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub struct MuscleSubGroup {
+    #[serde(borrow)]
     pub name: &'static str,
 }
 

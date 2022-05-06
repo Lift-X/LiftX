@@ -6,6 +6,7 @@ use crate::{equipment::{self, EquipmentType, Weight, WeightType}, muscles::Muscl
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
 #[derive(Debug, Clone, Copy, Deserialize, Serialize)]
 pub struct Exercise {
+    #[serde(borrow)]
     pub name: &'static str,
     pub muscle_sub_groups: [MuscleSubGroup; 2], // Has to be statically sized in order to implement Copy trait (will have to do for now)
     pub recommended_rep_range: [u32; 2],
@@ -13,7 +14,7 @@ pub struct Exercise {
 }
 
 /// "Set" as in a set of reps, not the verb "set"
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct SetEntry {
     pub exercise: Exercise,
     pub reps: u32,
@@ -21,12 +22,21 @@ pub struct SetEntry {
     pub reps_in_reserve: f32, // how many more reps you feel you could've done
 }
 
-/// ExerciseEntry is a collection of sets
+/// ExerciseEntry is a collection of Set Entries
 #[derive(Debug, Clone)]
 pub struct ExerciseEntry {
     pub exercise: Exercise,
     pub comments: String,
     pub sets: Vec<SetEntry>,
+}
+
+/// WorkoutEntry is a collection of exercise entries
+#[derive(Debug, Clone)]
+pub struct WorkoutEntry {
+    pub date: String,
+    pub exercises: Vec<ExerciseEntry>,
+    pub comments: String,
+    pub user: String,
 }
 
 // Absolutely scuffed, feel free to PR :D
@@ -94,16 +104,6 @@ impl ExerciseEntry {
         }
         return stringified_exercise.trim().to_string();
     }
-}
-
-
-/// WorkoutEntry is a collection of exercise entries
-#[derive(Debug, Clone)]
-pub struct WorkoutEntry {
-    pub date: String,
-    pub exercises: Vec<ExerciseEntry>,
-    pub comments: String,
-    pub user: String,
 }
 
 lazy_static! {
