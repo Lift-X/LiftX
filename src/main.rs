@@ -47,12 +47,12 @@ async fn launch_web() -> Result<(), rocket::Error> {
         .attach(shield)
         .attach(database::Db::init())
         .attach(rocket_dyn_templates::Template::fairing())
-        .mount("/", routes![crate::handlers::workout_json]);
+        .mount("/", routes![crate::handlers::workout_json, crate::handlers::view]);
     rocket.launch().await
 }
 
 // Stuff not needed for prod, but useful for testing
-async fn dev(mut conn: SqliteConnection) {
+async fn dev(conn: SqliteConnection) {
     let bench_press = SetEntry {
         exercise: *EXERCISE_BENCH_PRESS,
         reps: 8,
