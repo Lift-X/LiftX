@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rocket = { git = "https://github.com/SergioBenitez/Rocket", features = ["json"] }
+rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-rc.1", features = ["json"] }
 rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
-rocket_dyn_templates = { version = "0.1.0-rc.1", features = ["handlebars"] }
+rocket_dyn_templates = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc.1", features = ["handlebars"] }
 serde = { version = "1.0.137", features = ["derive"] }
 serde_json = { version = "1.0.68" }
 sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }

@@ -1,3 +1,4 @@
+#![forbid(unsafe_code)]
 #[macro_use]
 extern crate rocket;
 
@@ -12,7 +13,6 @@ mod tests;
 use equipment::WeightType;
 use exercises::{ExerciseEntry, SetEntry, WorkoutEntry, EXERCISE_BENCH_PRESS};
 use rocket_db_pools::Database;
-use rocket_dyn_templates::Template;
 use sqlx::{ConnectOptions, SqliteConnection};
 
 #[allow(unused_imports)]
@@ -46,7 +46,7 @@ async fn launch_web() -> Result<(), rocket::Error> {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        //.attach(Template::fairing())
+        .attach(rocket_dyn_templates::Template::fairing())
         .mount("/", routes![crate::handlers::workout_json]);
     rocket.launch().await
 }
