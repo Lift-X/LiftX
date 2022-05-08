@@ -40,6 +40,7 @@ pub struct ExerciseEntry<'a> {
 /// WorkoutEntry is a collection of exercise entries
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct WorkoutEntry<'a> {
+    pub uuid: String,
     pub start_time: u64,
     pub end_time: u64,
     #[serde(borrow)]
@@ -111,7 +112,7 @@ impl ExerciseEntry<'_> {
         let mut stringified_exercise = self.exercise.name.to_string();
         for set in self.sets.iter() {
             let _a = format!(
-                "- {}x{}{},{}RiR",
+                " - {}x{}{},{}RiR",
                 set.reps,
                 set.weight.weight,
                 WeightType::from_string(&set.weight.weight_unit)

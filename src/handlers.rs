@@ -6,7 +6,7 @@ use rocket_dyn_templates::{context, Template};
 use crate::database::{Db, WorkoutID};
 use crate::exercises::WorkoutEntry;
 
-#[get("/workout/<id>/json")]
+/*#[get("/workout/<id>/json")]
 pub async fn workout_json(
     id: String,
     mut db: Connection<Db>,
@@ -30,25 +30,33 @@ pub async fn view(id: String, mut db: Connection<Db>) -> rocket_dyn_templates::T
     // Query the database via ID, return data column
     let data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id)
         .fetch_one(&mut *db)
-        .await.unwrap()
-        .data.unwrap();
+        .await
+        .unwrap()
+        .data
+        .unwrap();
 
     // inline most of this unless it's complex once working
     let entry = WorkoutEntry::from_json(&data);
     let workout_start = entry.start_time;
     let workout_end = entry.end_time;
-    let items = entry.exercises.iter().map(|e| e.to_string_summary()).collect::<Vec<String>>();
+    let items = entry
+        .exercises
+        .iter()
+        .map(|e| e.to_string_summary())
+        .collect::<Vec<String>>();
     let comments = entry.comments;
 
-    let t = Template::render("view", context! {
-        workout_start: workout_start,
-        workout_end: workout_end,
-        items: items,
-        comments: comments,
-    });
+    let t = Template::render(
+        "view",
+        context! {
+            workout_start: workout_start,
+            workout_end: workout_end,
+            items: items,
+            comments: comments,
+        },
+    );
     t
-}
-
+}*/
 
 #[get("/shutdown")]
 pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {

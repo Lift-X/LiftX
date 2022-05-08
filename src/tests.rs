@@ -130,6 +130,69 @@ fn test_exercise_to_string() {
 }
 
 #[test]
+fn test_exercise_to_string_summary() {
+    let bench_press = SetEntry {
+        exercise: *EXERCISE_BENCH_PRESS,
+        reps: 8,
+        weight: Weight {
+            weight: 135.0,
+            weight_unit: "lbs".to_string(),
+        },
+        reps_in_reserve: 1.5,
+    };
+    let mut bench_set = ExerciseEntry {
+        exercise: *EXERCISE_BENCH_PRESS,
+        comments: String::from(""),
+        sets: vec![bench_press.clone()],
+    };
+    for i in 0..2 {
+        bench_set.sets.push(bench_press.clone());
+    }
+    assert_eq!(
+        bench_set.to_string_summary(),
+        "Bench Press - 8x135lbs,1.5RiR - 8x135lbs,1.5RiR - 8x135lbs,1.5RiR"
+    );
+}
+
+#[test]
+fn test_workout() {
+    let time = std::time::UNIX_EPOCH.elapsed().unwrap().as_secs();
+    let time_1hr = time + 3600;
+    let uuid = uuid::Uuid::new_v4();
+    let bench_press = SetEntry {
+        exercise: *EXERCISE_BENCH_PRESS,
+        reps: 8,
+        weight: Weight {
+            weight: 135.0,
+            weight_unit: "lbs".to_string(),
+        },
+        reps_in_reserve: 1.5,
+    };
+    let mut bench_set = ExerciseEntry {
+        exercise: *EXERCISE_BENCH_PRESS,
+        comments: String::from(""),
+        sets: vec![bench_press.clone()],
+    };
+    for i in 0..2 {
+        bench_set.sets.push(bench_press.clone());
+    }
+    let bench_workout = WorkoutEntry {
+        start_time: time,
+        end_time: time_1hr,
+        exercises: vec![bench_set.clone()],
+        comments: "".to_string(),
+        user: "John Doe".to_string(),
+        uuid: uuid.to_string(),
+    };
+    assert_eq!(bench_workout.start_time, time);
+    assert_eq!(bench_workout.end_time, time_1hr);
+    assert_eq!(bench_workout.exercises.len(), 1);
+    assert_eq!(bench_workout.exercises[0].exercise.name, "Bench Press");
+    assert_eq!(bench_workout.exercises[0].sets.len(), 3);
+    assert_eq!(bench_workout.uuid, uuid.to_string());
+}
+
+#[test]
 fn test_user() {
     let user = database::User {
         name: "test".to_string(),

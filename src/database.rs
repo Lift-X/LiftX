@@ -27,6 +27,7 @@ pub async fn create_connection() -> sqlx::SqlitePool {
     pool
 }
 
+
 pub async fn build_tables(mut conn: SqliteConnection) {
     sqlx::query!("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, date char(10), user TINYTEXT, data MEDIUMTEXT)")
         .execute(&mut conn)
@@ -44,12 +45,11 @@ pub async fn build_tables(mut conn: SqliteConnection) {
     sqlx::query(&query).execute(&mut conn).await.unwrap();
 }*/
 
-pub async fn insert_workout(exercise: WorkoutEntry<'_>, mut conn: SqliteConnection) {
-    let id = uuid::Uuid::new_v4().to_string();
-    println!("Creating ExerciseEntry with id: {}...", id);
+pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry<'_>, mut conn: SqliteConnection) {
+    println!("Creating ExerciseEntry with id: {}...", uuid.to_string());
     let query = format!(
         "INSERT INTO workout (id, date, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
-        id,
+        uuid.to_string(),
         std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
         exercise.to_json()
     );

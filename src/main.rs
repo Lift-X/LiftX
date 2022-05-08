@@ -10,10 +10,12 @@ pub mod muscles;
 #[cfg(test)]
 mod tests;
 
+use database::build_tables;
 use equipment::WeightType;
 use exercises::{ExerciseEntry, SetEntry, WorkoutEntry, EXERCISE_BENCH_PRESS};
 use rocket_db_pools::Database;
 use sqlx::{ConnectOptions, SqliteConnection};
+use uuid::Uuid;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
@@ -21,7 +23,6 @@ use crate::{database::create_connection, equipment::Weight};
 // Global Preference for weight, implement configuration later
 const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
 
-//#[tokio::main]
 #[rocket::main]
 async fn main() {
     // connect to DB
@@ -47,7 +48,10 @@ async fn launch_web() -> Result<(), rocket::Error> {
         .attach(shield)
         .attach(database::Db::init())
         .attach(rocket_dyn_templates::Template::fairing())
-        .mount("/", routes![crate::handlers::workout_json, crate::handlers::view]);
+        /*.mount(
+            "/",
+            routes![crate::handlers::workout_json, crate::handlers::view],
+        )*/;
     rocket.launch().await
 }
 
@@ -70,13 +74,16 @@ async fn dev(conn: SqliteConnection) {
     for i in 0..2 {
         bench_set.sets.push(bench_press.clone());
     }
+    let uuid = Uuid::new_v4();
     let bench_workout = WorkoutEntry {
+        uuid: uuid.to_string(),
         start_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
         end_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() + 3600,
         exercises: vec![bench_set.clone()],
         comments: "".to_string(),
         user: "John Doe".to_string(),
     };
-    //database::insert_workout(bench_workout, conn).await;
+    //build_tables(conn).await;
+    database::insert_workout(uuid, bench_workout, conn).await;
     //http://localhost:8000/workout/3293d876-d823-457e-9cec-b1df68de37cf/json
 }
