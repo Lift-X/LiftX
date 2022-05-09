@@ -22,11 +22,6 @@ pub const POUNDS: WeightType = WeightType {
     short_name: "lbs",
 };
 
-enum WeightTypeVariant {
-    Kilograms,
-    Pounds,
-}
-
 /* deserializable *kind of*
 lazy_static!(
     #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
