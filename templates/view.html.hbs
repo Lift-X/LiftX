@@ -1,16 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>WLRS - Workout: {{ workout_date }}</title>
+    <title>WLRS - Workout: {{ workout_start }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/workout_view.css">
   </head>
   <body>
-    <div id="content">
+     <div id="navbar">
+        <div id="navbar-logo">
+            <a href="/">
+                <img src="/static/logo.png" alt="WLRS Logo">
+            </a>
+            </div>
+        <div id="navbar-links">
+            <a href="/">Home</a>
+            <a href="/workouts">Workouts</a>
+            <a href="/login">Login</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="seperator" id="metadata">
       <p>Started: {{workout_start }}</p>
       <p>Ended: {{workout_end }}</p>
-      {{#each items as |i|}}
-        <p>{{ i }}</p>
+      <p>By: {{ workout_data.user }}</p>
+    </div>
+    <div class="seperator" id="content">
+      {{#each sets as |i|}}
+        <h2>{{ i.exercise.name }}</h2>
+          {{#each i.sets as |j|}}
+            <div class="set">
+              <li>{{ j.reps }} x {{ j.weight.weight }}{{ j.weight.weight_unit }} - {{ j.reps_in_reserve }}RiR</li>
+            </div>
+            {{/each}}
       {{/each}}
     </div>
-    <p>Comments: {{ comments }}</p>
+    {{#if comments comments_empty }}
+      <div class="seperator" id="comments">
+        <p>Comments: {{ workout_data.comments }}</p>
+    {{/if}}
+    </div>
   </body>
 </html>

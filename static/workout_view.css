@@ -1,0 +1,60 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/static/Roboto_reg.woff2) format("woff2");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+body {
+  background: #111;
+  color: white;
+  max-width: 100%;
+  margin: auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+.seperator {
+  background: #2b2b2b;
+  border-radius: 33px;
+  padding: 15px;
+  margin: 10px;
+}
+
+#content > h2 {
+  margin-top: -5px;
+}
+
+.set {
+  background: #373737;
+  border-radius: 33px;
+  margin-left: 10px;
+}
+
+.set > li {
+  padding-top: 6px;
+}
+
+#navbar {
+  background: #a50b00;
+  max-height: 80px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0px 20px;
+  display: block;
+}
+
+#navbar-logo > a > img {
+  height: 90px;
+  width: 140px;
+}
+
+#navbar-links {
+  float: right;
+}
+/*# sourceMappingURL=workout_view.css.map */

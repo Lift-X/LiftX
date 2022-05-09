@@ -1,8 +1,7 @@
+![](static/logo.png)
 # WLRS [![codecov](https://codecov.io/gh/Zusier/wlrs/branch/main/graph/badge.svg?token=JQX7FH4WL5)](https://codecov.io/gh/Zusier/wlrs)
 
-First time trying to make a "full stack" web application. Goal is to track workouts
-
-Never taken a class on "advanced data structures" so feel free to scold me on how I should do it
+WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout tracker that is bLaZiNgLy FaSt :rocket: :rocket:.
 
 ## TODO
 

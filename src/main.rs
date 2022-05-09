@@ -9,6 +9,7 @@ pub mod handlers;
 pub mod muscles;
 #[cfg(test)]
 mod tests;
+pub mod util;
 
 use database::build_tables;
 use equipment::WeightType;
@@ -48,10 +49,14 @@ async fn launch_web() -> Result<(), rocket::Error> {
         .attach(shield)
         .attach(database::Db::init())
         .attach(rocket_dyn_templates::Template::fairing())
-        /*.mount(
+        .mount(
             "/",
-            routes![crate::handlers::workout_json, crate::handlers::view],
-        )*/;
+            routes![
+                crate::handlers::workout_json,
+                crate::handlers::view,
+                crate::handlers::static_file
+            ],
+        );
     rocket.launch().await
 }
 
@@ -84,6 +89,6 @@ async fn dev(conn: SqliteConnection) {
         user: "John Doe".to_string(),
     };
     //build_tables(conn).await;
-    database::insert_workout(uuid, bench_workout, conn).await;
-    //http://localhost:8000/workout/3293d876-d823-457e-9cec-b1df68de37cf/json
+    //database::insert_workout(uuid, bench_workout, conn).await;
+    //http://localhost:8000/workout/f6af9f72-f10c-427d-b814-eab720b84cd9/json
 }

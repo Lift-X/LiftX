@@ -1,12 +1,12 @@
+use rocket::fs::NamedFile;
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
-//use rocket_dyn_templates::{Template, context};
 
 #[allow(unused_imports)]
 use crate::database::{Db, WorkoutID};
-use crate::exercises::WorkoutEntry;
+use crate::{exercises::WorkoutEntry, util::timestamp_to_iso8601};
 
-/*#[get("/workout/<id>/json")]
+#[get("/workout/<id>/json")]
 pub async fn workout_json(
     id: String,
     mut db: Connection<Db>,
@@ -37,26 +37,28 @@ pub async fn view(id: String, mut db: Connection<Db>) -> rocket_dyn_templates::T
 
     // inline most of this unless it's complex once working
     let entry = WorkoutEntry::from_json(&data);
-    let workout_start = entry.start_time;
-    let workout_end = entry.end_time;
-    let items = entry
-        .exercises
-        .iter()
-        .map(|e| e.to_string_summary())
-        .collect::<Vec<String>>();
-    let comments = entry.comments;
-
-    let t = Template::render(
+    // Get date and time
+    let workout_start = timestamp_to_iso8601(entry.start_time);
+    let workout_end = timestamp_to_iso8601(entry.end_time);
+    let comments_not_empty = !&entry.comments.is_empty();
+    Template::render(
         "view",
         context! {
             workout_start: workout_start,
             workout_end: workout_end,
-            items: items,
-            comments: comments,
+            // Workout items
+            workout_data: &entry,
+            sets: &entry.exercises,
+            // Hide comments section if empty
+            comments_not_empty: comments_not_empty,
         },
-    );
-    t
-}*/
+    )
+}
+
+#[get("/static/<file>")]
+pub async fn static_file(file: String) -> Option<NamedFile> {
+    NamedFile::open(format!("static/{}", file)).await.ok()
+}
 
 #[get("/shutdown")]
 pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {
