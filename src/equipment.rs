@@ -50,8 +50,7 @@ impl Weight {
     pub fn from_string(string: &str) -> Result<Weight, String> {
         // collect only alphabetical characters
         let split = string
-            .chars()
-            .filter(|c| c.is_alphabetic())
+            .matches(|c: char| c.is_alphabetic())
             .collect::<String>();
         match split.as_ref() {
             "kgs" => Ok(Weight {

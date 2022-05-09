@@ -9,7 +9,7 @@ use crate::{
 /*#[tokio::test]
 async fn test_rocket_and_handlers() {
     let rocket = launch_web().await;
-    assert_eq!(rocket.is_ok(), true);
+    assert!(rocket.is_ok());
 }
 */
 
@@ -36,7 +36,7 @@ fn test_weight_from_string_kgs() {
 #[test]
 fn test_weight_from_string_fail() {
     let weight = Weight::from_string("FAIL");
-    assert_eq!(weight.is_err(), true);
+    assert!(weight.is_err());
 }
 
 #[test]
@@ -67,13 +67,13 @@ fn test_weight_to_pounds() {
 fn test_weight_type_from_string() {
     assert_eq!(WeightType::from_string("kgs").unwrap(), KILOGRAMS);
     assert_eq!(WeightType::from_string("lbs").unwrap(), POUNDS);
-    assert_eq!(WeightType::from_string("ERROR").is_err(), true);
+    assert!(WeightType::from_string("ERROR").is_err());
 }
 
 #[test]
 fn test_parse_equipment() {
     for equipment in EQUIPMENT_LIST {
-        assert_eq!(equipment.name.is_ascii(), true);
+        assert!(equipment.name.is_ascii());
         match equipment.rep_multiplier {
             0 => assert_eq!(equipment.rep_multiplier, 0),
             1 => assert_eq!(equipment.rep_multiplier, 1),
@@ -230,20 +230,17 @@ fn test_workout_id() {
 #[test]
 fn test_exercises() {
     for exercise in exercises::EXCERCISES_LIST.iter() {
-        assert_eq!(exercise.name.is_ascii(), true);
+        assert!(exercise.name.is_ascii());
         for muscles in exercise.muscle_sub_groups.into_iter() {
-            assert_eq!(muscles.name.is_ascii(), true);
+            assert!(muscles.name.is_ascii());
         }
-        assert_eq!(
-            exercise.recommended_rep_range[0] <= exercise.recommended_rep_range[1],
-            true
-        );
+        assert!(exercise.recommended_rep_range[0] <= exercise.recommended_rep_range[1]);
     }
 }
 
 #[test]
 fn test_muscles() {
     for muscle in muscles::MUSCLE_SUB_GROUPS.iter() {
-        assert_eq!(muscle.name.is_ascii(), true);
+        assert!(muscle.name.is_ascii());
     }
 }
