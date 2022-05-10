@@ -30,10 +30,8 @@ pub async fn view(id: String, mut db: Connection<Db>) -> rocket_dyn_templates::T
     // Query the database via ID, return data column
     let data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id)
         .fetch_one(&mut *db)
-        .await.unwrap_or(return Template::render(
-            "view",
-            context! { workout_start: 0, workout_end: 0, workout_data: WorkoutEntry::default(), sets: WorkoutEntry::default().exercises, comments_not_empty: true },
-        ))
+        .await
+        .unwrap()
         .data
         .unwrap();
 
