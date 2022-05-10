@@ -144,6 +144,17 @@ impl WorkoutEntry<'_> {
         let workout: WorkoutEntry = serde_json::from_str(string).unwrap();
         workout
     }
+
+    pub fn default() -> Self {
+        WorkoutEntry {
+            uuid: "".to_string(),
+            start_time: 0,
+            end_time: 0,
+            exercises: vec![],
+            comments: "".to_string(),
+            user: "".to_string(),
+        }
+    }
 }
 
 lazy_static! {
