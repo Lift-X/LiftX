@@ -12,6 +12,7 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
 - [X] switch date to unix timestamp (and start/end times)
 - [ ] Switch from sqlite DB once stuff is working great. (Using sqlite because my dev environment changes frequently)
 - [ ] Minimize dependencies
+  - Not about minimization, but checkout Perseus
 
 ## Design Choices/Questions
 - Should I render data server or client side?

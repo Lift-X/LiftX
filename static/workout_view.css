@@ -56,5 +56,16 @@ body {
 
 #navbar-links {
   float: right;
+  margin: 0;
+  list-style-type: none;
+  padding: 0;
+}
+
+#navbar-links > ul {
+  overflow: hidden;
+}
+
+#navbar-links > ul > li {
+  display: inline;
 }
 /*# sourceMappingURL=workout_view.css.map */
