@@ -12,8 +12,7 @@ pub async fn workout_json(
     mut db: Connection<Db>,
 ) -> Result<serde_json::Value, serde_json::Value> {
     // Query the database via ID, return data column
-    let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id)
-        .fetch_one(&mut *db);
+    let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id).fetch_one(&mut *db);
 
     // If workout doesn't exist, 404.
     match wrap_data.await {
@@ -29,21 +28,21 @@ pub async fn workout_json(
 }
 
 #[get("/workouts/<id>/view")]
-pub async fn view(id: String, mut db: Connection<Db>) -> Result<rocket_dyn_templates::Template, content::RawHtml<&'static str>> {
+pub async fn view(
+    id: String,
+    mut db: Connection<Db>,
+) -> Result<rocket_dyn_templates::Template, content::RawHtml<&'static str>> {
     let data: String;
 
     // Query the database via ID, return data column
-    let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id)
-        .fetch_one(&mut *db);
+    let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id).fetch_one(&mut *db);
 
     // If workout doesn't exist, 404.
     match wrap_data.await {
         Ok(wrap_data) => {
             data = wrap_data.data.unwrap();
         }
-        Err(_) => {
-            return Err(content::RawHtml(r#"<p>Workout not found!</p>"#))
-        }
+        Err(_) => return Err(content::RawHtml(r#"<p>Workout not found!</p>"#)),
     }
 
     // inline most of this unless it's complex once working
@@ -79,14 +78,18 @@ pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {
 
 #[catch(404)]
 fn general_not_found() -> content::RawHtml<&'static str> {
-    content::RawHtml(r#"
+    content::RawHtml(
+        r#"
         <p>404</p>
-    "#)
+    "#,
+    )
 }
 
 #[catch(404)]
 pub fn workout_404() -> content::RawHtml<&'static str> {
-    content::RawHtml(r#"
+    content::RawHtml(
+        r#"
         <p>Uh oh! Looks like our server had a hiccup..</p>
-    "#)
+    "#,
+    )
 }

@@ -257,3 +257,20 @@ fn test_time_iso8601() {
     let time_iso8601 = util::timestamp_to_iso8601(time);
     assert_eq!(time_iso8601, "2022-05-12 00:10");
 }
+
+#[test]
+fn test_workout_entry_to_json() {
+    let json = exercises::WorkoutEntry::default().to_json();
+    assert_eq!(json, "{\"uuid\":\"\",\"start_time\":0,\"end_time\":0,\"exercises\":[],\"comments\":\"\",\"user\":\"\"}");
+}
+
+#[test]
+fn test_workout_entry_default() {
+    let default = exercises::WorkoutEntry::default();
+    assert_eq!(default.uuid, "");
+    assert_eq!(default.start_time, 0);
+    assert_eq!(default.end_time, 0);
+    assert_eq!(default.exercises.len(), 0);
+    assert_eq!(default.comments, "");
+    assert_eq!(default.user, "");
+}

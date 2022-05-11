@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 
 /// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
-#[derive(Debug, Clone, Copy, Deserialize, Serialize)]
+#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
 pub struct Exercise<'a> {
     #[serde(borrow)]
     pub name: &'a str,
@@ -18,7 +18,7 @@ pub struct Exercise<'a> {
 }
 
 /// "Set" as in a set of reps, not the verb "set"
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct SetEntry<'a> {
     #[serde(borrow)]
     pub exercise: Exercise<'a>,
@@ -28,7 +28,7 @@ pub struct SetEntry<'a> {
 }
 
 /// ExerciseEntry is a collection of Set Entries
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct ExerciseEntry<'a> {
     #[serde(borrow)]
     pub exercise: Exercise<'a>,
@@ -38,7 +38,7 @@ pub struct ExerciseEntry<'a> {
 }
 
 /// WorkoutEntry is a collection of exercise entries
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct WorkoutEntry<'a> {
     pub uuid: String,
     pub start_time: u64,
