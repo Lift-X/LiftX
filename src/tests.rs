@@ -259,9 +259,12 @@ fn test_time_iso8601() {
 }
 
 #[test]
-fn test_workout_entry_to_json() {
+fn test_workout_entry_from_json() {
     let json = exercises::WorkoutEntry::default().to_json();
-    assert_eq!(json, "{\"uuid\":\"\",\"start_time\":0,\"end_time\":0,\"exercises\":[],\"comments\":\"\",\"user\":\"\"}");
+    assert_eq!(
+        exercises::WorkoutEntry::from_json(&json.to_string()),
+        exercises::WorkoutEntry::default()
+    );
 }
 
 #[test]
