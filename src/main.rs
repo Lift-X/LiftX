@@ -92,5 +92,4 @@ async fn dev(conn: SqliteConnection) {
     //build_tables(conn).await;
     //database::insert_workout(uuid, bench_workout, conn).await;
     //http://localhost:8000/workout/f6af9f72-f10c-427d-b814-eab720b84cd9/json
-
 }

@@ -250,3 +250,10 @@ fn test_human_duration() {
     let human: String = util::human_duration(1652314241, 1652317841);
     assert_eq!(human, "1h 0m 0s");
 }
+
+#[test]
+fn test_time_iso8601() {
+    let time = 1652314241;
+    let time_iso8601 = util::timestamp_to_iso8601(time);
+    assert_eq!(time_iso8601, "2022-05-12 00:10");
+}
