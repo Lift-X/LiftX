@@ -36,36 +36,58 @@ body {
   padding-top: 6px;
 }
 
-#navbar {
-  background: #a50b00;
-  max-height: 80px;
+nav {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #a50b00;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-logo > a > img {
+  max-height: 75px;
+}
+
+.nav-links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.nav-links li {
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  letter-spacing: 3px;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 14px 16px;
+}
+
+.nav-links a:hover:not(.active) {
+  background-color: #bf0d00;
+}
+
+.nav-links li a.active {
+  background-color: #d80e00;
+}
+
+nav > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 0px 20px;
-  display: block;
-}
-
-#navbar-logo > a > img {
-  height: 90px;
-  width: 140px;
-}
-
-#navbar-links {
-  float: right;
-  margin: 0;
-  list-style-type: none;
-  padding: 0;
-}
-
-#navbar-links > ul {
-  overflow: hidden;
-}
-
-#navbar-links > ul > li {
-  display: inline;
 }
 /*# sourceMappingURL=workout_view.css.map */

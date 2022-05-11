@@ -8,6 +8,7 @@
 }
 
 $dark: #111;
+$rust: #a50b00;
 
 body {
     background: $dark;
@@ -38,20 +39,46 @@ body {
     padding-top: 6px;
 }
 
-#navbar {
-    background: rgb(165, 11, 0);
-    max-height: 80px;
+nav {
+    align-items: center;
+    background-color: $rust;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-logo > a > img {
+    max-height: 75px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around;
+}
+
+.nav-links li {
+    list-style: none;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    letter-spacing: 3px;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 14px 16px;
+}
+
+.nav-links a:hover:not(.active) {
+    background-color: lighten($rust, 5%);
+}
+
+.nav-links li a.active {
+    background-color: lighten($rust, 10%);
+}
+
+nav > div {
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0px 20px;
-    display: block;
-}
-
-#navbar-logo > a > img {
-    height: 90px;
-    width: 140px;
-}
-
-#navbar-links {
-    float: right;
 }

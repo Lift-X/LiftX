@@ -7,21 +7,20 @@
     <link rel="stylesheet" href="/static/workout_view.css">
   </head>
   <body>
-     <div id="navbar">
-        <div id="navbar-logo">
-            <a href="/">
-                <img src="/static/logo.png" alt="WLRS Logo">
-            </a>
-            </div>
-        <div id="navbar-links">
-            <ul>
-              <li><a href="/">Home</a></li>
-              <li><a href="/workouts">Workouts</a></li>
-              <li><a href="/login">Login</a></li>
-              <li><a href="/logout">Logout</a></li>
-            </ul>
-        </div>
-    </div>
+    <nav>
+    <div>
+      <div class="navbar-logo">
+          <a href="/">
+              <img src="/static/logo.png" alt="WLRS Logo">
+          </a>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a class="active" href="/workouts">Workouts</a></li>
+        <li><a href="/login">Login</a></li>
+      </ul>
+      </div>
+    </nav>
     <div class="seperator" id="metadata">
       <p>Started: {{workout_start }}</p>
       <p>Ended: {{workout_end }}</p>
