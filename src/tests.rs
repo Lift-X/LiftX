@@ -145,7 +145,7 @@ fn test_exercise_to_string_summary() {
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
-    for i in 0..2 {
+    for _i in 0..2 {
         bench_set.sets.push(bench_press.clone());
     }
     assert_eq!(
@@ -173,7 +173,7 @@ fn test_workout() {
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
-    for i in 0..2 {
+    for _i in 0..2 {
         bench_set.sets.push(bench_press.clone());
     }
     let bench_workout = WorkoutEntry {
@@ -243,4 +243,10 @@ fn test_muscles() {
     for muscle in muscles::MUSCLE_SUB_GROUPS.iter() {
         assert!(muscle.name.is_ascii());
     }
+}
+
+#[test]
+fn test_human_duration() {
+    let human: String = util::human_duration(1652314241, 1652317841);
+    assert_eq!(human, "1h 0m 0s");
 }

@@ -56,7 +56,8 @@ async fn launch_web() -> Result<(), rocket::Error> {
                 crate::handlers::view,
                 crate::handlers::static_file
             ],
-        );
+        )
+        .register("/workouts/", catchers![crate::handlers::workout_404]);
     rocket.launch().await
 }
 
@@ -76,7 +77,7 @@ async fn dev(conn: SqliteConnection) {
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
-    for i in 0..2 {
+    for _i in 0..2 {
         bench_set.sets.push(bench_press.clone());
     }
     let uuid = Uuid::new_v4();
@@ -91,4 +92,5 @@ async fn dev(conn: SqliteConnection) {
     //build_tables(conn).await;
     //database::insert_workout(uuid, bench_workout, conn).await;
     //http://localhost:8000/workout/f6af9f72-f10c-427d-b814-eab720b84cd9/json
+
 }

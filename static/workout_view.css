@@ -24,12 +24,14 @@ body {
 
 #content > h2 {
   margin-top: -5px;
+  margin-bottom: 0;
 }
 
 .set {
   background: #373737;
   border-radius: 33px;
   margin-left: 10px;
+  width: 101%;
 }
 
 .set > li {
