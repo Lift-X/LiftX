@@ -2586,6 +2586,7 @@ dependencies = [
  "lazy_static",
  "log",
  "ordered-float",
+ "regex-syntax",
  "rocket",
  "rocket_db_pools",
  "rocket_dyn_templates",
@@ -2595,6 +2596,7 @@ dependencies = [
  "time 0.3.9",
  "tokio",
  "tokio-test",
+ "tracing-core",
  "uuid",
 ]
 
