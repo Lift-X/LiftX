@@ -11,8 +11,6 @@ pub async fn workout_json(
     id: String,
     mut db: Connection<Db>,
 ) -> Result<serde_json::Value, serde_json::Value> {
-    let data: String;
-
     // Query the database via ID, return data column
     let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id)
         .fetch_one(&mut *db);
