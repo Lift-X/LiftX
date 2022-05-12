@@ -20,7 +20,7 @@ pub async fn workout_json(
             return Ok(serde_json::Value::String(wrap_data.data.unwrap()));
         }
         Err(_) => {
-            return Err(serde_json::from_str("Workout not found!").unwrap());
+            return Err(serde_json::from_str("{\"error\": \"Workout not found!\"}").unwrap());
         }
     }
     // If workout exists in database, return it
