@@ -7,7 +7,12 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
 
 - [x] Make impl for WorkoutEntry so we can parse after retrieving from DB
 - [x] Json for data stuff
-- [ ] HTML + CSS Templating for workout view
+- [X] figure out HTML + CSS Templating
+  - [X] Workout View
+  - [X] Status Codes
+  - [ ] Workout create
+  - [ ] Homepage
+  - [ ] Login/Auth
 - [ ] Authentication + Cookies
 - [X] switch date to unix timestamp (and start/end times)
 - [ ] Switch from sqlite DB once stuff is working great. (Using sqlite because my dev environment changes frequently)

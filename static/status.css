@@ -1,0 +1,85 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/static/Roboto_reg.woff2) format("woff2");
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+
+body {
+  background: #111;
+  color: white;
+  max-width: 100%;
+  margin: auto;
+  font-family: 'Roboto', sans-serif;
+}
+
+nav {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #a50b00;
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-logo > a > img {
+  max-height: 75px;
+}
+
+.nav-links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.nav-links li {
+  list-style: none;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  letter-spacing: 3px;
+  font-weight: bold;
+  font-size: 14px;
+  padding: 14px 16px;
+}
+
+.nav-links a:hover:not(.active) {
+  background-color: #bf0d00;
+}
+
+.nav-links li a.active {
+  background-color: #d80e00;
+}
+
+nav > div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+#error > h1 {
+  font-size: 400%;
+  margin-bottom: 0px;
+}
+
+#error > hr {
+  width: 75%;
+}
+
+#error {
+  text-align: center;
+}
+/*# sourceMappingURL=status.css.map */

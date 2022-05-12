@@ -31,7 +31,7 @@ pub async fn workout_json(
 pub async fn view(
     id: String,
     mut db: Connection<Db>,
-) -> Result<rocket_dyn_templates::Template, content::RawHtml<&'static str>> {
+) -> Result<rocket_dyn_templates::Template, rocket_dyn_templates::Template> {
     let data: String;
 
     // Query the database via ID, return data column
@@ -42,7 +42,7 @@ pub async fn view(
         Ok(wrap_data) => {
             data = wrap_data.data.unwrap();
         }
-        Err(_) => return Err(content::RawHtml(r#"<p>Workout not found!</p>"#)),
+        Err(_) => return Err(workout_404()),
     }
 
     // inline most of this unless it's complex once working
@@ -86,10 +86,12 @@ fn general_not_found() -> content::RawHtml<&'static str> {
 }
 
 #[catch(404)]
-pub fn workout_404() -> content::RawHtml<&'static str> {
-    content::RawHtml(
-        r#"
-        <p>Uh oh! Looks like our server had a hiccup..</p>
-    "#,
+pub fn workout_404() -> rocket_dyn_templates::Template {
+    Template::render(
+        "status",
+        context! {
+            status_code: "404",
+            status_message: "Workout not found!",
+        },
     )
 }
