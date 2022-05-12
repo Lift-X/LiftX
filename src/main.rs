@@ -57,7 +57,8 @@ async fn launch_web() -> Result<(), rocket::Error> {
                 crate::handlers::static_file
             ],
         )
-        .register("/workouts/", catchers![crate::handlers::workout_404]);
+        .register("/workouts/", catchers![crate::handlers::workout_404])
+        .register("/", catchers![crate::handlers::general_404]);
     rocket.launch().await
 }
 

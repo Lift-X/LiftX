@@ -1,4 +1,4 @@
-use rocket::{fs::NamedFile, response::content};
+use rocket::{fs::NamedFile};
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 
@@ -65,6 +65,13 @@ pub async fn view(
     ))
 }
 
+/*#[get("/workouts/new")]
+pub async fn new(
+    mut db: Connection<Db>,
+) -> Result<rocket_dyn_templates::Template, rocket_dyn_templates::Template> {
+
+}*/
+
 #[get("/static/<file>")]
 pub async fn static_file(file: String) -> Option<NamedFile> {
     NamedFile::open(format!("static/{}", file)).await.ok()
@@ -77,11 +84,13 @@ pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {
 }
 
 #[catch(404)]
-fn general_not_found() -> content::RawHtml<&'static str> {
-    content::RawHtml(
-        r#"
-        <p>404</p>
-    "#,
+pub fn general_404() -> rocket_dyn_templates::Template {
+    Template::render(
+        "status",
+        context! {
+            status_code: "404",
+            status_message: "Couldn't find what you're looking for!",
+        },
     )
 }
 

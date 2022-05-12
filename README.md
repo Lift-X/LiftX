@@ -11,6 +11,9 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
   - [X] Workout View
   - [X] Status Codes
   - [ ] Workout create
+    - Native Date Picker
+    - Pick workouts from list view (also native)
+    - In the future try to port to WASM
   - [ ] Homepage
   - [ ] Login/Auth
 - [ ] Authentication + Cookies

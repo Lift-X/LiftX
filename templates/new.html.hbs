@@ -22,26 +22,9 @@
       </div>
     </nav>
     <div class="seperator" id="metadata">
-      <h1>Workout: {{ workout_start }}</h1>
+      <h1>New Workout</h1>
       <hr>
-      <p>Duration: {{workout_duration}}</p>
-      <p>By: {{ workout_data.user }}</p>
-    </div>
-    <div class="seperator" id="content">
-      {{#each sets as |i|}}
-        <h2>{{ i.exercise.name }}</h2>
-        <hr>
-          {{#each i.sets as |j|}}
-            <div class="set">
-              <li>{{ j.reps }} x {{ j.weight.weight }}{{ j.weight.weight_unit }} - {{ j.reps_in_reserve }}RiR</li>
-            </div>
-            {{/each}}
-      {{/each}}
-    </div>
-    {{#if comments comments_empty }}
-      <div class="seperator" id="comments">
-        <p>Comments: {{ workout_data.comments }}</p>
-    {{/if}}
+      
     </div>
   </body>
 </html>
