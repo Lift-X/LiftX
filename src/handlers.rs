@@ -17,7 +17,7 @@ pub async fn workout_json(
     // If workout doesn't exist, 404.
     match wrap_data.await {
         Ok(wrap_data) => {
-            return Ok(serde_json::Value::String(wrap_data.data.unwrap()));
+            return Ok(serde_json::from_str(wrap_data.data.unwrap().as_str()).unwrap());
         }
         Err(_) => {
             return Err(serde_json::from_str("{\"error\": \"Workout not found!\"}").unwrap());
@@ -27,7 +27,7 @@ pub async fn workout_json(
     // Fun fact: I spent multiple hours trying to remove the "std::option::Option<String>" from the String. (reading docs is really helpful, kids.)
 }
 
-#[get("/workouts/<id>/view")]
+#[get("/workouts/<id>")]
 pub async fn workout_view(
     id: String,
     mut db: Connection<Db>,
