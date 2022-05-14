@@ -15,3 +15,6 @@ data.db-*
 *.css.map
 *.sass.map
 *.scss.map
+
+node_modules/
+*.js.map

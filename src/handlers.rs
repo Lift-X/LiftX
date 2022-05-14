@@ -1,4 +1,4 @@
-use rocket::{fs::NamedFile};
+use rocket::fs::NamedFile;
 use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 
@@ -28,7 +28,7 @@ pub async fn workout_json(
 }
 
 #[get("/workouts/<id>/view")]
-pub async fn view(
+pub async fn workout_view(
     id: String,
     mut db: Connection<Db>,
 ) -> Result<rocket_dyn_templates::Template, rocket_dyn_templates::Template> {
@@ -65,17 +65,22 @@ pub async fn view(
     ))
 }
 
-/*#[get("/workouts/new")]
-pub async fn new(
-    mut db: Connection<Db>,
+#[get("/workouts/new")]
+pub async fn workout_new(
+    db: Connection<Db>,
 ) -> Result<rocket_dyn_templates::Template, rocket_dyn_templates::Template> {
-
-}*/
-
-#[get("/static/<file>")]
-pub async fn static_file(file: String) -> Option<NamedFile> {
-    NamedFile::open(format!("static/{}", file)).await.ok()
+    Ok(Template::render("new", context! {bloat: "yes"}))
 }
+
+#[get("/public/<file..>")]
+pub async fn static_file(file: std::path::PathBuf) -> Option<NamedFile> {
+    //NamedFile::open(format!("public/{}", file)).await.ok()
+    let file = std::path::Path::new("public").join(file);
+
+    NamedFile::open(file).await.ok()
+}
+
+
 
 #[get("/shutdown")]
 pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {

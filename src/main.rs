@@ -53,8 +53,9 @@ async fn launch_web() -> Result<(), rocket::Error> {
             "/",
             routes![
                 crate::handlers::workout_json,
-                crate::handlers::view,
-                crate::handlers::static_file
+                crate::handlers::workout_view,
+                crate::handlers::static_file,
+                crate::handlers::workout_new,
             ],
         )
         .register("/workouts/", catchers![crate::handlers::workout_404])
