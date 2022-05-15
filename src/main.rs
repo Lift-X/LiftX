@@ -37,10 +37,10 @@ async fn main() {
 
     //database::build_tables(conn).await;
     dev(conn).await;
-    let rocket = launch_web().await;
+    launch_web().await;
 }
 
-async fn launch_web() -> Result<(), rocket::Error> {
+async fn launch_web() {
     // launch web server
     let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
@@ -60,7 +60,7 @@ async fn launch_web() -> Result<(), rocket::Error> {
         )
         .register("/workouts/", catchers![crate::handlers::workout_404])
         .register("/", catchers![crate::handlers::general_404]);
-    rocket.launch().await
+    rocket.launch().await.expect("Failed to launch web server!");
 }
 
 // Stuff not needed for prod, but useful for testing
