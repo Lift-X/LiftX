@@ -19,5 +19,5 @@ data.db-*
 
 node_modules/
 *.js.map
-/public/build
+/public/build/
 package-lock.json
