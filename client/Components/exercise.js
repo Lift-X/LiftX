@@ -65,6 +65,8 @@ export function modifysets() {
     }
 }
 
+import json_data from "../pages/WorkoutNew.svelte";
+//$: json_data_var = { json_data };
 export function addexercise() {
     console.log("addexercise");
 
@@ -84,9 +86,11 @@ export function addexercise() {
     for (let i = 0; i < document.getElementsByClassName("set").length; i++) {
         let set = {
             reps: document.getElementsByClassName("reps")[i].value,
-            weight: document.getElementsByClassName("weight")[i].value,
-            weightunit: document.getElementsByClassName("weightunit")[i].value,
-            rir: document.getElementsByClassName("rir")[i].value,
+            reps_in_reserve: document.getElementsByClassName("rir")[i].value,
+            weight: {
+                weight: document.getElementsByClassName("weight")[i].value,
+                weightunit: document.getElementsByClassName("weightunit")[i].value,
+            },
         }
         exercise.sets.push(set);
     }
@@ -102,14 +106,18 @@ export function addexercise() {
     let exerciseDiv = document.createElement("div");
     exerciseDiv.className = "exercise";
     exerciseDiv.innerHTML = `
-        <h2>${exercise.name}</h2>
-        <ul>
-            ${exercise.sets.map(set => `
-                <li>
-                    <p>Reps: ${set.reps} x ${set.weight}${set.weightunit} - ${set.rir}RiR</p>
-                </li>
-            `).join("")}
-        </ul>
-    `;
+    <h2>${exercise.name}</h2>
+    <ul>
+        ${exercise.sets.map(set => `
+            <li>
+                <p>Reps: ${set.reps} x ${set.weight}${set.weightunit} - ${set.rir}RiR</p>
+            </li>
+        `).join("")}
+    </ul>
+`;
     exercises.appendChild(exerciseDiv);
+
+    //json_data.exercises.push(exercise);
+    //$json_data_var.update(value => value.exercises.push(exercise));
+    //console.log({ json_data_var });
 }

@@ -1,16 +1,19 @@
 <script>
-    let myDate = new Date();
     import SveltyPicker from "svelty-picker";
+    import { writable } from "svelte/store";
     let user = "John Doe"; // replace once auth is implemented
     import {modifysets} from "../Components/exercise.js";
     import {addexercise} from "../Components/exercise.js";
+    let json_data = writable({});
+    export {json_data};
+    console.log(json_data);
 </script>
 
 <div class="separator" id="metadata">
     <h1>New Workout</h1>
     <hr>
     <p>By: {user}</p>
-    <p>Start: <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" pickerDone=true></SveltyPicker></p>
+    <p>Start: <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii"></SveltyPicker></p>
     <p>Duration: <input type="number" class="form-control" id="duration" placeholder="Duration in minutes" min="0" max="360" required><span class="validity"></span></p>
 </div>
 
