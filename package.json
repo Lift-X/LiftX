@@ -1,5 +1,5 @@
 {
-    "name": "svelte-on-rust",
+    "name": "svelte-wlrs",
     "version": "0.1.4",
     "scripts": {
         "build": "rollup -c",

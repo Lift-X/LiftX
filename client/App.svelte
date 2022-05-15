@@ -1,5 +1,4 @@
 <script>
-  // export let name;
   import Nav from "./Nav.svelte";
   import Footer from "./Footer.svelte";
   import { Router, Route } from "yrv";
