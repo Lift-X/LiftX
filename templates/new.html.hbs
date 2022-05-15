@@ -4,59 +4,9 @@
     <title>WLRS - New Workout</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/workoutview.css">
+    <link rel='stylesheet' href='/public/build/bundle.css'>
+	  <script defer src='/public/build/bundle.js'></script>
   </head>
   <body>
-    <nav>
-    <div>
-      <div class="navbar-logo">
-          <a href="/">
-              <img src="/static/logo.png" alt="WLRS Logo">
-          </a>
-      </div>
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a class="active" href="/workouts">Workouts</a></li>
-        <li><a href="/login">Login</a></li>
-      </ul>
-      </div>
-    </nav>
-    <div class="seperator" id="metadata">
-      <h1>New Workout</h1>
-      <hr>
-      <label for="date">Started:<span class="date-description"></span></label>
-      <input id="date" type=datetime-local>
-      <br>
-      <label for="date">Ended:<span class="date-description"></span></label>
-      <input id="date" type=datetime-local>
-      <br>
-      <p>{{bloat}}</p>
-    </div>
-    <div>
-      <div class="seperator" id="exercises">
-        <h1>Add Exercises</h1>
-        <hr>
-        <div class="exercise-list">
-          <div class="exercise-item">
-            <div class="exercise-name">
-              <label for="exercise-name">Exercise Name:</label>
-              <input id="exercise-name" required maxlength="75" placeholder="Bench Press" type="text">
-            </div>
-
-            </div>
-            <div class="exercise-notes">
-              <label for="exercise-notes">Notes:</label>
-              <input id="exercise-notes" type="text" required maxlength="4096">
-            </div>
-          </div>
-        </div>
-        <button id="add-exercise">Add Exercise</button>
-      </div>
-      <div class="seperator">
-        <div class="exericse">
-
-        </div>
-      </div>
-    </div>
   </body>
 </html>

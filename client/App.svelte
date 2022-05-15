@@ -5,6 +5,7 @@
   import Home from "./pages/Home.svelte";
   import About from "./pages/About.svelte";
   import WorkoutView from "./pages/WorkoutView.svelte";
+  import WorkoutNew from "./pages/WorkoutNew.svelte";
 </script>
 
 <main>
@@ -16,6 +17,7 @@
     <Route path="/workouts/:id" let:router
       ><WorkoutView id={router.params.id} /></Route
     >
+    <Route exact path="/workouts/new"><WorkoutNew /></Route>
   </Router>
   <Footer />
 </main>

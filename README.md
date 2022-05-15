@@ -10,8 +10,8 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
 - [X] figure out HTML + CSS Templating
   - [X] Workout View
   - [X] Status Codes
-  - [ ] Workout create
-    - Svelte
+  - [X] Workout create
+    - [ ] When adding exercises form json, render off the json.
   - [ ] Homepage
   - [ ] Login/Auth
 - [ ] Authentication + Cookies

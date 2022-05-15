@@ -11,18 +11,25 @@ export default {
 	output: {
 		sourcemap: true,
 		format: 'iife',
-		name: 'svelte-wlrs',
+		name: 'wlrs',
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
 		svelte({
 			// enable run-time checks when not in production
 			dev: !production,
+			hydratable: true,
+
+			onwarn: (warning, handler) => {
+				const { code, frame } = warning;
+				if (code === "css-unused-selector") return;
+				handler(warning);
+			},
 			// we'll extract any component CSS out into
 			// a separate file — better for performance
 			css: css => {
 				css.write('bundle.css');
-			}
+			},
 		}),
 
 		// If you have external dependencies installed from
