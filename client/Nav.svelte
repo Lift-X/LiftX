@@ -1,4 +1,4 @@
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+<nav class="navbar is-primary" aria-label="main navigation">
     <div>
         <div class="navbar-brand">
             <div class="nav-logo">
@@ -37,7 +37,7 @@
     }
 
     .nav-logo > a > img {
-        max-height: 75px;
+        max-height: 90px;
     }
 
     .nav-links {

@@ -4,44 +4,9 @@
     <title>WLRS - Workout: {{ workout_start }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="/static/workoutview.css">
+    <link rel='stylesheet' href='/public/build/bundle.css'>
+	  <script defer src='/public/build/bundle.js'></script>
   </head>
   <body>
-    <nav>
-    <div>
-      <div class="navbar-logo">
-          <a href="/">
-              <img src="/static/logo.png" alt="WLRS Logo">
-          </a>
-      </div>
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a class="active" href="/workouts">Workouts</a></li>
-        <li><a href="/login">Login</a></li>
-      </ul>
-      </div>
-    </nav>
-    <div class="seperator" id="metadata">
-      <h1>Workout: {{ workout_start }}</h1>
-      <hr>
-      <p>Duration: {{workout_duration}}</p>
-      <p>By: {{ workout_data.user }}</p>
-    </div>
-    <div class="seperator" id="content">
-      {{#each sets as |i|}}
-        <h2>{{ i.exercise.name }}</h2>
-        <hr>
-          {{#each i.sets as |j|}}
-            <div class="set">
-              <li>{{ j.reps }} x {{ j.weight.weight }}{{ j.weight.weight_unit }} - {{ j.reps_in_reserve }}RiR</li>
-            </div>
-            {{/each}}
-      {{/each}}
-    </div>
-    {{#if comments comments_empty }}
-      <div class="seperator" id="comments">
-        <p>Comments: {{ workout_data.comments }}</p>
-    {{/if}}
-    </div>
   </body>
 </html>
