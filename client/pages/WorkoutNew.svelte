@@ -1,16 +1,65 @@
 <script>
-    import SveltyPicker from "svelty-picker";
-    let user = "John Doe"; // replace once auth is implemented
-    import {modifysets} from "../Components/exercise.js";
-    import {addexercise} from "../Components/exercise.js";
+import SveltyPicker from "svelty-picker";
+let user = "John Doe"; // replace once auth is implemented
+import {modifysets} from "../Components/exercise.js";
+import {addexercise} from "../Components/exercise.js";
+import {json_data} from "../Components/json_store.js";
+$: start_time_bind = null;
+$: start_time = null;
+$: end_time = null;
+$: duration_bind = 0;
+
+function handle_time(time) {
+    let new_time = Math.floor(new Date(time).getTime() / 1000);
+
+    {start_time = new_time}
+    {$json_data.start_time = new_time};
+
+    return new_time;
+}
+
+function handle_duration(time, duration) {
+    let end =  handle_time(time) + (duration * 60);
+
+    {end_time = end};
+    {$json_data.end_time = end};
+
+    return end;
+}
+
+function validate_json() {
+    let valid = true;
+
+    if ($json_data.exercises.length == 0) {
+        valid = false;
+    }
+
+    if ($json_data.start_time < 10000) {
+        valid = false;
+    }
+
+    if ($json_data.end_time < 10000) {
+        valid = false;
+    }
+
+    if ($json_data.end_time < $json_data.start_time) {
+        valid = false;
+    }
+
+    if ($json_data.user == "") {
+        valid = false;
+    }
+
+    return valid;
+}
 </script>
 
 <div class="separator" id="metadata">
     <h1>New Workout</h1>
     <hr>
     <p>By: {user}</p>
-    <p>Start: <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii"></SveltyPicker></p>
-    <p>Duration: <input type="number" class="form-control" id="duration" placeholder="Duration in minutes" min="0" max="360" required><span class="validity"></span></p>
+    <p>Start: <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={start_time_bind} on:change={handle_time(start_time_bind)}></SveltyPicker></p>
+    <p>Duration: <input type="number" class="form-control" id="duration" placeholder="Duration in minutes" min="0" max="360" required bind:value={duration_bind} on:change={handle_duration(start_time_bind, duration_bind)}><span class="validity"></span></p>
 </div>
 
 <div class="separator" id="create">
@@ -28,26 +77,32 @@
     <hr>
 </div>
 
+<hr>
+<code lang="json">
+    <pre>
+        {JSON.stringify($json_data, null, 2)}
+    </pre>
+</code>
+
 <style>
-    .separator {
-        background: #2b2b2b;
-        border-radius: 33px;
-        padding: 15px;
-        margin: 10px;
-    }
+.separator {
+    background: #2b2b2b;
+    border-radius: 33px;
+    padding: 15px;
+    margin: 10px;
+}
 
-    input:invalid+span:after {
-        content: '⛔';
-        padding-left: 5px;
-    }
+input:invalid+span:after {
+    content: '⛔';
+    padding-left: 5px;
+}
 
-    input:valid+span:after {
-        content: '✅';
-        padding-left: 5px;
-    }
+input:valid+span:after {
+    content: '✅';
+    padding-left: 5px;
+}
 
-    :global(.numberform) {
-        max-width: 150px;
-    }
-
+:global(.numberform) {
+    max-width: 150px;
+}
 </style>

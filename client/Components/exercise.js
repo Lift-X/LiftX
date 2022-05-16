@@ -1,4 +1,4 @@
-
+import { json_data } from "./json_store";
 export function modifysets() {
     // Delete previously created sets, if any
     let setslist = document.getElementsByClassName("set");
@@ -39,11 +39,11 @@ export function modifysets() {
             }
         };
         let option1 = document.createElement("option");
-        option1.value = "kgs";
-        option1.text = "Kilograms";
+        option1.value = "lbs";
+        option1.text = "Pounds";
         let option2 = document.createElement("option");
-        option2.value = "lbs";
-        option2.text = "Pounds";
+        option2.value = "kgs";
+        option2.text = "Kilograms";
         weightunit.appendChild(option1);
         weightunit.appendChild(option2);
 
@@ -99,6 +99,11 @@ export function addexercise() {
         return;
     }
 
+    json_data.update(function (data) {
+        data.exercises.push(exercise);
+        return data;
+    });
+
     // Render
     let exercises = document.getElementById("exercises");
     let exerciseDiv = document.createElement("div");
@@ -108,7 +113,7 @@ export function addexercise() {
     <ul>
         ${exercise.sets.map(set => `
             <li>
-                <p>Reps: ${set.reps} x ${set.weight}${set.weightunit} - ${set.rir}RiR</p>
+                <p>Reps: ${set.reps} x ${set.weight.weight}${set.weight.weightunit} - ${set.reps_in_reserve}RiR</p>
             </li>
         `).join("")}
     </ul>
