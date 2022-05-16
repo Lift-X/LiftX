@@ -7,13 +7,14 @@ pub mod equipment;
 mod exercises;
 pub mod handlers;
 pub mod muscles;
+mod api;
 #[cfg(test)]
 mod tests;
 pub mod util;
 
-use database::build_tables;
+//use database::build_tables;
 use equipment::WeightType;
-use exercises::{ExerciseEntry, SetEntry, WorkoutEntry, EXERCISE_BENCH_PRESS};
+use exercises::{ExerciseEntry, SetEntry, WorkoutEntry};
 use rocket_db_pools::Database;
 use sqlx::{ConnectOptions, SqliteConnection};
 use uuid::Uuid;
@@ -52,7 +53,7 @@ async fn launch_web() {
         .mount(
             "/",
             routes![
-                crate::handlers::workout_json,
+                crate::api::workout_json,
                 crate::handlers::workout_view,
                 crate::handlers::static_file,
                 crate::handlers::workout_new,
@@ -66,7 +67,6 @@ async fn launch_web() {
 // Stuff not needed for prod, but useful for testing
 async fn dev(conn: SqliteConnection) {
     let bench_press = SetEntry {
-        exercise: *EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: Weight {
             weight: 135.0,
@@ -75,7 +75,7 @@ async fn dev(conn: SqliteConnection) {
         reps_in_reserve: 1.5,
     };
     let mut bench_set = ExerciseEntry {
-        exercise: *EXERCISE_BENCH_PRESS,
+        exercise: "Bench Press".to_string(),
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
@@ -85,13 +85,14 @@ async fn dev(conn: SqliteConnection) {
     let uuid = Uuid::new_v4();
     let bench_workout = WorkoutEntry {
         uuid: uuid.to_string(),
+        title: "Test!".to_string(),
         start_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
         end_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() + 3600,
         exercises: vec![bench_set.clone()],
         comments: "".to_string(),
         user: "John Doe".to_string(),
     };
-    //build_tables(conn).await;
+    //database::build_tables(conn).await;
     //database::insert_workout(uuid, bench_workout, conn).await;
     //http://localhost:8000/workout/f6af9f72-f10c-427d-b814-eab720b84cd9/json
 }

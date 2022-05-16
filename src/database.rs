@@ -19,7 +19,7 @@ pub struct WorkoutID {
 pub struct User {
     pub name: String,
     pub email: String,
-    pub password: String,
+    pub password: String, // blake2 hash
 }
 
 pub async fn create_connection() -> sqlx::SqlitePool {
@@ -28,7 +28,7 @@ pub async fn create_connection() -> sqlx::SqlitePool {
 }
 
 pub async fn build_tables(mut conn: SqliteConnection) {
-    sqlx::query!("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, date char(10), user TINYTEXT, data MEDIUMTEXT)")
+    sqlx::query!("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created char(12), user TINYTEXT, data MEDIUMTEXT)")
         .execute(&mut conn)
         .await
         .unwrap();
@@ -43,15 +43,10 @@ pub async fn build_tables(mut conn: SqliteConnection) {
     );
     sqlx::query(&query).execute(&mut conn).await.unwrap();
 }*/
-
-pub async fn insert_workout(
-    uuid: uuid::Uuid,
-    exercise: WorkoutEntry<'_>,
-    mut conn: SqliteConnection,
-) {
+pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, mut conn: SqliteConnection) {
     println!("Creating ExerciseEntry with id: {}...", uuid.to_string());
     let query = format!(
-        "INSERT INTO workout (id, date, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
+        "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
         uuid.to_string(),
         std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
         exercise.to_json()

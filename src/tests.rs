@@ -89,13 +89,7 @@ fn test_parse_equipment() {
 fn test_exercise_string_to_exercise() {
     let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
     let e = ExerciseEntry::from_string(t);
-    assert_eq!(e.exercise.name, "Bench Press");
-    assert_eq!(
-        e.exercise.muscle_sub_groups,
-        [muscles::PECTORALIS_MAJOR, muscles::PECTORALIS_MINOR]
-    );
-    assert_eq!(e.exercise.recommended_rep_range[0], 8);
-    assert_eq!(e.exercise.recommended_rep_range[1], 12);
+    assert_eq!(e.exercise, "Bench Press");
     assert_eq!(e.sets[0].reps, 8);
     assert_eq!(e.sets.len(), 3);
     assert_eq!(e.sets[0].weight.weight, 135.0);
@@ -110,7 +104,6 @@ fn test_exercise_string_to_exercise() {
 fn test_exercise_to_string() {
     let t = "Bench Press;8,135lbs,1.5;8,135lbs,1.5;8,135lbs,1.5";
     let bench_press = SetEntry {
-        exercise: *exercises::EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: Weight {
             weight: 135.0,
@@ -119,7 +112,7 @@ fn test_exercise_to_string() {
         reps_in_reserve: 1.5,
     };
     let mut bench_set = ExerciseEntry {
-        exercise: *exercises::EXERCISE_BENCH_PRESS,
+        exercise: "Bench Press".to_string(),
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
@@ -132,7 +125,6 @@ fn test_exercise_to_string() {
 #[test]
 fn test_exercise_to_string_summary() {
     let bench_press = SetEntry {
-        exercise: *EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: Weight {
             weight: 135.0,
@@ -141,7 +133,7 @@ fn test_exercise_to_string_summary() {
         reps_in_reserve: 1.5,
     };
     let mut bench_set = ExerciseEntry {
-        exercise: *EXERCISE_BENCH_PRESS,
+        exercise: "Bench Press".to_string(),
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
@@ -160,7 +152,6 @@ fn test_workout() {
     let time_1hr = time + 3600;
     let uuid = uuid::Uuid::new_v4();
     let bench_press = SetEntry {
-        exercise: *EXERCISE_BENCH_PRESS,
         reps: 8,
         weight: Weight {
             weight: 135.0,
@@ -169,7 +160,7 @@ fn test_workout() {
         reps_in_reserve: 1.5,
     };
     let mut bench_set = ExerciseEntry {
-        exercise: *EXERCISE_BENCH_PRESS,
+        exercise: "Bench Press".to_string(),
         comments: String::from(""),
         sets: vec![bench_press.clone()],
     };
@@ -183,13 +174,15 @@ fn test_workout() {
         comments: "".to_string(),
         user: "John Doe".to_string(),
         uuid: uuid.to_string(),
+        title: "test".to_string(),
     };
     assert_eq!(bench_workout.start_time, time);
     assert_eq!(bench_workout.end_time, time_1hr);
     assert_eq!(bench_workout.exercises.len(), 1);
-    assert_eq!(bench_workout.exercises[0].exercise.name, "Bench Press");
+    assert_eq!(bench_workout.exercises[0].exercise, "Bench Press");
     assert_eq!(bench_workout.exercises[0].sets.len(), 3);
     assert_eq!(bench_workout.uuid, uuid.to_string());
+    assert_eq!(bench_workout.title, "test".to_string());
 }
 
 #[test]
@@ -225,17 +218,6 @@ fn test_workout_id() {
     assert_eq!(workout_id.uuid, uuid);
     assert_eq!(workout_id.user.name, "test");
     assert_eq!(workout_id.timestamp, time);
-}
-
-#[test]
-fn test_exercises() {
-    for exercise in exercises::EXCERCISES_LIST.iter() {
-        assert!(exercise.name.is_ascii());
-        for muscles in exercise.muscle_sub_groups.into_iter() {
-            assert!(muscles.name.is_ascii());
-        }
-        assert!(exercise.recommended_rep_range[0] <= exercise.recommended_rep_range[1]);
-    }
 }
 
 #[test]

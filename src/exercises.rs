@@ -1,27 +1,10 @@
-use crate::muscles::*;
-use crate::{
-    equipment::{self, EquipmentType, Weight, WeightType},
-    muscles::MuscleSubGroup,
-};
-use lazy_static::lazy_static;
+use crate::equipment::{Weight, WeightType};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 
-/// A Single Excercise, allows for metadata such as affected muscle groups, equipment used, etc.
-#[derive(Debug, Clone, Copy, Deserialize, Serialize, PartialEq)]
-pub struct Exercise<'a> {
-    #[serde(borrow)]
-    pub name: &'a str,
-    pub muscle_sub_groups: [MuscleSubGroup<'a>; 2], // Has to be statically sized in order to implement Copy trait (will have to do for now)
-    pub recommended_rep_range: [u32; 2],
-    pub equipment: EquipmentType<'a>,
-}
-
 /// "Set" as in a set of reps, not the verb "set"
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
-pub struct SetEntry<'a> {
-    #[serde(borrow)]
-    pub exercise: Exercise<'a>,
+pub struct SetEntry {
     pub reps: u32,
     pub weight: Weight,
     pub reps_in_reserve: f32, // how many more reps you feel you could've done
@@ -29,70 +12,50 @@ pub struct SetEntry<'a> {
 
 /// ExerciseEntry is a collection of Set Entries
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
-pub struct ExerciseEntry<'a> {
-    #[serde(borrow)]
-    pub exercise: Exercise<'a>,
+pub struct ExerciseEntry {
+    pub exercise: String,
     pub comments: String,
-    #[serde(borrow)]
-    pub sets: Vec<SetEntry<'a>>,
+    pub sets: Vec<SetEntry>,
 }
 
 /// WorkoutEntry is a collection of exercise entries
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
-pub struct WorkoutEntry<'a> {
+pub struct WorkoutEntry {
     pub uuid: String,
+    pub title: String,
     pub start_time: u64,
     pub end_time: u64,
-    #[serde(borrow)]
-    pub exercises: Vec<ExerciseEntry<'a>>,
+    pub exercises: Vec<ExerciseEntry>,
     pub comments: String,
     pub user: String,
 }
 
 // Absolutely scuffed, feel free to PR :D
-impl ExerciseEntry<'_> {
+impl ExerciseEntry {
     pub fn from_string(string: &str) -> ExerciseEntry {
         // iter over string, separated by;
         let split = string.split_terminator(';').collect::<Vec<_>>();
-        let mut gen_set_entry: ExerciseEntry = ExerciseEntry {
-            exercise: Exercise {
-                name: "",
-                muscle_sub_groups: [crate::muscles::NONE, crate::muscles::NONE],
-                recommended_rep_range: [0, 0],
-                equipment: equipment::NONE,
-            },
-            comments: "".to_string(),
-            sets: vec![],
-        };
 
-        // iterate over excercises, see if "split[0]" is in the name of an exercise
-        // could be very taxing as list of exercises grows.. maybe use a hashmap?
-        for excercise in EXCERCISES_LIST.iter() {
-            let mut gen_vec = Vec::new();
-            if excercise.name == split[0] {
-                for set in split[1..].iter() {
-                    let proc_set = set.split_terminator(',').collect::<Vec<_>>();
-                    let gen_set = SetEntry {
-                        exercise: *excercise,
-                        reps: proc_set[0].parse::<u32>().unwrap(),
-                        weight: Weight::from_string(proc_set[1]).expect("Invalid weight"),
-                        reps_in_reserve: proc_set[2].parse::<f32>().unwrap(),
-                    };
-                    gen_vec.push(gen_set);
-                }
-                gen_set_entry = ExerciseEntry {
-                    exercise: *excercise,
-                    comments: split[1].to_string(),
-                    sets: gen_vec,
-                };
-                break;
-            }
+        let mut gen_vec: Vec<SetEntry> = Vec::new();
+        for set in split[1..].iter() {
+            let proc_set = set.split_terminator(',').collect::<Vec<_>>();
+            let gen_set = SetEntry {
+                reps: proc_set[0].parse::<u32>().unwrap(),
+                weight: Weight::from_string(proc_set[1]).expect("Invalid weight"),
+                reps_in_reserve: proc_set[2].parse::<f32>().unwrap(),
+            };
+            gen_vec.push(gen_set);
         }
+        let gen_set_entry = ExerciseEntry {
+            exercise: split[0].to_string(),
+            comments: split[1].to_string(),
+            sets: gen_vec,
+        };
         gen_set_entry
     }
 
     pub fn to_string(&self) -> String {
-        let mut stringified_exercise = self.exercise.name.to_string();
+        let mut stringified_exercise = self.exercise.clone();
         for set in self.sets.iter() {
             let _a = format!(
                 ";{},{}{},{}",
@@ -109,7 +72,7 @@ impl ExerciseEntry<'_> {
     }
 
     pub fn to_string_summary(&self) -> String {
-        let mut stringified_exercise = self.exercise.name.to_string();
+        let mut stringified_exercise = self.exercise.clone();
         for set in self.sets.iter() {
             let _a = format!(
                 " - {}x{}{},{}RiR",
@@ -135,7 +98,7 @@ impl ExerciseEntry<'_> {
     }
 }
 
-impl WorkoutEntry<'_> {
+impl WorkoutEntry {
     pub fn to_json(&self) -> serde_json::Value {
         json! {self}
     }
@@ -148,6 +111,7 @@ impl WorkoutEntry<'_> {
     pub fn default() -> Self {
         WorkoutEntry {
             uuid: "".to_string(),
+            title: "".to_string(),
             start_time: 0,
             end_time: 0,
             exercises: vec![],
@@ -155,36 +119,4 @@ impl WorkoutEntry<'_> {
             user: "".to_string(),
         }
     }
-}
-
-lazy_static! {
-    #[derive(Clone, Copy, Serialize, Deserialize)]
-    pub static ref EXCERCISES_LIST: [Exercise<'static>; 2] = [EXERCISE_BENCH_PRESS.to_owned(), EXERCISE_DUMBBELL_BENCH_PRESS.to_owned()];
-}
-
-lazy_static! {
-    pub static ref EXERCISE_BLANK: Exercise<'static> = Exercise {
-        name: "",
-        muscle_sub_groups: [crate::muscles::NONE, crate::muscles::NONE],
-        recommended_rep_range: [0, 0],
-        equipment: equipment::NONE,
-    };
-}
-
-lazy_static! {
-    pub static ref EXERCISE_BENCH_PRESS: Exercise<'static> = Exercise {
-        name: "Bench Press",
-        muscle_sub_groups: [PECTORALIS_MAJOR, PECTORALIS_MINOR].into(),
-        recommended_rep_range: [8, 12],
-        equipment: equipment::BARBELL,
-    };
-}
-
-lazy_static! {
-    pub static ref EXERCISE_DUMBBELL_BENCH_PRESS: Exercise<'static> = Exercise {
-        name: "Dumbbell Bench Press",
-        muscle_sub_groups: [PECTORALIS_MAJOR, PECTORALIS_MINOR].into(),
-        recommended_rep_range: [8, 12],
-        equipment: equipment::DUMBBELLS,
-    };
 }

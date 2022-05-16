@@ -8,7 +8,6 @@ edition = "2021"
 [dependencies]
 chrono = "0.4.19"
 env_logger = "0.9"
-lazy_static = "1.4.0"
 log = "0.4.0"
 ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
 regex-syntax = { version = "0.6.25" }

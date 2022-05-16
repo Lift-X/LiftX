@@ -16,7 +16,7 @@
     {#await data}
         <p>Loading... please wait</p>
     {:then json}
-        <h1>Workout: <Time timestamp={json.start_time * 1000} format="dddd @ h:mm A · MMMM D, YYYY"></Time></h1>
+        <h1>Workout: {json.title}</h1>
         <hr>
         <p>Duration: { duration_from_secs( json.end_time - json.start_time )}</p>
         <p>By: {json.user}</p>
@@ -31,7 +31,7 @@
         <hr>
         {#each json.exercises as exercise}
             <div class="exercise">
-                <h2>{exercise.exercise.name}</h2>
+                <h2>{exercise.exercise}</h2>
                 {#if exercise.comments != ""}
                     <p>Comments: {exercise.comments}</p>
                 {/if}
