@@ -1,12 +1,8 @@
 <script>
     import SveltyPicker from "svelty-picker";
-    import { writable } from "svelte/store";
     let user = "John Doe"; // replace once auth is implemented
     import {modifysets} from "../Components/exercise.js";
     import {addexercise} from "../Components/exercise.js";
-    let json_data = writable({});
-    export {json_data};
-    console.log(json_data);
 </script>
 
 <div class="separator" id="metadata">

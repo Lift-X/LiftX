@@ -65,8 +65,6 @@ export function modifysets() {
     }
 }
 
-import json_data from "../pages/WorkoutNew.svelte";
-//$: json_data_var = { json_data };
 export function addexercise() {
     console.log("addexercise");
 
