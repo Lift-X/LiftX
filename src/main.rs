@@ -13,7 +13,6 @@ mod tests;
 pub mod util;
 
 //use database::build_tables;
-use equipment::WeightType;
 use exercises::{ExerciseEntry, SetEntry, WorkoutEntry};
 use rocket_db_pools::Database;
 use sqlx::{ConnectOptions, SqliteConnection};
@@ -21,9 +20,6 @@ use uuid::Uuid;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
-
-// Global Preference for weight, implement configuration later
-const GLOBAL_WEIGHT_UNIT: WeightType = equipment::POUNDS;
 
 #[rocket::main]
 async fn main() {

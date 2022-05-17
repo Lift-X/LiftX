@@ -1,7 +1,7 @@
 use ordered_float::OrderedFloat;
 
 use crate::{
-    equipment::{EQUIPMENT_LIST, KILOGRAMS, POUNDS},
+    equipment::{EQUIPMENT_LIST, KILOGRAMS, POUNDS, WeightType},
     exercises::{ExerciseEntry, SetEntry},
     *,
 };

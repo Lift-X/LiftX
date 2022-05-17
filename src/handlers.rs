@@ -45,10 +45,8 @@ pub async fn workout_view(
 }
 
 #[get("/workouts/new")]
-pub async fn workout_new(
-    db: Connection<Db>,
-) -> Result<rocket_dyn_templates::Template, rocket_dyn_templates::Template> {
-    Ok(Template::render("new", context! {bloat: "yes"}))
+pub async fn workout_new() -> Option<NamedFile> {
+    NamedFile::open("templates/new.html").await.ok()
 }
 
 #[get("/public/<file..>")]
