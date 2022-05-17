@@ -18,10 +18,6 @@
 </nav>
 
 <style>
-    :global([aria-current]) {
-        font-weight: bold;
-    }
-
     nav {
         align-items: center;
         background-color: #a50b00;

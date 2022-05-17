@@ -1,12 +1,17 @@
 <script>
     import Nav from "../Nav.svelte";
-    import { duration_from_secs} from "../Components/time.js";
     import Time, { svelteTime } from "svelte-time";
     export let id;
     export async function load_json() {
         const response = await fetch("/workouts/" + id + "/json");
         const responseJson = await response.json();
         return responseJson;
+    }
+    export function duration_from_secs(time) {
+        let hours = Math.floor(time / 3600);
+        let minutes = Math.floor((time - hours * 3600) / 60);
+        let seconds = time - hours * 3600 - minutes * 60;
+        return hours + "h " + minutes + "m " + seconds + "s";
     }
     let json_data = load_json();
     $: data = json_data;
