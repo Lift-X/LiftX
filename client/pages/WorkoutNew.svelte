@@ -1,16 +1,16 @@
 <script>
 import SveltyPicker from "svelty-picker";
-import Exercise from "../Components/Exercise.svelte";
-import {modifysets} from "../Components/exercise.js";
-import {addexercise} from "../Components/exercise.js";
+import Exercise from "../Components/ExerciseView.svelte";
+import {addexercise} from "../Components/Exercise.svelte";
 import {json_data} from "../Components/json_store.js";
+import SetEntryForm from "../Components/SetEntryForm.svelte";
 let user = "John Doe"; // replace once auth is implemented
 $json_data.user = user;
 
 $: start_time_bind = null;
-$: start_time = null;
-$: end_time = null;
 $: duration_bind = 0;
+
+$: set_count_bind = 0;
 
 function handle_time(time) {
     let new_time = Math.floor(new Date(time).getTime() / 1000);
@@ -81,8 +81,14 @@ function deleteExercise(exercise) {
     <hr>
     <p>Exercise: <input type="text" class="form-control" id="exercisename" placeholder="Bench Press" maxlength="100" required><span class="validity"></span></p>
     <p>Comments: <input type="text" class="form-control" id="comments" placeholder="Comments (optional)" maxlength="5000"><span class="validity"></span></p>
-    <p>Sets: <input type="number" class="form-control numberform" id="sets" placeholder="Sets" min="0" max="100" required on:input="{modifysets}"><span class="validity"></span></p>
-    <div id="setsdiv"></div>
+    <p>Sets: <input type="number" class="form-control numberform" id="sets" placeholder="Sets" min="0" max="25" required bind:value={set_count_bind} ><span class="validity"></span></p>
+    <div id="setsdiv">
+        {#if set_count_bind > 0 && set_count_bind <= 25}
+            {#each {length: set_count_bind} as _}
+                <SetEntryForm/>
+            {/each}
+        {/if}
+    </div>
     <button type="submit" class="btn btn-primary" id="add-exercise" on:click="{addexercise}">Submit</button>
 </div>
 
