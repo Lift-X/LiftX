@@ -11,7 +11,7 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
   - [X] Workout View
   - [X] Status Codes
   - [X] Workout create
-    - [ ] When adding exercises form a json, render off the json. (Editing/deleting exerices will be possible then)
+    - [X] When adding exercises form a json, render off the json. (Editing/deleting exerices will be possible then)
   - [ ] Homepage
   - [ ] Login/Auth
 - [ ] Authentication + Cookies

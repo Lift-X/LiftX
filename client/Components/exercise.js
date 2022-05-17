@@ -1,4 +1,5 @@
 import { json_data } from "./json_store";
+import {get} from "svelte/store";
 export function modifysets() {
     // Delete previously created sets, if any
     let setslist = document.getElementsByClassName("set");
@@ -51,7 +52,7 @@ export function modifysets() {
         let rir = document.createElement("input");
         rir.type = "number";
         rir.className = "rir numberform";
-        rir.placeholder = "Reps in Reserve";
+        rir.placeholder = "Reps in Reserve (optional)";
         rir.maxLength = "10.0";
         rir.required = true;
         rir.step = "0.5";
@@ -66,8 +67,6 @@ export function modifysets() {
 }
 
 export function addexercise() {
-    console.log("addexercise");
-
     let exercise = {
         name: "",
         comments: "",
@@ -82,9 +81,16 @@ export function addexercise() {
 
     // Sets
     for (let i = 0; i < document.getElementsByClassName("set").length; i++) {
+
+        // Special handling for rir, as it is optional
+        let rir_val = document.getElementsByClassName("rir")[i].value;
+        if (rir_val == "" || rir_val == null) {
+            rir_val = 0;
+        }
+
         let set = {
             reps: document.getElementsByClassName("reps")[i].value,
-            reps_in_reserve: document.getElementsByClassName("rir")[i].value,
+            reps_in_reserve: rir_val,
             weight: {
                 weight: document.getElementsByClassName("weight")[i].value,
                 weightunit: document.getElementsByClassName("weightunit")[i].value,
@@ -93,34 +99,51 @@ export function addexercise() {
         exercise.sets.push(set);
     }
 
+
     // Check for empty fields
     if (exercise.name == "" || exercise.sets.length == 0 || exercise.sets[0].reps == "" || exercise.sets[0].weight == "" || exercise.sets[0].rir == "") {
         alert("Please fill in all fields!");
         return;
     }
 
+    // Hidden at the start when exercises are empty, unhide.
+    document.getElementById("exercises").classList.remove("hidden");
+
     json_data.update(function (data) {
         data.exercises.push(exercise);
         return data;
     });
 
-    // Render
-    let exercises = document.getElementById("exercises");
-    let exerciseDiv = document.createElement("div");
-    exerciseDiv.className = "exercise";
-    exerciseDiv.innerHTML = `
-    <h2>${exercise.name}</h2>
-    <ul>
-        ${exercise.sets.map(set => `
-            <li>
-                <p>Reps: ${set.reps} x ${set.weight.weight}${set.weight.weightunit} - ${set.reps_in_reserve}RiR</p>
-            </li>
-        `).join("")}
-    </ul>
-`;
-    exercises.appendChild(exerciseDiv);
-
-    //json_data.exercises.push(exercise);
-    //$json_data_var.update(value => value.exercises.push(exercise));
-    //console.log({ json_data_var });
+   //render();
 }
+
+/*
+function render() {
+    // Remove any elements under the exercises id
+    let exercises_div = document.getElementById("exercises");
+    exercises_div.innerHTML = "<h1>Exercises</h1><hr>";
+
+    let arr = get(json_data);
+    console.log(arr);
+
+    // Render each exercise
+    for (let i = 0; i < arr.exercises.length; i++) {
+        let exercise = arr.exercises[i];
+        let exercise_div = document.createElement("div");
+        exercise_div.className = "exercise";
+        exercise_div.id = "exercise-" + i;
+        exercise_div.innerHTML = `
+        <h2>${exercise.name}</h2>
+        <ul>
+            ${exercise.sets.map(set => `
+                <li>
+                    <p>Reps: ${set.reps} x ${set.weight.weight}${set.weight.weightunit} - ${set.reps_in_reserve}RiR</p>
+                </li>
+            `).join("")}
+        </ul>
+        <button class="button delete-button" on:click=${`() => delete_exercise(${i})`}>Delete Exercise</button>
+        `;
+        exercises_div.appendChild(exercise_div);
+    }
+}
+*/

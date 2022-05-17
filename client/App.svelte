@@ -30,4 +30,8 @@
     margin: auto;
     font-family: "Roboto", sans-serif;
   }
+
+  :global(.hidden) {
+    display: none;
+  }
 </style>

@@ -1,9 +1,12 @@
 <script>
 import SveltyPicker from "svelty-picker";
-let user = "John Doe"; // replace once auth is implemented
+import Exercise from "../Components/Exercise.svelte";
 import {modifysets} from "../Components/exercise.js";
 import {addexercise} from "../Components/exercise.js";
 import {json_data} from "../Components/json_store.js";
+let user = "John Doe"; // replace once auth is implemented
+$json_data.user = user;
+
 $: start_time_bind = null;
 $: start_time = null;
 $: end_time = null;
@@ -52,10 +55,21 @@ function validate_json() {
 
     return valid;
 }
+
+function deleteExercise(exercise) {
+    let index = $json_data.exercises.indexOf(exercise);
+
+    if (index > -1) {
+        json_data.update(data => {
+            data.exercises.splice(index, 1);
+            return data;
+        });
+    }
+}
 </script>
 
 <div class="separator" id="metadata">
-    <h1>New Workout</h1>
+    <h1>New Workout: <input type="text" name="title" placeholder="Push Day" bind:value="{$json_data.title}" /></h1>
     <hr>
     <p>By: {user}</p>
     <p>Start: <SveltyPicker inputClasses="form-control" format="yyyy-mm-dd hh:ii" bind:value={start_time_bind} on:change={handle_time(start_time_bind)}></SveltyPicker></p>
@@ -66,15 +80,18 @@ function validate_json() {
     <h1>Add Exercise</h1>
     <hr>
     <p>Exercise: <input type="text" class="form-control" id="exercisename" placeholder="Bench Press" maxlength="100" required><span class="validity"></span></p>
-    <p>Comments: <input type="text" class="form-control" id="comments" maxlength="5000" placeholder="Comments (optional)"><span class="validity"></span></p>
+    <p>Comments: <input type="text" class="form-control" id="comments" placeholder="Comments (optional)" maxlength="5000"><span class="validity"></span></p>
     <p>Sets: <input type="number" class="form-control numberform" id="sets" placeholder="Sets" min="0" max="100" required on:input="{modifysets}"><span class="validity"></span></p>
     <div id="setsdiv"></div>
     <button type="submit" class="btn btn-primary" id="add-exercise" on:click="{addexercise}">Submit</button>
 </div>
 
-<div class="separator" id="exercises">
+<div class="separator hidden" id="exercises">
     <h1>Exercises</h1>
     <hr>
+    {#each $json_data.exercises as exercise}
+        <Exercise exercise={exercise} on:delete={deleteExercise(exercise)} ></Exercise>
+    {/each}
 </div>
 
 <hr>
@@ -104,5 +121,17 @@ input:valid+span:after {
 
 :global(.numberform) {
     max-width: 150px;
+}
+
+:global(.delete-button) {
+  background-color: #fa6464;
+  border: none;
+  color: white;
+  padding: 15px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 15px;
 }
 </style>
