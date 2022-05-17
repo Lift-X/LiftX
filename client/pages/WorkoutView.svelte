@@ -1,6 +1,5 @@
 <script>
-    import Nav from "../Nav.svelte";
-    import Time, { svelteTime } from "svelte-time";
+    import Exercise from "../Components/ExerciseView.svelte";
     export let id;
     export async function load_json() {
         const response = await fetch("/workouts/" + id + "/json");
@@ -35,17 +34,7 @@
         <h1>Exercises</h1>
         <hr>
         {#each json.exercises as exercise}
-            <div class="exercise">
-                <h2>{exercise.exercise}</h2>
-                {#if exercise.comments != ""}
-                    <p>Comments: {exercise.comments}</p>
-                {/if}
-                <ul>
-                {#each exercise.sets as set}
-                        <li>{set.reps} x {set.weight.weight} {set.weight.weight_unit} - {set.reps_in_reserve}RiR</li>
-                {/each}
-                </ul>
-            </div>
+            <Exercise exercise={exercise} view_only=true />
         {/each}
     {/await}
 </div>

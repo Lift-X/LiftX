@@ -4,13 +4,13 @@ import SetEntryForm from "./SetEntryForm.svelte";
 
 export function addexercise() {
     let exercise = {
-        name: "",
+        exercise: "",
         comments: "",
         sets: [],
     }
 
     // Name
-    exercise.name = document.getElementById("exercisename").value;
+    exercise.exercise = document.getElementById("exercisename").value;
 
     // Comments
     exercise.comments = document.getElementById("comments").value;
@@ -29,7 +29,7 @@ export function addexercise() {
             reps_in_reserve: rir_val,
             weight: {
                 weight: document.getElementsByClassName("weight")[i].value,
-                weightunit: document.getElementsByClassName("weightunit")[i].value,
+                weight_unit: document.getElementsByClassName("weightunit")[i].value,
             },
         }
         exercise.sets.push(set);
@@ -37,7 +37,7 @@ export function addexercise() {
 
 
     // Check for empty fields
-    if (exercise.name == "" || exercise.sets.length == 0 || exercise.sets[0].reps == "" || exercise.sets[0].weight == "" || exercise.sets[0].rir == "") {
+    if (exercise.exercise == "" || exercise.sets.length == 0 || exercise.sets[0].reps == "" || exercise.sets[0].weight == "" || exercise.sets[0].rir == "") {
         alert("Please fill in all fields!");
         return;
     }
@@ -49,6 +49,5 @@ export function addexercise() {
         data.exercises.push(exercise);
         return data;
     });
-
 }
 </script>

@@ -9,8 +9,8 @@
 
 <div class="set">
     <ul>
-    <li><input type="number" id="reps" class="numberform" placeholder="Reps" min=0 max=100 required/></li>
-    <li><input type="number" id="weight" class="numberform" placeholder="Weight" min=0 max=5000 required/><select class="weightunit"><option value="lbs" text="Pounds">lbs</option><option value="kg" text="Kilograms">kg</option></select></li>
-    <li><input type="number" id="rir" class="numberform" placeholder="Reps in Reserve (optional)" min=0 max=10.0 steps=0.5/></li>
+    <li><input type="number" class="reps numberform" placeholder="Reps" min=0 max=100 required/></li>
+    <li><input type="number" class="weight numberform" placeholder="Weight" min=0 max=5000 required/><select class="weightunit"><option value="lbs" text="Pounds">lbs</option><option value="kg" text="Kilograms">kg</option></select></li>
+    <li><input type="number" class="rir numberform" placeholder="Reps in Reserve (optional)" min=0 max=10.0 steps=0.5/></li>
     </ul>
 </div>
