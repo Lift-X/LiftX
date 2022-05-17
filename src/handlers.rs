@@ -1,47 +1,13 @@
 use rocket::fs::NamedFile;
-use rocket_db_pools::Connection;
 use rocket_dyn_templates::{context, Template};
 
 #[allow(unused_imports)]
 use crate::database::{Db, WorkoutID};
-use crate::{exercises::WorkoutEntry, util::timestamp_to_iso8601};
 
 #[get("/workouts/<id>")]
-pub async fn workout_view(
-    id: String,
-    mut db: Connection<Db>,
-) -> Result<rocket_dyn_templates::Template, rocket_dyn_templates::Template> {
-    let data: String;
-
-    // Query the database via ID, return data column
-    let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id).fetch_one(&mut *db);
-
-    // If workout doesn't exist, 404.
-    match wrap_data.await {
-        Ok(wrap_data) => {
-            data = wrap_data.data.unwrap();
-        }
-        Err(_) => return Err(workout_404()),
-    }
-
-    // inline most of this unless it's complex once working
-    let entry = WorkoutEntry::from_json(&data);
-    // Get date and time
-    let workout_start = timestamp_to_iso8601(entry.start_time);
-    let workout_duration = crate::util::human_duration(entry.start_time, entry.end_time);
-    let comments_not_empty = !&entry.comments.is_empty();
-    Ok(Template::render(
-        "view",
-        context! {
-            workout_start: workout_start,
-            workout_duration: workout_duration,
-            // Workout items
-            workout_data: &entry,
-            sets: &entry.exercises,
-            // Hide comments section if empty
-            comments_not_empty: comments_not_empty,
-        },
-    ))
+pub async fn workout_view(id: String) -> Option<NamedFile> {
+    println!("Viewing {}", id);
+    NamedFile::open("templates/view.html").await.ok()
 }
 
 #[get("/workouts/new")]

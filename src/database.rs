@@ -46,9 +46,10 @@ pub async fn build_tables(mut conn: SqliteConnection) {
 pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, mut conn: SqliteConnection) {
     println!("Creating ExerciseEntry with id: {}...", uuid.to_string());
     let query = format!(
-        "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', 'John Doe', '{}')",
+        "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', '{}', '{}')",
         uuid.to_string(),
         std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
+        exercise.user,
         exercise.to_json()
     );
     sqlx::query(&query).execute(&mut conn).await.unwrap();

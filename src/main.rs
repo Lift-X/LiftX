@@ -55,6 +55,7 @@ async fn launch_web() {
                 crate::handlers::workout_new,
             ],
         )
+        .mount("/api", routes![crate::api::workout_post_json])
         .register("/workouts/", catchers![crate::handlers::workout_404])
         .register("/", catchers![crate::handlers::general_404]);
     rocket.launch().await.expect("Failed to launch web server!");
@@ -85,7 +86,6 @@ async fn dev(conn: SqliteConnection) {
         start_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
         end_time: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() + 3600,
         exercises: vec![bench_set.clone()],
-        comments: "".to_string(),
         user: "John Doe".to_string(),
     };
     //database::build_tables(conn).await;

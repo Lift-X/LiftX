@@ -171,7 +171,6 @@ fn test_workout() {
         start_time: time,
         end_time: time_1hr,
         exercises: vec![bench_set.clone()],
-        comments: "".to_string(),
         user: "John Doe".to_string(),
         uuid: uuid.to_string(),
         title: "test".to_string(),
@@ -256,6 +255,5 @@ fn test_workout_entry_default() {
     assert_eq!(default.start_time, 0);
     assert_eq!(default.end_time, 0);
     assert_eq!(default.exercises.len(), 0);
-    assert_eq!(default.comments, "");
     assert_eq!(default.user, "");
 }

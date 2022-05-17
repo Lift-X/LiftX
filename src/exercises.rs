@@ -26,7 +26,6 @@ pub struct WorkoutEntry {
     pub start_time: u64,
     pub end_time: u64,
     pub exercises: Vec<ExerciseEntry>,
-    pub comments: String,
     pub user: String,
 }
 
@@ -115,7 +114,6 @@ impl WorkoutEntry {
             start_time: 0,
             end_time: 0,
             exercises: vec![],
-            comments: "".to_string(),
             user: "".to_string(),
         }
     }

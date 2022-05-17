@@ -1,6 +1,6 @@
 <script>
     export let exercise;
-    export let view_only = false;
+    export let view_only = false; // Hide delete button if true
 
     import { createEventDispatcher } from 'svelte'
     const dispatch = createEventDispatcher()
@@ -21,6 +21,6 @@
         <p>Comments: {exercise.comments}</p>
     {/if}
     {#if !view_only}
-        <button class="button delete-button" on:click={onDelete}>Delete Exercise</button>
+        <button class="button delete-button" on:click={onDelete}>Delete</button>
     {/if}
 </div>

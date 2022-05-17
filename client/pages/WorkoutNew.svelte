@@ -8,6 +8,8 @@ let user = "John Doe"; // replace once auth is implemented
 $json_data.user = user;
 
 $: start_time_bind = null;
+$: start_time = null;
+$: end_time = null;
 $: duration_bind = 0;
 
 $: set_count_bind = 0;
@@ -53,6 +55,13 @@ function validate_json() {
         valid = false;
     }
 
+    // Convert any stringed numbers to numbers
+    for (let i = 0; i < $json_data.exercises.length; i++) {
+        for (let j = 0; j < $json_data.exercises[i].sets.length; j++) {
+            $json_data.exercises[i].sets[j].reps = Number($json_data.exercises[i].sets[j].reps);
+            $json_data.exercises[i].sets[j].weight.weight = Number($json_data.exercises[i].sets[j].weight.weight);
+        }
+    }
     return valid;
 }
 
@@ -64,6 +73,28 @@ function deleteExercise(exercise) {
             data.exercises.splice(index, 1);
             return data;
         });
+    }
+}
+
+function post() {
+    if (validate_json()) {
+        let data = JSON.stringify($json_data);
+        let url = "/api/workouts/json";
+        fetch(url, {
+            method: "POST",
+            body: data,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                console.log("Successfully posted workout");
+            } else {
+                console.log("Failed to post workout!");
+            }
+        });
+    } else {
+        console.log("Invalid workout!");
     }
 }
 </script>
@@ -98,6 +129,12 @@ function deleteExercise(exercise) {
     {#each $json_data.exercises as exercise}
         <Exercise exercise={exercise} on:delete={deleteExercise(exercise)} ></Exercise>
     {/each}
+</div>
+
+<div class="separator" id="submit">
+    <h1>Submit</h1>
+    <hr>
+    <button type="submit" class="btn btn-primary" id="submit-workout" on:click="{post}">Submit</button>
 </div>
 
 <hr>
