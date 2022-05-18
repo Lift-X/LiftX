@@ -3,7 +3,6 @@
   import Footer from "./Footer.svelte";
   import { Router, Route } from "yrv";
   import Home from "./pages/Home.svelte";
-  import About from "./pages/About.svelte";
   import WorkoutView from "./pages/WorkoutView.svelte";
   import WorkoutNew from "./pages/WorkoutNew.svelte";
 </script>
@@ -12,11 +11,7 @@
   <Nav />
   <Router>
     <Route exact path="/"><Home /></Route>
-    <Route path="#about"><About /></Route>
-    <Route exact path="#bruh"><WorkoutView /></Route>
-    <Route path="/workouts/:id" let:router
-      ><WorkoutView id={router.params.id} /></Route
-    >
+    <Route path="/workouts/:id" let:router><WorkoutView id={router.params.id} /></Route>
     <Route exact path="/workouts/new"><WorkoutNew /></Route>
   </Router>
   <Footer />

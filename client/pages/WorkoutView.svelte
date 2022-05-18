@@ -2,7 +2,7 @@
     import Exercise from "../Components/ExerciseView.svelte";
     export let id;
     export async function load_json() {
-        const response = await fetch("/workouts/" + id + "/json");
+        const response = await fetch("/api/workouts/" + id + "/json");
         const responseJson = await response.json();
         return responseJson;
     }

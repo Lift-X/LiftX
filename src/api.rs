@@ -1,4 +1,3 @@
-use rocket::response::Redirect;
 use rocket_db_pools::Connection;
 use uuid::Uuid;
 
