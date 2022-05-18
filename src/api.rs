@@ -1,3 +1,4 @@
+use rocket::response::Redirect;
 use rocket_db_pools::Connection;
 use uuid::Uuid;
 
@@ -25,7 +26,7 @@ pub async fn workout_json(
 }
 
 #[post("/workouts/json", format = "json", data = "<data>")]
-pub async fn workout_post_json(data: rocket::serde::json::Json<WorkoutEntry>) {
+pub async fn workout_post_json(data: rocket::serde::json::Json<WorkoutEntry>) -> rocket::response::Redirect {
     // TODO: Somehow connect to DB pool
     let conn =
     sqlx::ConnectOptions::connect(&<sqlx::sqlite::SqliteConnectOptions as std::str::FromStr> ::from_str("sqlite://data.db").unwrap().create_if_missing(true))
@@ -37,4 +38,5 @@ pub async fn workout_post_json(data: rocket::serde::json::Json<WorkoutEntry>) {
     let uuid = Uuid::new_v4();
     println!("Creating workoutentry with {}", uuid);
     crate::database::insert_workout(uuid, val, conn).await;
+    rocket::response::Redirect::to(format!("/workouts/{}", uuid))
 }

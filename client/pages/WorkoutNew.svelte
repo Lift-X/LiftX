@@ -88,9 +88,11 @@ function post() {
             }
         }).then(response => {
             if (response.status == 200) {
-                console.log("Successfully posted workout");
+                console.log("Successfully posted workout, redirecting...");
+                window.location.href = response.url;
             } else {
-                console.log("Failed to post workout!");
+                // TODO: Add notification ui for failed post
+                console.log("Failed to post workout: " + response.status);
             }
         });
     } else {
