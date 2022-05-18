@@ -49,13 +49,13 @@ async fn launch_web() {
         .mount(
             "/",
             routes![
+                crate::handlers::home,
                 crate::handlers::workout_view,
                 crate::handlers::static_file,
                 crate::handlers::workout_new,
             ],
         )
         .mount("/api", routes![crate::api::workout_json, crate::api::workout_post_json])
-        .register("/workouts/", catchers![crate::handlers::workout_404])
         .register("/", catchers![crate::handlers::general_404]);
     rocket.launch().await.expect("Failed to launch web server!");
 }

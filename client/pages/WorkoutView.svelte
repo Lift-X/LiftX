@@ -16,6 +16,15 @@
     $: data = json_data;
 </script>
 
+<svelte:head>
+    {#await data}
+        <title>Loading...</title>
+    {:then json}
+        <title>WLRS - Workout: {json.title}</title>
+    {/await}
+</svelte:head>
+
+
 <div class="separator" id="metadata">
     {#await data}
         <p>Loading... please wait</p>

@@ -101,6 +101,10 @@ function post() {
 }
 </script>
 
+<svelte:head>
+    <title>WLRS - New Workout</title>
+</svelte:head>
+
 <div class="separator" id="metadata">
     <h1>New Workout: <input type="text" name="title" placeholder="Push Day" bind:value="{$json_data.title}" /></h1>
     <hr>
