@@ -4,7 +4,13 @@
     export async function load_json() {
         const response = await fetch("/api/workouts/" + id + "/json");
         const responseJson = await response.json();
-        return responseJson;
+        if (responseJson.error != null) {
+            // Hide workout section
+            document.getElementById("workout").style.display = "none";
+            throw new Error(responseJson.error);
+        } else {
+            return responseJson;
+        }
     }
     export function duration_from_secs(time) {
         let hours = Math.floor(time / 3600);
@@ -21,6 +27,8 @@
         <title>Loading...</title>
     {:then json}
         <title>WLRS - Workout: {json.title}</title>
+    {:catch error}
+        <title>WLRS - {error}</title>
     {/await}
 </svelte:head>
 
@@ -33,6 +41,12 @@
         <hr>
         <p>Duration: { duration_from_secs( json.end_time - json.start_time )}</p>
         <p>By: {json.user}</p>
+    {:catch error}
+        <center id="404">
+            <h1>404</h1>
+            <hr>
+            <p>{error}</p>
+        </center>
     {/await}
 </div>
 
@@ -45,6 +59,8 @@
         {#each json.exercises as exercise}
             <Exercise exercise={exercise} view_only=true />
         {/each}
+    {:catch error}
+        <p>{error}</p>
     {/await}
 </div>
 

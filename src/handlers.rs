@@ -35,5 +35,5 @@ pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {
 
 #[catch(404)]
 pub async fn general_404() -> Option<NamedFile> {
-    NamedFile::open("templates/basic.html").await.ok()
+    NamedFile::open("templates/404.html").await.ok()
 }

@@ -29,4 +29,8 @@
   :global(.hidden) {
     display: none;
   }
+
+  :global(.center) {
+    text-align: center;
+  }
 </style>
