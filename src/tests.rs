@@ -1,9 +1,10 @@
 use ordered_float::OrderedFloat;
 
 use crate::{
-    equipment::{EQUIPMENT_LIST, KILOGRAMS, POUNDS, WeightType},
-    exercises::{ExerciseEntry, SetEntry},
-    *,
+    database,
+    equipment::{self, Weight, WeightType, EQUIPMENT_LIST, KILOGRAMS, POUNDS},
+    exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
+    muscles, util,
 };
 
 /*#[tokio::test]
@@ -188,11 +189,11 @@ fn test_workout() {
 fn test_user() {
     let user = database::User {
         name: "test".to_string(),
-        email: "test@example.com".to_string(),
         password: "password".to_string(),
+        id: "1".to_string(),
     };
     assert_eq!(user.name, "test");
-    assert_eq!(user.email, "test@example.com");
+    assert_eq!(user.id, "1");
     assert_eq!(user.password, "password");
 }
 
@@ -206,7 +207,7 @@ fn test_workout_id() {
     let uuid = uuid::Uuid::new_v4().to_string();
     let user = database::User {
         name: "test".to_string(),
-        email: "test@example.com".to_string(),
+        id: "1".to_string(),
         password: "password".to_string(),
     };
     let workout_id = database::WorkoutID {
@@ -216,6 +217,7 @@ fn test_workout_id() {
     };
     assert_eq!(workout_id.uuid, uuid);
     assert_eq!(workout_id.user.name, "test");
+    assert_eq!(workout_id.user.id, "1");
     assert_eq!(workout_id.timestamp, time);
 }
 

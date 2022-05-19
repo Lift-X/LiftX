@@ -5,7 +5,7 @@ use crate::database::{Db, WorkoutID};
 
 #[get("/workouts/<id>")]
 pub async fn workout_view(id: String) -> Option<NamedFile> {
-    println!("Viewing {}", id);
+    debug!("Viewing {}", id);
     NamedFile::open("templates/basic.html").await.ok()
 }
 

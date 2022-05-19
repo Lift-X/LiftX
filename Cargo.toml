@@ -3,24 +3,29 @@ name = "wlrs"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-chrono = "0.4.19"
-env_logger = "0.9"
+# Logging
 log = "0.4.0"
-ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
-regex-syntax = { version = "0.6.25" }
-rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-rc.1", features = ["json"] }
+# Web
+rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-rc.1", features = ["json", "secrets"] }
 rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
-rocket_dyn_templates = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc.1", features = ["handlebars"] }
+tokio = "1.18.1"
+# Time
+time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }
+chrono = "0.4.19"
+# JSON
 serde = { version = "1.0.137", features = ["derive"] }
 serde_json = { version = "1.0.68" }
-sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
-time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }
-tokio = "1.18.1"
-tracing-core = { version = "0.1.26" }
+## For workout IDs
 uuid = { version = "1.0.0", features = ["v4", "fast-rng"] }
+#DB
+sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
+# Misc
+ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
+regex-syntax = { version = "0.6.25" }
+tracing-core = { version = "0.1.26" }
+# Auth
+rocket_auth = { version = "0.4.0", features = ["sqlx-sqlite"]}
 
 [profile.release]
 panic = "abort"
