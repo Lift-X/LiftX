@@ -2,7 +2,7 @@ use crate::exercises::WorkoutEntry;
 use serde::{Deserialize, Serialize};
 
 use rocket_db_pools::{sqlx, Database};
-use sqlx::{SqlitePool};
+use sqlx::SqlitePool;
 
 #[derive(Database)]
 #[database("sqlite_db")]
@@ -39,7 +39,7 @@ pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, conn: &Sql
     debug!("Creating ExerciseEntry with id: {}...", uuid.to_string());
     let query = format!(
         "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', '{}', '{}')",
-        uuid.to_string(),
+        uuid,
         std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
         exercise.user,
         exercise.to_json()

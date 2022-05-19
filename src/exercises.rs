@@ -45,29 +45,11 @@ impl ExerciseEntry {
             };
             gen_vec.push(gen_set);
         }
-        let gen_set_entry = ExerciseEntry {
+        ExerciseEntry {
             exercise: split[0].to_string(),
             comments: split[1].to_string(),
             sets: gen_vec,
-        };
-        gen_set_entry
-    }
-
-    pub fn to_string(&self) -> String {
-        let mut stringified_exercise = self.exercise.clone();
-        for set in self.sets.iter() {
-            let _a = format!(
-                ";{},{}{},{}",
-                set.reps,
-                set.weight.weight,
-                WeightType::from_string(&set.weight.weight_unit)
-                    .expect("Invalid Weight Type!")
-                    .short_name,
-                set.reps_in_reserve
-            );
-            stringified_exercise.push_str(&_a);
         }
-        return stringified_exercise.trim().to_string();
     }
 
     pub fn to_string_summary(&self) -> String {
@@ -92,8 +74,26 @@ impl ExerciseEntry {
     }
 
     pub fn from_json(string: &str) -> ExerciseEntry {
-        let exercise: ExerciseEntry = serde_json::from_str(string).unwrap();
-        exercise
+        serde_json::from_str(string).unwrap()
+    }
+}
+
+impl std::fmt::Display for ExerciseEntry {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let mut stringified_exercise = self.exercise.clone();
+        for set in self.sets.iter() {
+            let _a = format!(
+                ";{},{}{},{}",
+                set.reps,
+                set.weight.weight,
+                WeightType::from_string(&set.weight.weight_unit)
+                    .expect("Invalid Weight Type!")
+                    .short_name,
+                set.reps_in_reserve
+            );
+            stringified_exercise.push_str(&_a);
+        }
+        write!(f, "{}", stringified_exercise)
     }
 }
 

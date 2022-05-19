@@ -20,16 +20,19 @@ pub async fn workout_json(
     match wrap_data.await {
         Ok(wrap_data) => {
             let str: &str = wrap_data.try_get("data").unwrap();
-            return Ok(serde_json::from_str(str).unwrap());
+            Ok(serde_json::from_str(str).unwrap())
         }
         Err(_) => {
-            return Err(serde_json::from_str("{\"error\": \"Workout not found!\"}").unwrap());
+            Err(serde_json::from_str("{\"error\": \"Workout not found!\"}").unwrap())
         }
     }
 }
 
 #[post("/workouts/json", format = "json", data = "<data>")]
-pub async fn workout_post_json(data: rocket::serde::json::Json<WorkoutEntry>, conn: &State<SqlitePool>) -> rocket::response::Redirect {
+pub async fn workout_post_json(
+    data: rocket::serde::json::Json<WorkoutEntry>,
+    conn: &State<SqlitePool>,
+) -> rocket::response::Redirect {
     // "Unwrap" Json<WorkoutEntry> to WorkoutEntry
     let val: WorkoutEntry = data.into_inner();
     // Generate UUID

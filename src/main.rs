@@ -63,7 +63,8 @@ async fn launch_web(conn: sqlx::SqlitePool) {
             "/api",
             routes![crate::api::workout_json, crate::api::workout_post_json],
         )
-        .register("/", catchers![crate::handlers::general_404]).manage(conn);
+        .register("/", catchers![crate::handlers::general_404])
+        .manage(conn);
     let rocket = rocket.launch().await;
 
     match rocket {

@@ -88,7 +88,7 @@ impl Weight {
 
 impl WeightType<'_> {
     pub fn from_string(string: &str) -> Result<WeightType, String> {
-        match string.as_ref() {
+        match string {
             "kgs" => Ok(KILOGRAMS),
             "lbs" => Ok(POUNDS),
             _ => Err("Invalid Weight Type!".to_string()),
