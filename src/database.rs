@@ -28,11 +28,15 @@ pub async fn create_connection() -> sqlx::SqlitePool {
 }
 
 pub async fn build_tables(conn: SqlitePool) {
+    // Workout Table
     sqlx::query("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created char(12), user TINYTEXT, data MEDIUMTEXT)")
         .execute(&conn)
         .await
         .unwrap();
-    warn!("Tables not found. Building.")
+
+    // User Table
+    let users: rocket_auth::Users = conn.into();
+    users.create_table().await.unwrap();
 }
 
 pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, conn: &SqlitePool) {

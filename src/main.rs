@@ -24,10 +24,7 @@ async fn main() {
 
     match conn {
         Ok(conn) => {
-            // Initialize database tables, if not already present
-            let users: rocket_auth::Users = conn.clone().into();
-            users.create_table().await.unwrap();
-
+            // Initialize Database tables if they don't exist
             database::build_tables(conn.clone()).await;
             info!("Database connection successful");
             launch_web(conn).await;
