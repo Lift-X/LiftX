@@ -13,7 +13,6 @@ mod tests;
 pub mod util;
 
 use rocket_db_pools::Database;
-use sqlx::ConnectOptions;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
@@ -21,30 +20,27 @@ use crate::{database::create_connection, equipment::Weight};
 #[rocket::main]
 async fn main() {
     // connect to DB
-    let conn =
-        <sqlx::sqlite::SqliteConnectOptions as std::str::FromStr>::from_str("sqlite://data.db")
-            .unwrap()
-            .create_if_missing(true)
-            .connect().await;
+    let conn = sqlx::SqlitePool::connect("data.db").await;
 
     match conn {
         Ok(conn) => {
             // Initialize database tables, if not already present
-            database::build_tables(conn).await;
+            let users: rocket_auth::Users = conn.clone().into();
+            users.create_table().await.unwrap();
+
+            database::build_tables(conn.clone()).await;
             info!("Database connection successful");
+            launch_web(conn).await;
         }
         Err(e) => {
             error!("Database connection failed: {}", e);
         }
     }
-
-    // As the name implies, launch the rocket web server
-    launch_web().await;
 }
 
-/// Launch the rocket web server
+/// Launch the rocket web server.
 /// Policies: no mime sniffing, xss filtering, no ref
-async fn launch_web() {
+async fn launch_web(conn: sqlx::SqlitePool) {
     // launch web server
     let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
@@ -67,7 +63,7 @@ async fn launch_web() {
             "/api",
             routes![crate::api::workout_json, crate::api::workout_post_json],
         )
-        .register("/", catchers![crate::handlers::general_404]);
+        .register("/", catchers![crate::handlers::general_404]).manage(conn);
     let rocket = rocket.launch().await;
 
     match rocket {

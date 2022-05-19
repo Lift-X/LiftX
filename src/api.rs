@@ -1,5 +1,6 @@
+use rocket::State;
 use rocket_db_pools::Connection;
-use sqlx::Row;
+use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::{database::Db, exercises::WorkoutEntry};
@@ -28,22 +29,12 @@ pub async fn workout_json(
 }
 
 #[post("/workouts/json", format = "json", data = "<data>")]
-pub async fn workout_post_json(
-    data: rocket::serde::json::Json<WorkoutEntry>,
-) -> rocket::response::Redirect {
-    // TODO: Somehow connect to DB pool
-    let conn = sqlx::ConnectOptions::connect(
-        &<sqlx::sqlite::SqliteConnectOptions as std::str::FromStr>::from_str("sqlite://data.db")
-            .unwrap()
-            .create_if_missing(true),
-    )
-    .await
-    .unwrap();
+pub async fn workout_post_json(data: rocket::serde::json::Json<WorkoutEntry>, conn: &State<SqlitePool>) -> rocket::response::Redirect {
     // "Unwrap" Json<WorkoutEntry> to WorkoutEntry
     let val: WorkoutEntry = data.into_inner();
     // Generate UUID
     let uuid = Uuid::new_v4();
     debug!("Creating workoutentry with {}", uuid);
-    crate::database::insert_workout(uuid, val, conn).await;
+    crate::database::insert_workout(uuid, val, &**conn).await;
     rocket::response::Redirect::to(format!("/workouts/{}", uuid))
 }

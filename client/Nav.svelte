@@ -10,8 +10,7 @@
         <div class="navbar-menu">
             <ul class="nav-links">
                 <li><a class="navbar-item" href="/">Home</a></li>
-                <li><a class="navbar-item" href="#about">Svelte</a></li>
-                <li><a class="navbar-item" href="#app/common">Common</a></li>
+                <li><a class="navbar-item" href="/login">Login</a></li>
             </ul>
         </div>
     </div>

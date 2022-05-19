@@ -2,7 +2,7 @@ use crate::exercises::WorkoutEntry;
 use serde::{Deserialize, Serialize};
 
 use rocket_db_pools::{sqlx, Database};
-use sqlx::SqliteConnection;
+use sqlx::{SqlitePool};
 
 #[derive(Database)]
 #[database("sqlite_db")]
@@ -23,19 +23,19 @@ pub struct User {
 }
 
 pub async fn create_connection() -> sqlx::SqlitePool {
-    let pool = sqlx::SqlitePool::connect("sqlite_db").await.unwrap();
+    let pool = sqlx::SqlitePool::connect("data.db").await.unwrap();
     pool
 }
 
-pub async fn build_tables(mut conn: SqliteConnection) {
+pub async fn build_tables(conn: SqlitePool) {
     sqlx::query("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created char(12), user TINYTEXT, data MEDIUMTEXT)")
-        .execute(&mut conn)
+        .execute(&conn)
         .await
         .unwrap();
     warn!("Tables not found. Building.")
 }
 
-pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, mut conn: SqliteConnection) {
+pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, conn: &SqlitePool) {
     debug!("Creating ExerciseEntry with id: {}...", uuid.to_string());
     let query = format!(
         "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', '{}', '{}')",
@@ -44,5 +44,5 @@ pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, mut conn: 
         exercise.user,
         exercise.to_json()
     );
-    sqlx::query(&query).execute(&mut conn).await.unwrap();
+    sqlx::query(&query).execute(conn).await.unwrap();
 }
