@@ -206,7 +206,7 @@ fn test_time_iso8601() {
 
 #[test]
 fn test_workout_entry_from_json() {
-    let json = exercises::WorkoutEntry::default().to_json();
+    let json = exercises::WorkoutEntry::default().to_json(uuid::Uuid::new_v4());
     assert_eq!(
         exercises::WorkoutEntry::from_json(&json.to_string()),
         exercises::WorkoutEntry::default()
