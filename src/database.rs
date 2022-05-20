@@ -23,14 +23,14 @@ pub async fn build_tables(conn: SqlitePool) {
     users.create_table().await.unwrap();
 }
 
-pub async fn insert_workout(uuid: uuid::Uuid, exercise: WorkoutEntry, conn: &SqlitePool) {
+pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: &SqlitePool) {
     debug!("Creating ExerciseEntry with id: {}...", uuid.to_string());
     let query = format!(
         "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', '{}', '{}')",
         uuid,
         std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
-        exercise.user,
-        exercise.to_json()
+        exercise.user.clone(),
+        exercise.to_json(uuid)
     );
     sqlx::query(&query).execute(conn).await.unwrap();
 }

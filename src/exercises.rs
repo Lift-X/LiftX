@@ -1,6 +1,7 @@
 use crate::equipment::{Weight, WeightType};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use uuid::Uuid;
 
 /// "Set" as in a set of reps, not the verb "set"
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
@@ -98,7 +99,8 @@ impl std::fmt::Display for ExerciseEntry {
 }
 
 impl WorkoutEntry {
-    pub fn to_json(&self) -> serde_json::Value {
+    pub fn to_json(&mut self, uuid: Uuid) -> serde_json::Value {
+        self.uuid = uuid.to_string();
         json! {self}
     }
 
