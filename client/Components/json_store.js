@@ -1,4 +1,5 @@
 import { writable } from "svelte/store";
+import {get} from 'svelte/store';
 
 export const json_data = writable({
     user: "",
@@ -9,20 +10,22 @@ export const json_data = writable({
     exercises: [],
 });
 
-export const logged_in = writable({
-    user: "",
-    value: false,
-    error: "",
-});
-
 export async function get_current_user() {
+    // If logged in, don't make uneeded api calls
+    // Retrive json_data svelte store
+    const json_data_store = get(json_data);
+    if (json_data_store.user != "") {
+        console.log("Skipping user lookup");
+        return;
+    }
+    console.log("Calling user api");
     const response = await fetch("/api/user/current");
     const statusText = response.statusText;
-    const data = await response.json();
     if (statusText != "Unauthorized") {
+        const data = await response.json();
         json_data.update((old) => { old.user = data.name; return old; });
     } else {
-        logged_in.update((old) => { old.error = statusText; return old; });
+        json_data.update((old) => { old.user = ""; return old; });
         throw new Error(statusText);
     }
 }

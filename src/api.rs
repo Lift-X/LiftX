@@ -75,3 +75,56 @@ pub async fn get_current_user(user: User) -> Result<serde_json::Value, serde_jso
     let name = user.name();
     Ok(serde_json::json!({ "name": name }))
 }
+
+#[get("/user/workouts")]
+pub async fn get_user_workouts(user: Option<User>, conn: &State<SqlitePool>) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ?")
+                .bind(user.name())
+                .fetch_all(&**conn);
+            // If workout doesn't exist, 404.
+            match wrap_data.await {
+                Ok(wrap_data) => {
+                    let mut workouts: Vec<WorkoutEntry> = Vec::new();
+                    for row in wrap_data {
+                        let str: &str = row.get("data");
+                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                        let w = WorkoutEntry::from_json(&json.to_string());
+                        workouts.push(w);
+                    }
+                    Ok(serde_json::json!({ "workouts": workouts }))
+                }
+                Err(_) => Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap()),
+            }
+        }
+        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+    }
+}
+
+#[get("/user/workouts/<amount>")]
+pub async fn get_user_workouts_dynamic(user: Option<User>, conn: &State<SqlitePool>, amount: usize) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let wrap_data = sqlx::query("SELECT TOP ? FROM workout WHERE user = ?")
+                .bind(amount.to_string())
+                .bind(user.name())
+                .fetch_all(&**conn);
+            // If workout doesn't exist, 404.
+            match wrap_data.await {
+                Ok(wrap_data) => {
+                    let mut workouts: Vec<WorkoutEntry> = Vec::new();
+                    for row in wrap_data {
+                        let str: &str = row.get("data");
+                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                        let w = WorkoutEntry::from_json(&json.to_string());
+                        workouts.push(w);
+                    }
+                    Ok(serde_json::json!({ "workouts": workouts }))
+                }
+                Err(_) => Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap()),
+            }
+        }
+        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+    }
+}

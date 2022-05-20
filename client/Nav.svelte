@@ -1,5 +1,17 @@
 <script>
-    import { logged_in } from "./Components/json_store";
+import { onMount } from "svelte";
+
+    import { get } from "svelte/store";
+    import { get_current_user, json_data } from "./Components/json_store";
+    let json_data_store = [];
+    let login_status = false;
+    onMount(async () => {
+        await get_current_user();
+        json_data_store = get(json_data);
+        login_status = (json_data_store.user != "") ? true : false;
+        console.log(json_data_store);
+        console.log(login_status);
+    });
 </script>
 
 <nav class="navbar is-primary" aria-label="main navigation">
@@ -13,9 +25,9 @@
         </div>
         <div class="navbar-menu">
             <ul class="nav-links">
-                <li><a class="navbar-item" href="/">Home</a></li>
-                {#if logged_in.value}
-                <li><a class="navbar-item" href="/logout">Login</a></li>
+                <li><a class="navbar-item" href="/home">Home</a></li>
+                {#if login_status}
+                <li><a class="navbar-item" href="/logout">Logout</a></li>
                 {:else}
                 <li><a class="navbar-item" href="/login">Login</a></li>
                 {/if}

@@ -39,8 +39,13 @@ pub async fn logout(auth: Auth<'_>) -> Redirect {
     Redirect::to("/")
 }
 
-#[get("/")]
+#[get("/home")]
 pub async fn home() -> Option<NamedFile> {
+    NamedFile::open("templates/basic.html").await.ok()
+}
+
+#[get("/")]
+pub async fn frontpage() -> Option<NamedFile> {
     NamedFile::open("templates/basic.html").await.ok()
 }
 

@@ -1,88 +1,81 @@
+<script>
+    import {get_current_user, json_data} from "../Components/json_store.js";
+    import { onMount } from 'svelte';
+    import Time from "svelte-time";
+    import Exercise from "../Components/ExerciseView.svelte";
 
-<svelte:head>
-	<title>WLRS - Home</title>
-</svelte:head>
+    let login_status = false;
+    let workouts = [];
+    onMount(async () => {
+        get_current_user();
+        login_status = (json_data != "") ? true : false;
+        // Fetch workouts
+        if (login_status) {
+            const response = await fetch("/api/user/workouts");
+            const responseJson = await response.json();
+            if (responseJson.error != null) {
+                // Hide workout section
+                console.log(response.status)
+                document.getElementById("workout").style.display = "none";
+                throw new Error(responseJson.error);
+            } else {
+                workouts = responseJson.workouts;
+            }
+        }});
+    function redirect() {
+        window.location.href = "/login";
+    }
+</script>
 
+{#if login_status}
 <div>
-<center>
-<h1 class="title is-primary">WLRS</h1>
-<h4 class="subtitle"> An opinionated, free and open-source Workout Tracker.</h4>
-<div class="box">
-	<div>
-		<h3>Fast</h3>
-		<p>WLRS is built with a minimalist and fast design in mind. Don't let your workout tracker slow you down!</p>
-	</div>
-	<div>
-		<h3>Private</h3>
-		<p>We don't keep any data that <span class="italics">isn't</span> your workouts.</p>
-	</div>
-	<div>
-		<h3>Open Source</h3>
-		<p>WLRS is open source and available on <a href="https://github.com/Zusier/wlrs">GitHub</a>.</p>
-	</div>
-	<div>
-		<h3>Self-Hosted</h3>
-		<p>Because we are open source, you can self-host. Your workouts, your control.</p>
-	</div>
+    <div class="separator">
+        <h1>Recent Workouts</h1>
+        <hr>
+        <div id="recents">
+            {#each workouts as workout}
+            <div class="workout-summary">
+                <h2><a href="/workouts/{workout.uuid}">{workout.title} - <Time timestamp="{workout.start_time * 1000}"></Time></a></h2>
+                <hr/>
+                {#each workout.exercises as exercise}
+                    <Exercise exercise={exercise} view_only=true></Exercise>
+                {/each}
+            </div>
+            {/each}
+        </div>
+    </div>
 </div>
-<div id="signup"><a href="/signup">Sign Up</a></div>
-</center>
+{:else}
+<div display="flex">
+    <div>
+        <h1>Recent Workouts</h1>
+        <hr>
+        <p>You must be logged in to view this page.</p>
+        <button onclick="redirect()">Login</button>
+    </div>
 </div>
+{/if}
 
 <style>
-	.title {
-		font-size: 75px;
-		margin: 0;
-		font-weight: bold;
-		/*background-color: #a50b00;
-		display: block;
-		padding: 25px;
-		max-width: 6ch;*/
-		padding-top: 100px;
-	}
+    .workout-summary > h2 > a {
+        text-decoration: none;
+        color: white;
+    }
 
-	center {
-		background-image: linear-gradient(rgb(0,0,0,0.75), rgba(0,0,0,0.75)), url("/public/home_deadlift.webp");
-		background-size: cover;
-		background-position: center center;
-		background-attachment: scroll;
-		background-repeat: no-repeat;
-	}
+    .workout-summary {
+        padding: 10px;
+        margin: 10px;
+        display: block;
+        max-width: 300px;
+        max-height: 700px;
+        flex:auto;
+        background-color: #3f3f3f;
+        border-radius: 25px;
+    }
 
-	.box > div {
-		padding: 25px;
-		border-radius: 10px;
-		margin: 25px;
-		max-width: 25ch;
-		background-color: #a50b00;
-	}
-
-	.box > div > p > a {
-		color: white;
-	}
-
-	.box {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-around;
-	}
-
-	#signup {
-		border-radius: 10px;
-		background-color: #a50b00;
-		padding: 20px;
-		color: white;
-		width: 100px;
-		max-width: 100px;
-		margin-top: 50px;
-		margin-bottom: 50px;
-	}
-
-	#signup > a {
-		color: white;
-	}
-
-	:global(.italics) {
-		font-style: italic;
-	}
+    #recents {
+        flex-direction: row;
+        display: flex;
+        flex-wrap: wrap;
+    }
 </style>

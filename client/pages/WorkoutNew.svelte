@@ -5,7 +5,12 @@ import {addexercise} from "../Components/Exercise.svelte";
 import {json_data} from "../Components/json_store.js";
 import SetEntryForm from "../Components/SetEntryForm.svelte";
 import {get_current_user} from "../Components/json_store.js";
-get_current_user();
+import {onMount} from "svelte";
+let login_status = false;
+onMount(async () => {
+    get_current_user();
+    login_status = (json_data.user != "") ? true : false;
+});
 
 $: start_time_bind = null;
 $: start_time = null;

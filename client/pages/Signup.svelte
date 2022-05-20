@@ -1,11 +1,11 @@
 <script>
-    import {get_current_user, logged_in} from "../Components/json_store.js";
+    import {get_current_user, json_data} from "../Components/json_store.js";
     import { onMount } from 'svelte';
     import LoggedInAlready from "../Components/LoggedInAlready.svelte";
     let login_status = false;
     onMount(() => {
         get_current_user();
-        login_status = logged_in.value;
+        login_status = (json_data != "") ? true : false;
     });
     $: name = "";
     $: password = "";

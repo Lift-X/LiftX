@@ -2,22 +2,23 @@
   import Nav from "./Nav.svelte";
   import Footer from "./Footer.svelte";
   import { Router, Route } from "yrv";
-  import Home from "./pages/Home.svelte";
   import WorkoutView from "./pages/WorkoutView.svelte";
   import WorkoutNew from "./pages/WorkoutNew.svelte";
   import Signup from "./pages/Signup.svelte";
   import Login from "./pages/Login.svelte";
- "./pages/Login.svelte";
+  import Frontpage from "./pages/Frontpage.svelte";
+  import Home from "./pages/Home.svelte";
 </script>
 
 <main>
   <Nav />
   <Router>
-    <Route exact path="/"><Home /></Route>
+    <Route exact path="/"><Frontpage /></Route>
     <Route path="/workouts/:id" let:router><WorkoutView id={router.params.id} /></Route>
     <Route exact path="/workouts/new"><WorkoutNew /></Route>
     <Route exact path="/signup"><Signup/></Route>
     <Route exact path="/login"><Login/></Route>
+    <Route exact path="/home"><Home/></Route>
   </Router>
   <Footer />
 </main>
@@ -38,4 +39,15 @@
   :global(.center) {
     text-align: center;
   }
+
+  :global(.italics) {
+		font-style: italic;
+	}
+
+  :global(.separator) {
+        background: #2b2b2b;
+        border-radius: 33px;
+        padding: 15px;
+        margin: 10px;
+    }
 </style>

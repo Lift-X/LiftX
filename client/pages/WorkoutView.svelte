@@ -63,12 +63,3 @@
         <p>{error}</p>
     {/await}
 </div>
-
-<style>
-    :global(.separator) {
-        background: #2b2b2b;
-        border-radius: 33px;
-        padding: 15px;
-        margin: 10px;
-    }
-</style>
