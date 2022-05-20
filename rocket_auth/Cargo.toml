@@ -46,17 +46,6 @@ features = ["secrets"]
 version = "1.0.125"
 features = ["derive"]
 
-[dependencies.tokio-postgres]
-version = "0.7.0"
-optional = true
-
-
-
-[dependencies.redis]
-version = "0.20.0"
-features = ["aio", "tokio-comp"]
-optional = true
-
 [dependencies.futures]
 version = "0.3.16"
 
@@ -73,15 +62,9 @@ features = ["secrets", "json"]
 [dev-dependencies.tokio-postgres]
 version = "0.7.0"
 
-[dev-dependencies.redis]
-version = "0.20.0"
-features = ["aio", "tokio-comp"]
-
-
 [dev-dependencies.rocket_dyn_templates]
-version = "0.1.0-rc.1"
+version = "0.1.0-rc.2"
 features = ["tera"]
-
 
 [dev-dependencies.sqlx]
 version = "0.5.5"

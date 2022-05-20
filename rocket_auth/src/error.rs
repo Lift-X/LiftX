@@ -49,24 +49,9 @@ pub enum Error {
     #[error("Argon2ParsingError: {0}")]
     Argon2ParsingError(#[from] argon2::Error),
 
-    /// A wrapper around [`redis::RedisError`].
-    #[cfg(feature = "redis")]
-    #[error("RedisError")]
-    RedisError(#[from] redis::RedisError),
-
     /// A wrapper around [`serde_json::Error`].
     #[error("SerdeError: {0}")]
     SerdeError(#[from] serde_json::Error),
-
-    /// A wrapper around [`std::io::Error`].
-    #[cfg(feature = "sqlx-postgres")]
-    #[error("IOError: {0}")]
-    IOError(#[from] std::io::Error),
-
-    /// A wrapper around [`tokio_postgres::Error`].
-    #[cfg(feature = "tokio-postgres")]
-    #[error("TokioPostgresError: {0}")]
-    TokioPostgresError(#[from] tokio_postgres::Error),
 }
 
 /*****  CONVERSIONS  *****/

@@ -47,55 +47,6 @@ impl Users {
     pub async fn create_table(&self) {
         self.conn.init().await?
     }
-    /// Opens a redis connection. It allows for sessions to be stored persistently across
-    /// different launches. Note that persistent sessions also require a `secret_key` to be set in the [Rocket.toml](https://rocket.rs/v0.5-rc/guide/configuration/#configuration) configuration file.
-    /// ```rust,
-    /// # use rocket_auth::{Users, Error};
-    /// # #[tokio::main]
-    /// # async fn main() -> Result<(), Error> {
-    /// let mut users = Users::open_sqlite("database.db").await?;
-    /// users.open_redis("redis://127.0.0.1/")?;
-    ///
-    /// rocket::build()
-    ///     .manage(users)
-    ///     .launch();
-    ///
-    /// # Ok(()) }
-    /// ```
-    #[cfg(feature = "redis")]
-    #[throws(Error)]
-    pub fn open_redis(&mut self, path: impl redis::IntoConnectionInfo) {
-        let client = redis::Client::open(path)?;
-        self.sess = Box::new(client);
-    }
-
-    /// It creates a `Users` instance by connecting  it to a postgres database.
-    /// This method uses the [`sqlx`] crate.
-    ///
-    /// ```rust, no_run
-    /// # use rocket_auth::{Error, Users};
-    /// # #[tokio::main]
-    /// # async fn main() -> Result<(), Error> {
-    /// let users = Users::open_postgres("postgres://postgres:password@localhost/test").await?;
-    ///
-    /// rocket::build()
-    ///     .manage(users)
-    ///     .launch();
-    /// # Ok(()) }
-    ///
-    /// ```
-    #[cfg(feature = "sqlx-postgres")]
-    #[throws(Error)]
-    pub async fn open_postgres(path: &str) -> Self {
-        use sqlx::PgPool;
-        let conn = PgPool::connect(path).await?;
-        conn.init().await?;
-        let users = Users {
-            conn: Box::new(conn),
-            sess: Box::new(chashmap::CHashMap::new()),
-        };
-        users
-    }
 
     /// It creates a `Users` instance by connecting  it to a mysql database.
     /// This method uses the [`sqlx`] crate.
