@@ -5,6 +5,9 @@
   import Home from "./pages/Home.svelte";
   import WorkoutView from "./pages/WorkoutView.svelte";
   import WorkoutNew from "./pages/WorkoutNew.svelte";
+  import Signup from "./pages/Signup.svelte";
+  import Login from "./pages/Login.svelte";
+ "./pages/Login.svelte";
 </script>
 
 <main>
@@ -13,6 +16,8 @@
     <Route exact path="/"><Home /></Route>
     <Route path="/workouts/:id" let:router><WorkoutView id={router.params.id} /></Route>
     <Route exact path="/workouts/new"><WorkoutNew /></Route>
+    <Route exact path="/signup"><Signup/></Route>
+    <Route exact path="/login"><Login/></Route>
   </Router>
   <Footer />
 </main>

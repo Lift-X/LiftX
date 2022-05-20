@@ -1,26 +1,10 @@
 use crate::exercises::WorkoutEntry;
-use serde::{Deserialize, Serialize};
-
-use rocket_db_pools::{sqlx, Database};
+use rocket_db_pools::Database;
 use sqlx::SqlitePool;
 
 #[derive(Database)]
 #[database("sqlite_db")]
 pub struct Db(sqlx::sqlite::SqlitePool);
-
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
-pub struct WorkoutID {
-    pub uuid: String, // could be a plain uuid::Uuid but it's not deserializable
-    pub user: User,
-    pub timestamp: String,
-}
-
-#[derive(Serialize, Deserialize, PartialEq, Debug, Clone)]
-pub struct User {
-    pub name: String,
-    pub password: String,
-    pub id: String,
-}
 
 pub async fn create_connection() -> sqlx::SqlitePool {
     let pool = sqlx::SqlitePool::connect("data.db").await.unwrap();

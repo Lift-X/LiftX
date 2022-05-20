@@ -65,7 +65,7 @@
 </div>
 
 <style>
-    .separator {
+    :global(.separator) {
         background: #2b2b2b;
         border-radius: 33px;
         padding: 15px;

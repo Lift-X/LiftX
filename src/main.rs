@@ -26,8 +26,9 @@ async fn main() {
         Ok(conn) => {
             // Initialize Database tables if they don't exist
             database::build_tables(conn.clone()).await;
+            let users: rocket_auth::Users = conn.clone().into();
             info!("Database connection successful");
-            launch_web(conn).await;
+            launch_web(conn, users).await;
         }
         Err(e) => {
             error!("Database connection failed: {}", e);
@@ -37,7 +38,7 @@ async fn main() {
 
 /// Launch the rocket web server.
 /// Policies: no mime sniffing, xss filtering, no ref
-async fn launch_web(conn: sqlx::SqlitePool) {
+async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     // launch web server
     let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
@@ -46,7 +47,7 @@ async fn launch_web(conn: sqlx::SqlitePool) {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        //.attach(rocket_dyn_templates::Template::fairing()) // If we ever need SSR, uncomment this
+        //.attach(rocket_dyn_templates::Template::fairing()) // If we ever need SSR again, uncomment this
         .mount(
             "/",
             routes![
@@ -54,14 +55,24 @@ async fn launch_web(conn: sqlx::SqlitePool) {
                 crate::handlers::workout_view,
                 crate::handlers::static_file,
                 crate::handlers::workout_new,
+                crate::handlers::signup,
+                crate::handlers::login,
+                crate::handlers::logout,
             ],
         )
         .mount(
             "/api",
-            routes![crate::api::workout_json, crate::api::workout_post_json],
+            routes![
+                crate::api::workout_json,
+                crate::api::post_workout_json,
+                crate::api::post_signup,
+                crate::api::post_login,
+                crate::api::get_current_user
+            ],
         )
         .register("/", catchers![crate::handlers::general_404])
-        .manage(conn);
+        .manage(conn)
+        .manage(users);
     let rocket = rocket.launch().await;
 
     match rocket {

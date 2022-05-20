@@ -1,7 +1,6 @@
 use ordered_float::OrderedFloat;
 
 use crate::{
-    database,
     equipment::{self, Weight, WeightType, EQUIPMENT_LIST, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
     muscles, util,
@@ -183,42 +182,6 @@ fn test_workout() {
     assert_eq!(bench_workout.exercises[0].sets.len(), 3);
     assert_eq!(bench_workout.uuid, uuid.to_string());
     assert_eq!(bench_workout.title, "test".to_string());
-}
-
-#[test]
-fn test_user() {
-    let user = database::User {
-        name: "test".to_string(),
-        password: "password".to_string(),
-        id: "1".to_string(),
-    };
-    assert_eq!(user.name, "test");
-    assert_eq!(user.id, "1");
-    assert_eq!(user.password, "password");
-}
-
-#[test]
-fn test_workout_id() {
-    let time = std::time::UNIX_EPOCH
-        .elapsed()
-        .unwrap()
-        .as_secs()
-        .to_string();
-    let uuid = uuid::Uuid::new_v4().to_string();
-    let user = database::User {
-        name: "test".to_string(),
-        id: "1".to_string(),
-        password: "password".to_string(),
-    };
-    let workout_id = database::WorkoutID {
-        uuid: uuid.clone(),
-        user,
-        timestamp: time.clone(),
-    };
-    assert_eq!(workout_id.uuid, uuid);
-    assert_eq!(workout_id.user.name, "test");
-    assert_eq!(workout_id.user.id, "1");
-    assert_eq!(workout_id.timestamp, time);
 }
 
 #[test]

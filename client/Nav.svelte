@@ -1,3 +1,7 @@
+<script>
+    import { logged_in } from "./Components/json_store";
+</script>
+
 <nav class="navbar is-primary" aria-label="main navigation">
     <div>
         <div class="navbar-brand">
@@ -10,7 +14,11 @@
         <div class="navbar-menu">
             <ul class="nav-links">
                 <li><a class="navbar-item" href="/">Home</a></li>
+                {#if logged_in.value}
+                <li><a class="navbar-item" href="/logout">Login</a></li>
+                {:else}
                 <li><a class="navbar-item" href="/login">Login</a></li>
+                {/if}
             </ul>
         </div>
     </div>

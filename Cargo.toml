@@ -7,8 +7,10 @@ edition = "2021"
 # Logging
 log = "0.4.0"
 # Web
-rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-rc.1", features = ["json", "secrets"] }
-rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
+#rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-rc.2", features = ["json", "secrets"] }
+rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
+#rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
+rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
 tokio = "1.18.1"
 # Time
 time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }
@@ -25,7 +27,7 @@ ordered-float = { version = "3.0", default-features = false, features = ["serde"
 regex-syntax = { version = "0.6.25" }
 tracing-core = { version = "0.1.26" }
 # Auth
-rocket_auth = { version = "0.4.0", features = ["sqlx-sqlite"]}
+rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
 
 [profile.release]
 panic = "abort"
