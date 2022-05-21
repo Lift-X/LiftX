@@ -9,9 +9,9 @@
     onMount(async () => {
         get_current_user();
         login_status = (json_data != "") ? true : false;
-        // Fetch workouts
+        // Fetch 3 of the latest workouts
         if (login_status) {
-            const response = await fetch("/api/user/workouts");
+            const response = await fetch("/api/user/workouts/3");
             const responseJson = await response.json();
             if (responseJson.error != null) {
                 // Hide workout section
@@ -29,10 +29,10 @@
 
 {#if login_status}
 <div>
-    <div class="separator">
+    <div id="recentpanel" class="separator">
         <h1>Recent Workouts</h1>
         <hr>
-        <div id="recents">
+        <div id="recents" class="subpanel">
             {#each workouts as workout}
             <div class="workout-summary">
                 <h2><a href="/workouts/{workout.uuid}">{workout.title} - <Time timestamp="{workout.start_time * 1000}"></Time></a></h2>
@@ -77,5 +77,9 @@
         flex-direction: row;
         display: flex;
         flex-wrap: wrap;
+    }
+
+    #recentpanel {
+        max-width: 960px;
     }
 </style>

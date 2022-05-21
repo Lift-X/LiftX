@@ -77,12 +77,16 @@ pub async fn get_current_user(user: User) -> Result<serde_json::Value, serde_jso
 }
 
 #[get("/user/workouts")]
-pub async fn get_user_workouts(user: Option<User>, conn: &State<SqlitePool>) -> Result<serde_json::Value, serde_json::Value> {
+pub async fn get_user_workouts(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ?")
-                .bind(user.name())
-                .fetch_all(&**conn);
+            let wrap_data =
+                sqlx::query("SELECT * FROM workout WHERE user = ?")
+                    .bind(user.name())
+                    .fetch_all(&**conn);
             // If workout doesn't exist, 404.
             match wrap_data.await {
                 Ok(wrap_data) => {
@@ -93,9 +97,13 @@ pub async fn get_user_workouts(user: Option<User>, conn: &State<SqlitePool>) -> 
                         let w = WorkoutEntry::from_json(&json.to_string());
                         workouts.push(w);
                     }
+                    // Sort workouts in descending order (latest to oldest workout)
+                    workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
                     Ok(serde_json::json!({ "workouts": workouts }))
                 }
-                Err(_) => Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap()),
+                Err(_) => {
+                    Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap())
+                }
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
@@ -103,13 +111,18 @@ pub async fn get_user_workouts(user: Option<User>, conn: &State<SqlitePool>) -> 
 }
 
 #[get("/user/workouts/<amount>")]
-pub async fn get_user_workouts_dynamic(user: Option<User>, conn: &State<SqlitePool>, amount: usize) -> Result<serde_json::Value, serde_json::Value> {
+pub async fn get_user_workouts_dynamic(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+    amount: usize,
+) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ? LIMIT ?")
-                .bind(user.name())
-                .bind(amount.to_string())
-                .fetch_all(&**conn);
+            let wrap_data =
+                sqlx::query("SELECT * FROM workout WHERE user = ? LIMIT ?")
+                    .bind(user.name())
+                    .bind(amount.to_string())
+                    .fetch_all(&**conn);
             // If workout doesn't exist, 404.
             match wrap_data.await {
                 Ok(wrap_data) => {
@@ -120,9 +133,13 @@ pub async fn get_user_workouts_dynamic(user: Option<User>, conn: &State<SqlitePo
                         let w = WorkoutEntry::from_json(&json.to_string());
                         workouts.push(w);
                     }
+                    // Sort workouts in descending order (latest to oldest workout)
+                    workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
                     Ok(serde_json::json!({ "workouts": workouts }))
                 }
-                Err(_) => Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap()),
+                Err(_) => {
+                    Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap())
+                }
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),

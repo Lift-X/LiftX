@@ -210,10 +210,7 @@ fn test_workout_entry_from_json() {
     let json = exercises::WorkoutEntry::default().to_json(uuid);
     let mut def = WorkoutEntry::default();
     def.uuid = uuid.to_string().to_string();
-    assert_eq!(
-        exercises::WorkoutEntry::from_json(&json.to_string()),
-        def
-    );
+    assert_eq!(exercises::WorkoutEntry::from_json(&json.to_string()), def);
 }
 
 #[test]
