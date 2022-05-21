@@ -106,9 +106,9 @@ pub async fn get_user_workouts(user: Option<User>, conn: &State<SqlitePool>) -> 
 pub async fn get_user_workouts_dynamic(user: Option<User>, conn: &State<SqlitePool>, amount: usize) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let wrap_data = sqlx::query("SELECT TOP ? FROM workout WHERE user = ?")
-                .bind(amount.to_string())
+            let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ? LIMIT ?")
                 .bind(user.name())
+                .bind(amount.to_string())
                 .fetch_all(&**conn);
             // If workout doesn't exist, 404.
             match wrap_data.await {
