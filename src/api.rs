@@ -72,9 +72,11 @@ pub async fn post_login(
 }
 
 #[get("/user/current")]
-pub async fn get_current_user(user: User) -> Result<serde_json::Value, serde_json::Value> {
-    let name = user.name();
-    Ok(serde_json::json!({ "name": name }))
+pub fn get_current_user(user: Option<User>) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => Ok(serde_json::json!({ "name": user.name() })),
+        None => Err(serde_json::json!({ "error": "Not logged in!" })),
+    }
 }
 
 #[get("/user/workouts")]
