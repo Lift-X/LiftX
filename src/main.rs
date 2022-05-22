@@ -1,4 +1,6 @@
 #![forbid(unsafe_code)]
+// Use all clippy lints (just to get an idea)
+#![warn(clippy::all, clippy::pedantic)]
 #[macro_use]
 extern crate rocket;
 
@@ -10,7 +12,7 @@ pub mod handlers;
 pub mod muscles;
 #[cfg(test)]
 mod tests;
-pub mod util;
+//pub mod util;
 
 use rocket_db_pools::Database;
 
@@ -44,6 +46,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
         .enable(rocket::shield::Referrer::NoReferrer)
         .enable(rocket::shield::XssFilter::EnableBlock)
         .enable(rocket::shield::NoSniff::Enable);
+    #[allow(clippy::no_effect_underscore_binding)]
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
