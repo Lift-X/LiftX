@@ -94,18 +94,18 @@ pub async fn get_user_workouts(
     }
 }
 
-#[get("/user/workouts/<amount>")]
+#[get("/user/workouts/<limit>")]
 pub async fn get_user_workouts_dynamic(
     user: Option<User>,
     conn: &State<SqlitePool>,
-    amount: usize,
+    limit: usize,
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts = get_workouts(
                 conn,
                 user.name().to_string(),
-                Some(amount.try_into().unwrap()),
+                Some(limit as i16),
             )
             .await;
             match workouts {
