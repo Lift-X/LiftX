@@ -3,7 +3,7 @@ use ordered_float::OrderedFloat;
 use crate::{
     equipment::{self, Weight, WeightType, EQUIPMENT_LIST, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
-    muscles, util,
+    muscles,
 };
 
 /*#[tokio::test]
@@ -191,6 +191,7 @@ fn test_muscles() {
     }
 }
 
+/* unused
 #[test]
 fn test_human_duration() {
     let human: String = util::human_duration(1652314241, 1652317841);
@@ -203,6 +204,7 @@ fn test_time_iso8601() {
     let time_iso8601 = util::timestamp_to_iso8601(time);
     assert_eq!(time_iso8601, "2022-05-12 00:10");
 }
+*/
 
 #[test]
 fn test_workout_entry_from_json() {

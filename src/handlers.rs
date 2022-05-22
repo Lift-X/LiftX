@@ -49,12 +49,6 @@ pub async fn frontpage() -> Option<NamedFile> {
     NamedFile::open("templates/basic.html").await.ok()
 }
 
-#[get("/shutdown")]
-pub async fn shutdown(shutdown: rocket::Shutdown) -> &'static str {
-    shutdown.notify();
-    "Shutting down..."
-}
-
 #[catch(404)]
 pub async fn general_404() -> Option<NamedFile> {
     NamedFile::open("templates/404.html").await.ok()

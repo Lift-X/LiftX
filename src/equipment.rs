@@ -50,7 +50,7 @@ impl Weight {
     pub fn from_string(string: &str) -> Result<Weight, String> {
         // collect only alphabetical characters
         let split = string
-            .matches(|c: char| c.is_alphabetic())
+            .matches(char::is_alphabetic)
             .collect::<String>();
         match split.as_ref() {
             "kgs" => Ok(Weight {
@@ -72,14 +72,14 @@ impl Weight {
     pub fn to_kilograms(&self) -> Result<f32, String> {
         match self.weight_unit.as_str() {
             "kgs" => Ok(self.weight),
-            "lbs" => Ok(self.weight * 0.45359237),
+            "lbs" => Ok(self.weight * 0.453_592_37),
             _ => Err("Invalid Weight Type!".to_string()),
         }
     }
 
     pub fn to_pounds(&self) -> Result<f32, String> {
         match self.weight_unit.as_str() {
-            "kgs" => Ok(self.weight * 2.204623),
+            "kgs" => Ok(self.weight * 2.204_623),
             "lbs" => Ok(self.weight),
             _ => Err("Invalid Weight Type!".to_string()),
         }
