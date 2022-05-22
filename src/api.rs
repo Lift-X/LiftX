@@ -5,6 +5,7 @@ use rocket_db_pools::Connection;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
+use crate::database::get_workouts;
 use crate::{database::Db, exercises::WorkoutEntry};
 
 #[get("/workouts/<id>/json")]
@@ -83,27 +84,10 @@ pub async fn get_user_workouts(
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let wrap_data =
-                sqlx::query("SELECT * FROM workout WHERE user = ?")
-                    .bind(user.name())
-                    .fetch_all(&**conn);
-            // If workout doesn't exist, 404.
-            match wrap_data.await {
-                Ok(wrap_data) => {
-                    let mut workouts: Vec<WorkoutEntry> = Vec::new();
-                    for row in wrap_data {
-                        let str: &str = row.get("data");
-                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
-                        let w = WorkoutEntry::from_json(&json.to_string());
-                        workouts.push(w);
-                    }
-                    // Sort workouts in descending order (latest to oldest workout)
-                    workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
-                    Ok(serde_json::json!({ "workouts": workouts }))
-                }
-                Err(_) => {
-                    Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap())
-                }
+            let workouts = get_workouts(conn, user.name().to_string(), None).await;
+            match workouts {
+                Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
+                Err(workouts) => Err(workouts),
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
@@ -118,28 +102,15 @@ pub async fn get_user_workouts_dynamic(
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let wrap_data =
-                sqlx::query("SELECT * FROM workout WHERE user = ? LIMIT ?")
-                    .bind(user.name())
-                    .bind(amount.to_string())
-                    .fetch_all(&**conn);
-            // If workout doesn't exist, 404.
-            match wrap_data.await {
-                Ok(wrap_data) => {
-                    let mut workouts: Vec<WorkoutEntry> = Vec::new();
-                    for row in wrap_data {
-                        let str: &str = row.get("data");
-                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
-                        let w = WorkoutEntry::from_json(&json.to_string());
-                        workouts.push(w);
-                    }
-                    // Sort workouts in descending order (latest to oldest workout)
-                    workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
-                    Ok(serde_json::json!({ "workouts": workouts }))
-                }
-                Err(_) => {
-                    Err(serde_json::from_str("{\"statusText\": \"No workouts found!\"}").unwrap())
-                }
+            let workouts = get_workouts(
+                conn,
+                user.name().to_string(),
+                Some(amount.try_into().unwrap()),
+            )
+            .await;
+            match workouts {
+                Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
+                Err(workouts) => Err(workouts),
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
