@@ -11,7 +11,7 @@ pub struct SetEntry {
     pub reps_in_reserve: f32, // how many more reps you feel you could've done
 }
 
-/// ExerciseEntry is a collection of Set Entries
+/// `ExerciseEntry` is a collection of Set Entries
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct ExerciseEntry {
     pub exercise: String,
@@ -19,7 +19,7 @@ pub struct ExerciseEntry {
     pub sets: Vec<SetEntry>,
 }
 
-/// WorkoutEntry is a collection of exercise entries
+/// `WorkoutEntry` is a collection of exercise entries
 #[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
 pub struct WorkoutEntry {
     pub uuid: String,
@@ -30,8 +30,9 @@ pub struct WorkoutEntry {
     pub user: String,
 }
 
-// Absolutely scuffed, feel free to PR :D
+
 impl ExerciseEntry {
+    // Absolutely scuffed, feel free to PR :D
     pub fn from_string(string: &str) -> ExerciseEntry {
         // iter over string, separated by;
         let split = string.split_terminator(';').collect::<Vec<_>>();
@@ -56,7 +57,7 @@ impl ExerciseEntry {
     pub fn to_string_summary(&self) -> String {
         let mut stringified_exercise = self.exercise.clone();
         for set in &self.sets {
-            let _a = format!(
+            let a = format!(
                 " - {}x{}{},{}RiR",
                 set.reps,
                 set.weight.weight,
@@ -65,7 +66,7 @@ impl ExerciseEntry {
                     .short_name,
                 set.reps_in_reserve
             );
-            stringified_exercise.push_str(&_a);
+            stringified_exercise.push_str(&a);
         }
         return stringified_exercise.trim().to_string();
     }
@@ -83,7 +84,7 @@ impl std::fmt::Display for ExerciseEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         let mut stringified_exercise = self.exercise.clone();
         for set in &self.sets {
-            let _a = format!(
+            let a = format!(
                 ";{},{}{},{}",
                 set.reps,
                 set.weight.weight,
@@ -92,7 +93,7 @@ impl std::fmt::Display for ExerciseEntry {
                     .short_name,
                 set.reps_in_reserve
             );
-            stringified_exercise.push_str(&_a);
+            stringified_exercise.push_str(&a);
         }
         write!(f, "{}", stringified_exercise)
     }

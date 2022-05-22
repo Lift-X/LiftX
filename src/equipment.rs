@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-/// Either Kilograms or Pounds.
+/// Either `KILOGRAMS` or `POUNDS`.
 /// Contains a long and short name for the weight unit
 /// Strings below can't be indirectly deserialized for some reason. I've tried a bunch of stuff :/
-/// For now in indirect use cases the type will be a string and converted back to a WeightUnit
+/// For now in indirect use cases the type will be a string and converted back to a `WeightUnit`
 #[derive(PartialEq, Debug, Clone, Copy, Eq, Deserialize, Serialize)]
 pub struct WeightType<'a> {
     #[serde(borrow)]
@@ -21,24 +21,6 @@ pub const POUNDS: WeightType = WeightType {
     long_name: "Pounds",
     short_name: "lbs",
 };
-
-/* deserializable *kind of*
-lazy_static!(
-    #[derive(Serialize, Deserialize, PartialEq, Debug, Clone, Copy)]
-    pub static ref POUNDS: WeightType = WeightType {
-        long_name: "Pounds",
-        short_name: "lbs",
-    };
-);
-
-lazy_static!(
-    #[derive(PartialEq, Debug, Clone, Copy)]
-    pub static ref KILOGRAMS: WeightType = WeightType {
-        long_name: "Kilograms",
-        short_name: "kgs",
-    };
-);
-*/
 
 #[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
 pub struct Weight {

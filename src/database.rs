@@ -35,7 +35,7 @@ pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: 
     sqlx::query(&query).execute(conn).await.unwrap();
 }
 
-/// Get all workouts from the database.
+/// Get all workouts (for a certain user) from the database.
 /// Optionally provide a max number of workouts to return
 pub async fn get_workouts(
     conn: &SqlitePool,

@@ -34,9 +34,9 @@ pub async fn login() -> Option<NamedFile> {
 }
 
 #[get("/logout")]
-pub async fn logout(auth: Auth<'_>) -> Redirect {
-    auth.logout().unwrap();
-    Redirect::to("/")
+pub fn logout(auth: Auth<'_>) -> Result<Redirect, rocket_auth::Error> {
+    auth.logout()?;
+    Ok(Redirect::to("/"))
 }
 
 #[get("/home")]
