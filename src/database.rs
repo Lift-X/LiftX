@@ -44,7 +44,7 @@ pub async fn get_workouts(
     recent_days: Option<u64>,
 ) -> Result<Vec<WorkoutEntry>, serde_json::Value> {
     // If a limit is provided, use it. Else provide the latest 1000 workouts
-    if let None = limit {
+    if limit.is_none() {
         limit = Some(1000)
     }
 
