@@ -16,8 +16,10 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
     - [X] Login
       - [ ] Remember Login
     - [ ] Delete
-  - [ ] Home Page
-    - [-] Summaries of workouts
+  - [X] User Home Page
+    - [X] Summaries of workouts
+      - [ ] Add "New Workout" panel for users with less than 3 workouts
+      - [ ] View All page
     - [ ] Progression statistics/graphcs
     - [ ] Body weight graph?
   - [ ] Account Page
