@@ -22,10 +22,12 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
     - [ ] Body weight graph?
   - [ ] Account Page
     - [ ] Global unit preference
-- [X] switch date to unix timestamp (and start/end times)
-- Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL
+- [ ] Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL
+- [ ] Extend error handling with global error codes and don't handle `Result<>`s with `unwrap()`s
+- [ ] Organize api
+
 ### Ideas for the future
 
 - [ ] GPX Support
 - [ ] Exercise lists, with muscle group visualization (like wger)
-- [ ] Native mobile applications
+- [ ] Native mobile applications (Svelte-native?)
