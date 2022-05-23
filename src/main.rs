@@ -68,6 +68,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
             "/api",
             routes![
                 crate::api::workout_json,
+                crate::api::workout_delete,
                 crate::api::post_workout_json,
                 crate::api::post_register,
                 crate::api::post_login,

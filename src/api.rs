@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+//use std::collections::HashMap;
 
 use rocket::post;
 use rocket::{response::Redirect, State};
@@ -8,7 +8,7 @@ use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::database::get_workouts;
-use crate::equipment::Weight;
+//use crate::equipment::Weight;
 //use crate::exercises::{GraphEntry, GraphItem};
 use crate::{database::Db, exercises::WorkoutEntry};
 
@@ -36,6 +36,26 @@ pub async fn workout_json(
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view this workout" })),
+    }
+}
+
+#[get("/workouts/<id>/delete")]
+pub async fn workout_delete(
+    id: String,
+    mut db: Connection<Db>,
+    user: Option<User>,
+) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            // Query the database via ID, return data column
+            //let wrap_data = sqlx::query!("SELECT * FROM workout WHERE id = ?", id).fetch_one(&mut *db);
+            sqlx::query("DELETE FROM workout WHERE id = ? AND user = ?")
+                .bind(id)
+                .bind(user.name())
+                .fetch_one(&mut *db).await.unwrap();
+                return Ok(serde_json::from_str("{\"success\": \"Workout deleted or not found!\"}").unwrap())
+        }
+        None => Err(serde_json::json!({ "error": "You must be logged in to delete a workout" })),
     }
 }
 
