@@ -26,6 +26,7 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
 - [ ] Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL
 - [ ] Extend error handling with global error codes and don't handle `Result<>`s with `unwrap()`s
 - [ ] Organize api
+- [ ] [Ratelimiting](https://lib.rs/crates/rocket-governor)
 
 ### Ideas for the future
 
