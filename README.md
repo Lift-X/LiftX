@@ -10,12 +10,18 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
   - [X] Status Codes
   - [X] Workout create
     - [X] When adding exercises form a json, render off the json. (Editing/deleting exerices will be possible then)
-  - [X] Homepage
-  - [ ] Login/Auth
-    - [ ] Register Account
-    - [ ] Login
+  - [X] Front page
+  - [X] Login/Auth
+    - [X] Register Account
+    - [X] Login
       - [ ] Remember Login
     - [ ] Delete
+  - [ ] Home Page
+    - [-] Summaries of workouts
+    - [ ] Progression statistics/graphcs
+    - [ ] Body weight graph?
+  - [ ] Account Page
+    - [ ] Global unit preference
 - [X] switch date to unix timestamp (and start/end times)
 - Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL
 ### Ideas for the future
