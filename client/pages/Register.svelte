@@ -12,7 +12,9 @@
 </script>
 
 {#if login_status}
-<form action="/api/signup" method="post">
+<center>
+<h1>Register</h1>
+<form action="/api/register" method="post">
         <label>
             <span>Username</span>
             <input name="name" type="text" bind:value="{name}" required/>
@@ -21,8 +23,9 @@
             <span>Password</span>
             <input name="password" type="password" bind:value="{password}" required/>
         </label>
-        <button type="submit">Sign Up</button>
+        <button type="submit">Register</button>
 </form>
+</center>
 {:else}
 <LoggedInAlready/>
 {/if}

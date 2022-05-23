@@ -12,17 +12,21 @@
 </script>
 
 {#if login_status}
+<center>
+<h1>Login</h1>
 <form action="/api/login" method="post">
         <label>
             <span>Username</span>
             <input name="name" type="text" bind:value="{name}" required/>
         </label>
+
         <label>
             <span>Password</span>
             <input name="password" type="password" bind:value="{password}" required/>
         </label>
         <button type="submit">Login</button>
 </form>
+</center>
 {:else}
 <LoggedInAlready/>
 {/if}

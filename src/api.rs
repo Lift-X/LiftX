@@ -9,7 +9,7 @@ use uuid::Uuid;
 
 use crate::database::get_workouts;
 use crate::equipment::Weight;
-use crate::exercises::{GraphEntry, GraphItem};
+//use crate::exercises::{GraphEntry, GraphItem};
 use crate::{database::Db, exercises::WorkoutEntry};
 
 #[get("/workouts/<id>/json")]
@@ -53,8 +53,8 @@ pub async fn post_workout_json(
     rocket::response::Redirect::to(format!("/workouts/{}", uuid))
 }
 
-#[post("/signup", data = "<form>")]
-pub async fn post_signup(
+#[post("/register", data = "<form>")]
+pub async fn post_register(
     form: rocket::form::Form<Signup>,
     auth: Auth<'_>,
 ) -> Result<Redirect, Error> {
@@ -62,7 +62,7 @@ pub async fn post_signup(
     auth.signup(&form_proc.clone()).await.unwrap();
     auth.login(&form_proc.into()).await.unwrap();
     println!("Signed up!");
-    Ok(Redirect::to("/"))
+    Ok(Redirect::to("/home"))
 }
 
 #[post("/login", data = "<form>")]
@@ -72,7 +72,7 @@ pub async fn post_login(
 ) -> Result<Redirect, Error> {
     auth.login(&form.into_inner().into()).await.unwrap();
     println!("Logged in!");
-    Ok(Redirect::to("/"))
+    Ok(Redirect::to("/home"))
 }
 
 #[get("/user/current")]

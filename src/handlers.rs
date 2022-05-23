@@ -23,8 +23,8 @@ pub async fn static_file(file: std::path::PathBuf) -> Option<NamedFile> {
     NamedFile::open(file).await.ok()
 }
 
-#[get("/signup")]
-pub async fn signup() -> Option<NamedFile> {
+#[get("/register")]
+pub async fn register() -> Option<NamedFile> {
     NamedFile::open("templates/basic.html").await.ok()
 }
 

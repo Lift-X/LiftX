@@ -4,10 +4,10 @@
   import { Router, Route } from "yrv";
   import WorkoutView from "./pages/WorkoutView.svelte";
   import WorkoutNew from "./pages/WorkoutNew.svelte";
-  import Signup from "./pages/Signup.svelte";
   import Login from "./pages/Login.svelte";
   import Frontpage from "./pages/Frontpage.svelte";
   import Home from "./pages/Home.svelte";
+import Register from "./pages/Register.svelte";
 </script>
 
 <main>
@@ -16,7 +16,7 @@
     <Route exact path="/"><Frontpage /></Route>
     <Route path="/workouts/:id" let:router><WorkoutView id={router.params.id} /></Route>
     <Route exact path="/workouts/new"><WorkoutNew /></Route>
-    <Route exact path="/signup"><Signup/></Route>
+    <Route exact path="/register"><Register/></Route>
     <Route exact path="/login"><Login/></Route>
     <Route exact path="/home"><Home/></Route>
   </Router>

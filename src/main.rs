@@ -58,7 +58,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::handlers::workout_view,
                 crate::handlers::static_file,
                 crate::handlers::workout_new,
-                crate::handlers::signup,
+                crate::handlers::register,
                 crate::handlers::login,
                 crate::handlers::logout,
                 crate::handlers::home,
@@ -69,7 +69,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
             routes![
                 crate::api::workout_json,
                 crate::api::post_workout_json,
-                crate::api::post_signup,
+                crate::api::post_register,
                 crate::api::post_login,
                 crate::api::get_current_user,
                 crate::api::get_user_workouts,
