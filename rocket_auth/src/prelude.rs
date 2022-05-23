@@ -3,11 +3,11 @@ pub use crate::cookies::Session;
 pub use crate::error::Error;
 pub use crate::forms::{Login, Signup};
 pub use crate::{AdminUser, Auth, User, Users};
-/// A type alias of result to omit the error type. 
+/// A type alias of result to omit the error type.
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
-pub(crate) use crate::session::SessionManager;
 pub(crate) use crate::db::DBConnection;
+pub(crate) use crate::session::SessionManager;
 pub(crate) use async_trait::async_trait;
 pub(crate) use fehler::*;
 pub(crate) use rocket::form::FromForm;

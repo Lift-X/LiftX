@@ -1,6 +1,6 @@
-#[cfg(feature="sqlx-mysql")]
+#[cfg(feature = "sqlx-mysql")]
 mod mysql;
-#[cfg(any(feature="sqlx-sqlite"))]
+#[cfg(any(feature = "sqlx-sqlite"))]
 mod sqlite;
 
 use crate::prelude::*;
@@ -40,7 +40,6 @@ impl<T: DBConnection> DBConnection for std::sync::Arc<T> {
         T::get_user_by_name(self, name).await
     }
 }
-
 
 #[rocket::async_trait]
 impl<T: DBConnection> DBConnection for tokio::sync::Mutex<T> {

@@ -134,7 +134,6 @@
 //! }
 //! ```
 
-
 mod cookies;
 mod db;
 mod error;

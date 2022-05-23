@@ -46,10 +46,7 @@ impl DBConnection for MySqlPool {
         Ok(user)
     }
     async fn get_user_by_name(&self, name: &str) -> Result<User> {
-        let user = query_as(SELECT_BY_NAME)
-            .bind(name)
-            .fetch_one(self)
-            .await?;
+        let user = query_as(SELECT_BY_NAME).bind(name).fetch_one(self).await?;
         Ok(user)
     }
 }

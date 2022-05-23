@@ -21,7 +21,7 @@ impl From<String> for AuthKey {
     fn from(secret: String) -> AuthKey {
         AuthKey {
             expires: 31536000,
-            secret
+            secret,
         }
     }
 }
@@ -30,7 +30,7 @@ impl From<&str> for AuthKey {
     fn from(secret: &str) -> AuthKey {
         AuthKey {
             expires: 31536000,
-            secret: secret.into()
+            secret: secret.into(),
         }
     }
 }

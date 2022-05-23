@@ -24,7 +24,6 @@ pub struct Session {
     pub auth_key: String,
 }
 
-
 #[async_trait]
 impl<'r> FromRequest<'r> for Session {
     type Error = Error;

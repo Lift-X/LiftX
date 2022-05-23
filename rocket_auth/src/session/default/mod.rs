@@ -39,4 +39,3 @@ impl SessionManager for CHashMap<i32, AuthKey> {
         self.retain(|_, auth_key| auth_key.expires > time);
     }
 }
-

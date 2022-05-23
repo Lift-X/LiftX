@@ -1,6 +1,5 @@
 use crate::prelude::*;
 
-
 /// The `Login` form is used along with the [`Auth`] guard to authenticate users.
 #[derive(FromForm, Deserialize, Clone, Hash, PartialEq, Eq, Validate)]
 pub struct Login {
@@ -22,20 +21,12 @@ pub struct Signup {
 }
 impl Debug for Signup {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Signup {{ name: {:?}, password: \"*****\" }}",
-            self.name
-        )
+        write!(f, "Signup {{ name: {:?}, password: \"*****\" }}", self.name)
     }
 }
 impl Debug for Login {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "Signup {{ name: {:?}, password: \"*****\" }}",
-            self.name
-        )
+        write!(f, "Signup {{ name: {:?}, password: \"*****\" }}", self.name)
     }
 }
 

@@ -68,10 +68,9 @@ use self::Error::*;
 impl Error {
     fn message(&self) -> String {
         match self {
-            InvalidNameAddressError
-            | NameAlreadyExists
-            | UnauthorizedError
-            | UserNotFoundError => format!("{}", self),
+            InvalidNameAddressError | NameAlreadyExists | UnauthorizedError | UserNotFoundError => {
+                format!("{}", self)
+            }
             FormValidationErrors(source) => {
                 source
                     .field_errors()
