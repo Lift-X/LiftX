@@ -32,7 +32,7 @@
     {/await}
 </svelte:head>
 
-
+<div id="content">
 <div class="separator" id="metadata">
     {#await data}
         <p>Loading... please wait</p>
@@ -62,4 +62,5 @@
     {:catch error}
         <p>{error}</p>
     {/await}
+</div>
 </div>

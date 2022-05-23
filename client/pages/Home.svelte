@@ -28,7 +28,7 @@
 </script>
 
 {#if login_status}
-<div>
+<div id="content">
     <div id="recentpanel" class="separator">
         <h1>Recent Workouts</h1>
         <hr>
@@ -58,16 +58,20 @@
 
 <style>
     .workout-summary > h2 > a {
+        display: inline-block;
         text-decoration: none;
         color: white;
+        width: max-content;
+        font-size: 0.9em;
     }
 
     .workout-summary {
         padding: 10px;
         margin: 10px;
         display: block;
-        max-width: 300px;
-        max-height: 700px;
+        width: 175px;
+        max-height: 500px;
+        overflow: auto;
         flex:auto;
         background-color: #3f3f3f;
         border-radius: 25px;
@@ -81,5 +85,7 @@
 
     #recentpanel {
         max-width: 960px;
+        margin: auto;
+        margin-top: 10px;
     }
 </style>

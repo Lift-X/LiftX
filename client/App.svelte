@@ -50,4 +50,9 @@
         padding: 15px;
         margin: 10px;
     }
+
+    :global(#content) {
+        max-width: 1200px;
+        margin: 0 auto;
+     }
 </style>

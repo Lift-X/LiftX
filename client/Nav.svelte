@@ -27,6 +27,7 @@ import { onMount } from "svelte";
             <ul class="nav-links">
                 <li><a class="navbar-item" href="/home">Home</a></li>
                 {#if login_status}
+                <li><a class="navbar-item" href="/workouts/new">New Workout</a></li>
                 <li><a class="navbar-item" href="/logout">Logout</a></li>
                 {:else}
                 <li><a class="navbar-item" href="/login">Login</a></li>
