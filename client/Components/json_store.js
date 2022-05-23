@@ -21,7 +21,7 @@ export async function get_current_user() {
     console.log("Calling user api");
     const response = await fetch("/api/user/current");
     const data = await response.json();
-    if (data.error = null) {
+    if (data.error == null) {
         json_data.update((old) => { old.user = data.name; return old; });
     } else {
         json_data.update((old) => { old.user = ""; return old; });
