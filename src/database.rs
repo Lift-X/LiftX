@@ -43,10 +43,9 @@ pub async fn get_workouts(
     mut limit: Option<i16>,
     recent_days: Option<u64>,
 ) -> Result<Vec<WorkoutEntry>, serde_json::Value> {
-    // If a limit is provided, use it. Else provide the latest 1000
-    match limit {
-        None => limit = Some(1000),
-        _ => (),
+    // If a limit is provided, use it. Else provide the latest 1000 workouts
+    if let None = limit {
+        limit = Some(1000)
     }
 
     // fyi: Cannot take `recent_days` as a SQL query, as the `created` column is not the start of the workout
