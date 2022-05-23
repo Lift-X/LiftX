@@ -40,15 +40,21 @@ pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: 
 pub async fn get_workouts(
     conn: &SqlitePool,
     user: String,
-    limit: Option<i16>,
+    mut limit: Option<i16>,
+    recent_days: Option<u64>,
 ) -> Result<Vec<WorkoutEntry>, serde_json::Value> {
     // If a limit is provided, use it. Else provide the latest 1000
-    limit.unwrap_or(1000_i16);
+    match limit {
+        None => limit = Some(1000),
+        _ => (),
+    }
 
+    // fyi: Cannot take `recent_days` as a SQL query, as the `created` column is not the start of the workout
     let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ? LIMIT ?")
         .bind(user)
         .bind(limit)
         .fetch_all(conn);
+
     match wrap_data.await {
         Ok(wrap_data) => {
             let mut workouts: Vec<WorkoutEntry> = Vec::new();
@@ -56,7 +62,15 @@ pub async fn get_workouts(
                 let str: &str = row.get("data");
                 let json: serde_json::Value = serde_json::from_str(str).unwrap();
                 let w = WorkoutEntry::from_json(&json.to_string());
-                workouts.push(w);
+                // TODO: Might be expensive if we have a lot of workouts, perhaps move  the match statement up a level.
+                match recent_days {
+                    Some(days) => {
+                        if w.start_time > std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() - (days * 86400) {
+                            workouts.push(w);
+                        }
+                    }
+                    None => workouts.push(w),
+                }
             }
             // Sort workouts in descending order (latest to oldest workout)
             workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));

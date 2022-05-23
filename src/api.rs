@@ -86,7 +86,7 @@ pub async fn get_user_workouts(
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let workouts = get_workouts(conn, user.name().to_string(), None).await;
+            let workouts = get_workouts(conn, user.name().to_string(), None, None).await;
             match workouts {
                 Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
                 Err(workouts) => Err(workouts),
@@ -104,12 +104,27 @@ pub async fn get_user_workouts_dynamic(
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
-            let workouts = get_workouts(
-                conn,
-                user.name().to_string(),
-                Some(limit as i16),
-            )
-            .await;
+            let workouts =
+                get_workouts(conn, user.name().to_string(), Some(limit as i16), None).await;
+            match workouts {
+                Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
+                Err(workouts) => Err(workouts),
+            }
+        }
+        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+    }
+}
+
+#[get("/user/workouts/recent/<days>")]
+pub async fn get_user_workouts_recent(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+    days: usize,
+) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let workouts =
+                get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
             match workouts {
                 Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
                 Err(workouts) => Err(workouts),

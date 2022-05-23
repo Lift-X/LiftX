@@ -31,9 +31,7 @@ pub struct Weight {
 impl Weight {
     pub fn from_string(string: &str) -> Result<Weight, String> {
         // collect only alphabetical characters
-        let split = string
-            .matches(char::is_alphabetic)
-            .collect::<String>();
+        let split = string.matches(char::is_alphabetic).collect::<String>();
         match split.as_ref() {
             "kgs" => Ok(Weight {
                 weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]

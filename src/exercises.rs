@@ -30,7 +30,6 @@ pub struct WorkoutEntry {
     pub user: String,
 }
 
-
 impl ExerciseEntry {
     // Absolutely scuffed, feel free to PR :D
     pub fn from_string(string: &str) -> ExerciseEntry {
