@@ -49,10 +49,11 @@ pub async fn get_workouts(
     }
 
     // fyi: Cannot take `recent_days` as a SQL query, as the `created` column is not the start of the workout
-    let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ? LIMIT ?")
-        .bind(user)
-        .bind(limit)
-        .fetch_all(conn);
+    let wrap_data =
+        sqlx::query("SELECT * FROM workout WHERE user = ? ORDER BY created DESC LIMIT ?")
+            .bind(user)
+            .bind(limit)
+            .fetch_all(conn);
 
     match wrap_data.await {
         Ok(wrap_data) => {
