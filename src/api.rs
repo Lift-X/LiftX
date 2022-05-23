@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use rocket::post;
 use rocket::{response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
@@ -6,6 +8,8 @@ use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::database::get_workouts;
+use crate::equipment::Weight;
+use crate::exercises::{GraphEntry, GraphItem};
 use crate::{database::Db, exercises::WorkoutEntry};
 
 #[get("/workouts/<id>/json")]
@@ -133,3 +137,103 @@ pub async fn get_user_workouts_recent(
         None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
     }
 }
+
+// Hard code day amount until working implementation
+/* yes this is awful, don't even look at it.
+#[get("/user/graphs/workouts/30")]
+pub async fn get_user_wrokouts_graph(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            // Get 30 days worth of workouts
+            let workouts: Vec<WorkoutEntry> = serde_json::from_value(
+                get_user_workouts_recent(Some(user), conn, 30)
+                    .await
+                    .unwrap(),
+            )
+            .unwrap();
+
+            // Build Graph
+            let mut graph: Vec<GraphEntry> = Vec::new();
+            // Build hashmap of exercises
+            let mut exercises_map: HashMap<String, Vec<GraphItem>> = HashMap::new();
+            for workout in &workouts {
+                // Create a NaiveDateTime from the timestamp
+                let naive = chrono::NaiveDateTime::from_timestamp(
+                    workout.start_time.try_into().unwrap(),
+                    0,
+                );
+
+                // Create a normal DateTime from the NaiveDateTime
+                let datetime: chrono::DateTime<chrono::Utc> =
+                chrono::DateTime::from_utc(naive, chrono::Utc);
+
+                // Format the datetime how you want
+                let newdate = datetime.format("%Y-%m-%d");
+
+                // Build list of exercises
+                for exercise in &workout.exercises {
+                    if exercises_map.contains_key(&exercise.exercise) {
+                        let mut max_weight : Weight = Weight {
+                            weight: 0.0,
+                            // TODO: Account for different units
+                            weight_unit: "lbs".to_string(),
+                        };
+                        for set in &exercise.sets {
+                            if set.weight.weight > max_weight.weight {
+                                max_weight = set.weight.clone();
+                            }
+                        }
+                        // Update value in hashmap
+                        let vec = exercises_map.get_mut(&exercise.exercise).unwrap();
+                        vec.push(GraphItem {
+                            date: newdate.to_string(),
+                            weight: max_weight,
+                        });
+                    } else {
+                        let mut list: Vec<GraphItem> = Vec::new();
+                        let mut max_weight : Weight = Weight {
+                            weight: 0.0,
+                            // TODO: Account for different units
+                            weight_unit: "lbs".to_string(),
+                        };
+                        // get the max weight out of the sets
+                        for set in &exercise.sets {
+                            if set.weight.weight > max_weight.weight {
+                                max_weight = set.weight.clone();
+                            }
+                        }
+                        list.push(GraphItem {date:newdate.to_string(), weight: max_weight });
+                        exercises_map.insert(exercise.exercise.clone(), list);
+                    }
+                }
+            }
+
+            // Only use the top 5 exercises
+            let mut exercises_vec: Vec<String> = Vec::new();
+            for (exercise, _) in exercises_map.iter().take(5) {
+                exercises_vec.push(exercise.clone());
+            }
+
+            // Build graph
+            for exercise in exercises_vec {
+                let mut count = 0;
+                for workout in &workouts {
+                    for ex in &workout.exercises {
+                        if ex.exercise.to_lowercase() == exercise {
+                            count += 1;
+                        }
+                    }
+                }
+                //graph.push(GraphEntry {date:newdate.to_string(),exercise:exercise,  });
+            }
+
+
+            Ok((serde_json::json!({ "workouts": "Joe" })))
+        }
+        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+    }
+}
+*/

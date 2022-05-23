@@ -64,7 +64,9 @@ pub async fn get_workouts(
                 // TODO: Might be expensive if we have a lot of workouts, perhaps move  the match statement up a level.
                 match recent_days {
                     Some(days) => {
-                        if w.start_time > std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() - (days * 86400) {
+                        if w.start_time
+                            > std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() - (days * 86400)
+                        {
                             workouts.push(w);
                         }
                     }

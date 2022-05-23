@@ -30,6 +30,20 @@ pub struct WorkoutEntry {
     pub user: String,
 }
 
+/*
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct GraphEntry {
+    pub exercise: String,
+    pub items: Vec<GraphItem>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
+pub struct GraphItem {
+    pub date: String,
+    pub weight: Weight,
+}
+*/
+
 impl ExerciseEntry {
     // Absolutely scuffed, feel free to PR :D
     pub fn from_string(string: &str) -> ExerciseEntry {
