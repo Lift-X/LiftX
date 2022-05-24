@@ -8,6 +8,7 @@ use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::database::get_workouts;
+use crate::error;
 //use crate::equipment::Weight;
 //use crate::exercises::{GraphEntry, GraphItem};
 use crate::{database::Db, exercises::WorkoutEntry};
@@ -99,7 +100,7 @@ pub async fn post_login(
 pub fn get_current_user(user: Option<User>) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => Ok(serde_json::json!({ "name": user.name() })),
-        None => Err(serde_json::json!({ "error": "Not logged in!" })),
+        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
     }
 }
 
@@ -116,7 +117,7 @@ pub async fn get_user_workouts(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
     }
 }
 
@@ -135,7 +136,7 @@ pub async fn get_user_workouts_dynamic(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
     }
 }
 
@@ -154,9 +155,22 @@ pub async fn get_user_workouts_recent(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({ "error": "You must be logged in to view workouts!" })),
+        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Hard code day amount until working implementation
 /* yes this is awful, don't even look at it.

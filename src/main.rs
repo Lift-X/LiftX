@@ -12,6 +12,7 @@ pub mod handlers;
 pub mod muscles;
 #[cfg(test)]
 mod tests;
+pub mod error;
 //pub mod util;
 
 use rocket_db_pools::Database;
