@@ -7,12 +7,12 @@ extern crate rocket;
 mod api;
 pub mod database;
 pub mod equipment;
+pub mod error;
 mod exercises;
 pub mod handlers;
 pub mod muscles;
 #[cfg(test)]
 mod tests;
-pub mod error;
 //pub mod util;
 
 use rocket_db_pools::Database;

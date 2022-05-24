@@ -53,8 +53,12 @@ pub async fn workout_delete(
             sqlx::query("DELETE FROM workout WHERE id = ? AND user = ?")
                 .bind(id)
                 .bind(user.name())
-                .fetch_one(&mut *db).await.unwrap();
-                return Ok(serde_json::from_str("{\"success\": \"Workout deleted or not found!\"}").unwrap())
+                .fetch_one(&mut *db)
+                .await
+                .unwrap();
+            return Ok(
+                serde_json::from_str("{\"success\": \"Workout deleted or not found!\"}").unwrap(),
+            );
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to delete a workout" })),
     }
@@ -100,7 +104,9 @@ pub async fn post_login(
 pub fn get_current_user(user: Option<User>) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => Ok(serde_json::json!({ "name": user.name() })),
-        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
+        None => Err(serde_json::json!({
+            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+        })),
     }
 }
 
@@ -117,7 +123,9 @@ pub async fn get_user_workouts(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
+        None => Err(serde_json::json!({
+            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+        })),
     }
 }
 
@@ -136,7 +144,9 @@ pub async fn get_user_workouts_dynamic(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
+        None => Err(serde_json::json!({
+            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+        })),
     }
 }
 
@@ -155,22 +165,11 @@ pub async fn get_user_workouts_recent(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
+        None => Err(serde_json::json!({
+            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+        })),
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Hard code day amount until working implementation
 /* yes this is awful, don't even look at it.

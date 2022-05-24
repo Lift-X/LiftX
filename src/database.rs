@@ -1,5 +1,5 @@
-use crate::exercises::WorkoutEntry;
 use crate::error;
+use crate::exercises::WorkoutEntry;
 use rocket_db_pools::Database;
 use sqlx::{Row, SqlitePool};
 
