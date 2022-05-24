@@ -33,7 +33,7 @@ pub async fn workout_json(
                     let str: &str = wrap_data.try_get("data").unwrap();
                     Ok(serde_json::from_str(str).unwrap())
                 }
-                Err(_) => Err(serde_json::from_str("{\"error\": \"Workout not found!\"}").unwrap()),
+                Err(_) => Err(serde_json::json!({"error": error::WLRS_ERROR_NOT_FOUND})),
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view this workout" })),
@@ -57,7 +57,7 @@ pub async fn workout_delete(
                 .await
                 .unwrap();
             return Ok(
-                serde_json::from_str("{\"success\": \"Workout deleted or not found!\"}").unwrap(),
+                serde_json::json!({ "success": "Workout deleted or not found!" }),
             );
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to delete a workout" })),
