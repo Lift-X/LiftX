@@ -7,7 +7,7 @@ use rocket_db_pools::Connection;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::database::get_workouts;
+use crate::database::{get_exercises, get_workouts};
 use crate::error;
 //use crate::equipment::Weight;
 //use crate::exercises::{GraphEntry, GraphItem};
@@ -49,7 +49,11 @@ pub async fn workout_delete(
         Some(user) => {
             // Query the database via ID, delete
             // Don't unwrap (panics when deleted lol)
-            sqlx::query("DELETE FROM workout WHERE id = ? AND user = ?").bind(id).bind(user.name()).fetch_one(&mut *db).await;
+            sqlx::query("DELETE FROM workout WHERE id = ? AND user = ?")
+                .bind(id)
+                .bind(user.name())
+                .fetch_one(&mut *db)
+                .await;
             return Ok(serde_json::json!({ "success": "Workout deleted or not found!" }));
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to delete a workout" })),
@@ -155,6 +159,25 @@ pub async fn get_user_workouts_recent(
             match workouts {
                 Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
                 Err(workouts) => Err(workouts),
+            }
+        }
+        None => Err(serde_json::json!({
+            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+        })),
+    }
+}
+
+#[get("/user/exercises/list")]
+pub async fn get_exercises_list(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let exercises = get_exercises(conn, user.name().to_string()).await;
+            match exercises {
+                Ok(exercises) => Ok(serde_json::json!({ "exercises": exercises })),
+                Err(exercises) => Err(exercises),
             }
         }
         None => Err(serde_json::json!({

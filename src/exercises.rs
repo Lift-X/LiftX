@@ -30,19 +30,12 @@ pub struct WorkoutEntry {
     pub user: String,
 }
 
-/*
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
-pub struct GraphEntry {
-    pub exercise: String,
-    pub items: Vec<GraphItem>,
+/// `ExerciseList` is a list of exercises, used for the frontend
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct ExerciseList {
+    pub name: String,
+    pub count: i32,
 }
-
-#[derive(Debug, Clone, Deserialize, Serialize, PartialEq)]
-pub struct GraphItem {
-    pub date: String,
-    pub weight: Weight,
-}
-*/
 
 impl ExerciseEntry {
     // Absolutely scuffed, feel free to PR :D

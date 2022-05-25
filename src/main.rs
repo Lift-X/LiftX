@@ -13,7 +13,7 @@ pub mod handlers;
 pub mod muscles;
 #[cfg(test)]
 mod tests;
-//pub mod util;
+pub mod util;
 
 use rocket_db_pools::Database;
 
@@ -76,7 +76,8 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::api::get_current_user,
                 crate::api::get_user_workouts,
                 crate::api::get_user_workouts_dynamic,
-                crate::api::get_user_workouts_recent
+                crate::api::get_user_workouts_recent,
+                crate::api::get_exercises_list
             ],
         )
         .register("/", catchers![crate::handlers::general_404])

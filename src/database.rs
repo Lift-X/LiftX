@@ -1,5 +1,5 @@
-use crate::error;
 use crate::exercises::WorkoutEntry;
+use crate::{error, exercises::ExerciseList};
 use rocket_db_pools::Database;
 use sqlx::{Row, SqlitePool};
 
@@ -80,6 +80,55 @@ pub async fn get_workouts(
             Ok(workouts)
         }
         // If workout doesn't exist, 404.
+        Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
+    }
+}
+
+/// Build a list of exercises a user has done.
+/// This returns a hashmap with the key as the exercise name and the value as the number of times the user has done that exercise.
+pub async fn get_exercises(
+    conn: &SqlitePool,
+    user: String,
+) -> Result<Vec<ExerciseList>, serde_json::Value> {
+    let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ?")
+        .bind(user)
+        .fetch_all(conn);
+
+    match wrap_data.await {
+        Ok(wrap_data) => {
+            let mut exercises_list: Vec<ExerciseList> = Vec::new();
+            {
+                for row in wrap_data {
+                    let str: &str = row.get("data");
+                    let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                    let w = WorkoutEntry::from_json(&json.to_string());
+                    /*for exercise in w.exercises {
+                        let count = exercises_list.entry(exercise.exercise).or_insert(0);
+                        *count += 1;
+                    }*/
+                    for exercise in w.exercises {
+                        // convert exercise name to kebab case
+                        let exercise_name = crate::util::string_capital_case(&exercise.exercise);
+                        let count: Option<&mut ExerciseList> =
+                            exercises_list.iter_mut().find(|x| x.name == exercise_name);
+                        match count {
+                            Some(count) => {
+                                count.count += 1;
+                            }
+                            None => {
+                                let new_exercise = ExerciseList {
+                                    name: exercise_name,
+                                    count: 1,
+                                };
+                                exercises_list.push(new_exercise);
+                            }
+                        }
+                    }
+                }
+            }
+            exercises_list.sort_unstable_by(|a, b| b.count.cmp(&a.count));
+            Ok(exercises_list)
+        }
         Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
     }
 }

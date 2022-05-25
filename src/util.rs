@@ -17,3 +17,15 @@ pub fn human_duration(start: u64, end: u64) -> String {
     format!("{}h {}m {}s", hours, minutes, seconds)
 }
 */
+
+pub fn string_capital_case(word: &str) -> String {
+    let mut capitalized = String::new();
+    for (i, c) in word.chars().enumerate() {
+        if i == 0 {
+            capitalized.push(c.to_ascii_uppercase());
+        } else {
+            capitalized.push(c);
+        }
+    }
+    capitalized
+}
