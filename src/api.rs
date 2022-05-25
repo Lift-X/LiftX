@@ -90,9 +90,11 @@ pub async fn post_login(
     form: rocket::form::Form<Signup>,
     auth: Auth<'_>,
 ) -> Result<Redirect, Error> {
-    auth.login(&form.into_inner().into()).await.unwrap();
-    println!("Logged in!");
-    Ok(Redirect::to("/home"))
+    let result = auth.login(&form.into_inner().into()).await;
+    match result {
+        Ok(_) => Ok(Redirect::to("/home")),
+        Err(e) => Err(e),
+    }
 }
 
 #[get("/user/current")]
