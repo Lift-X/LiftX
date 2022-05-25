@@ -1,5 +1,3 @@
-//use std::collections::HashMap;
-
 use rocket::post;
 use rocket::{response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
@@ -48,15 +46,16 @@ pub async fn workout_delete(
     match user {
         Some(user) => {
             // Query the database via ID, delete
-            // Don't unwrap (panics when deleted lol)
-            sqlx::query("DELETE FROM workout WHERE id = ? AND user = ?")
+            let query = sqlx::query("DELETE FROM workout WHERE id = ? AND user = ?")
                 .bind(id)
                 .bind(user.name())
-                .fetch_one(&mut *db)
-                .await;
-            return Ok(serde_json::json!({ "success": "Workout deleted or not found!" }));
+                .fetch_one(&mut *db);
+            match query.await {
+                Ok(_) => Ok(serde_json::json!({ "success": "Workout deleted" })),
+                Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
+            }
         }
-        None => Err(serde_json::json!({ "error": "You must be logged in to delete a workout" })),
+        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
     }
 }
 
