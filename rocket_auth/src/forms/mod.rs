@@ -10,12 +10,14 @@ pub struct Login {
 /// The `Signup` form is used along with the [`Auth`] guard to create new users.
 #[derive(FromForm, Deserialize, Clone, PartialEq, Eq, Hash, Validate)]
 pub struct Signup {
+    #[validate(custom = "no_spaces")]
     pub name: String,
     #[validate(
         custom = "is_long",
         custom = "has_number",
         custom = "has_lowercase",
-        custom = "has_uppercase"
+        custom = "has_uppercase",
+        custom = "no_spaces"
     )]
     pub(crate) password: String,
 }
@@ -109,4 +111,13 @@ fn has_number(password: &str) {
         "The password has to contain at least one digit.\n"
     ))
     // throw!(Error::UnsafePasswordHasNoDigit)
+}
+
+#[throws(ValidationError)]
+fn no_spaces(input: &str) {
+    if input.contains(' ') {
+        throw!(ValidationError::new(
+            "The input cannot contain spaces.\n"
+        ));
+    }
 }
