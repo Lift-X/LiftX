@@ -1,5 +1,11 @@
-/// When a user (not logged in) is trying to access something that requires authentication, it returns this
-pub const WLRS_ERROR_NOT_LOGGED_IN: &str = "You must be logged in to view this!";
+use serde::{Deserialize, Serialize};
 
-/// Used in similar context to a 404
-pub const WLRS_ERROR_NOT_FOUND: &str = "Not found!";
+#[allow(non_camel_case_types)]
+#[derive(Debug, Serialize, Deserialize, thiserror::Error)]
+pub enum WlrsError {
+    #[error("You must be logged in to view this!")]
+    WLRS_ERROR_NOT_LOGGED_IN,
+
+    #[error("Not found!")]
+    WLRS_ERROR_NOT_FOUND
+}

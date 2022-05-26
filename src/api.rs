@@ -6,7 +6,7 @@ use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::database::{get_exercises, get_workouts};
-use crate::error;
+use crate::error::WlrsError;
 //use crate::equipment::Weight;
 //use crate::exercises::{GraphEntry, GraphItem};
 use crate::{database::Db, exercises::WorkoutEntry};
@@ -30,7 +30,7 @@ pub async fn workout_json(
                     let str: &str = wrap_data.try_get("data").unwrap();
                     Ok(serde_json::from_str(str).unwrap())
                 }
-                Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
+                Err(_) => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_FOUND })),
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view this workout" })),
@@ -52,10 +52,10 @@ pub async fn workout_delete(
                 .fetch_one(&mut *db);
             match query.await {
                 Ok(_) => Ok(serde_json::json!({ "success": "Workout deleted" })),
-                Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
+                Err(_) => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_FOUND })),
             }
         }
-        None => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_LOGGED_IN })),
+        None => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN })),
     }
 }
 
@@ -102,7 +102,7 @@ pub fn get_current_user(user: Option<User>) -> Result<serde_json::Value, serde_j
     match user {
         Some(user) => Ok(serde_json::json!({ "name": user.name() })),
         None => Err(serde_json::json!({
-            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
     }
 }
@@ -121,7 +121,7 @@ pub async fn get_user_workouts(
             }
         }
         None => Err(serde_json::json!({
-            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
     }
 }
@@ -142,7 +142,7 @@ pub async fn get_user_workouts_dynamic(
             }
         }
         None => Err(serde_json::json!({
-            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
     }
 }
@@ -163,7 +163,7 @@ pub async fn get_user_workouts_recent(
             }
         }
         None => Err(serde_json::json!({
-            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
     }
 }
@@ -182,7 +182,7 @@ pub async fn get_exercises_list(
             }
         }
         None => Err(serde_json::json!({
-            "error": error::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
     }
 }

@@ -1,5 +1,6 @@
+use crate::error::WlrsError;
 use crate::exercises::WorkoutEntry;
-use crate::{error, exercises::ExerciseList};
+use crate::{exercises::ExerciseList};
 use rocket_db_pools::Database;
 use sqlx::{Row, SqlitePool};
 
@@ -80,7 +81,7 @@ pub async fn get_workouts(
             Ok(workouts)
         }
         // If workout doesn't exist, 404.
-        Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
+        Err(_) => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_FOUND })),
     }
 }
 
@@ -129,6 +130,6 @@ pub async fn get_exercises(
             exercises_list.sort_unstable_by(|a, b| b.count.cmp(&a.count));
             Ok(exercises_list)
         }
-        Err(_) => Err(serde_json::json!({ "error": error::WLRS_ERROR_NOT_FOUND })),
+        Err(_) => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_FOUND })),
     }
 }
