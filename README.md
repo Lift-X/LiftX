@@ -1,4 +1,4 @@
-![](static/logo.png)
+![](public/logo.png)
 # WLRS
 WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout tracker.
 
