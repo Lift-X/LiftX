@@ -1,4 +1,5 @@
 <script>
+    import AuthBox from "../Components/AuthBox.svelte";
     import {get_current_user, json_data} from "../Components/json_store.js";
     import { onMount } from 'svelte';
     import LoggedInAlready from "../Components/LoggedInAlready.svelte";
@@ -12,21 +13,7 @@
 </script>
 
 {#if login_status}
-<center>
-<h1>Login</h1>
-<form action="/api/login" method="post">
-        <label>
-            <span>Username</span>
-            <input name="name" type="text" bind:value="{name}" required/>
-        </label>
-
-        <label>
-            <span>Password</span>
-            <input name="password" type="password" bind:value="{password}" required/>
-        </label>
-        <button type="submit">Login</button>
-</form>
-</center>
+<AuthBox auth_type="Login" endpoint="/api/login"></AuthBox>
 {:else}
 <LoggedInAlready/>
 {/if}
