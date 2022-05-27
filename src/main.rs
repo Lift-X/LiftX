@@ -51,7 +51,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        .attach(Compression::fairing())
+        //.attach(Compression::fairing())
         //.attach(rocket_dyn_templates::Template::fairing()) // If we ever need SSR again, uncomment this
         .mount(
             "/",
