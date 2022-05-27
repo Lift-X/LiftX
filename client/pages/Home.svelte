@@ -14,9 +14,8 @@
         if (!login_status) {
             // redirect to login
             window.location.href = "/login";
-        }
+        } else {
         // Fetch 3 of the latest workouts
-        if (login_status) {
             const response = await fetch("/api/user/workouts/3");
             const responseJson = await response.json();
             if (responseJson.error != null) {
