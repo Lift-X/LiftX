@@ -14,6 +14,7 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
     - [X] Register Account
     - [X] Login
       - [ ] Remember Login
+      - [ ] Add validation (frontend, backend has validation)
     - [ ] Delete
   - [X] User Home Page
     - [X] Summaries of workouts
