@@ -10,7 +10,6 @@ thiserror = "1.0.31"
 # Web
 rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
 rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
-rocket_async_compression = { git = "https://github.com/Zusier/rocket_async_compression"}
 tokio = "1.18.1"
 # Time
 time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }

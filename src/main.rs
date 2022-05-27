@@ -17,7 +17,7 @@ pub mod util;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
-use rocket::{fairing::AdHoc, response, form::validate::Contains};
+use rocket::{fairing::AdHoc, form::validate::Contains};
 use rocket_db_pools::Database;
 
 #[rocket::main]
