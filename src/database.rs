@@ -1,6 +1,6 @@
 use crate::error::WlrsError;
 use crate::exercises::WorkoutEntry;
-use crate::{exercises::ExerciseList};
+use crate::exercises::ExerciseList;
 use rocket_db_pools::Database;
 use sqlx::{Row, SqlitePool};
 
