@@ -28,6 +28,8 @@ WLRS (*[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)*) is a WIP workout t
 - [ ] Extend error handling with global error codes and don't handle `Result<>`s with `unwrap()`s
 - [ ] Organize api
 - [ ] [Ratelimiting](https://lib.rs/crates/rocket-governor)
+- [X] Compression
+  - [ ] Decrease latency/prcoessing times, perhaps pre-compress ( Basic json adds +/-16ms of response time)
 
 ### Ideas for the future
 

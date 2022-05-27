@@ -8,10 +8,9 @@ edition = "2021"
 log = "0.4.0"
 thiserror = "1.0.31"
 # Web
-#rocket = { git = "https://github.com/SergioBenitez/Rocket", version = "0.5.0-rc.2", features = ["json", "secrets"] }
 rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
-#rocket_db_pools = { git = "https://github.com/SergioBenitez/Rocket", version = "0.1.0-rc", features = ["sqlx_sqlite"] }
 rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
+rocket_async_compression = { git = "https://github.com/Zusier/rocket_async_compression"}
 tokio = "1.18.1"
 # Time
 time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }

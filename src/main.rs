@@ -15,10 +15,10 @@ pub mod muscles;
 mod tests;
 pub mod util;
 
-use rocket_db_pools::Database;
-
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
+use rocket_async_compression::Compression;
+use rocket_db_pools::Database;
 
 #[rocket::main]
 async fn main() {
@@ -51,6 +51,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
+        .attach(Compression::fairing())
         //.attach(rocket_dyn_templates::Template::fairing()) // If we ever need SSR again, uncomment this
         .mount(
             "/",

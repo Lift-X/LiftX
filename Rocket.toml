@@ -10,3 +10,8 @@ idle_timeout = 120
 template_dir = "templates"
 address = "127.0.0.1"
 port = 8000
+# Note, change to env variable which is set in docker-compose.yml
+secret_key = "qZOir1b8GaaRDTqNX18fTqqub3T4ChR/aWnzZU2QP1s="
+
+[global.compress]
+exclude = ["text/html", "image/avif", "image/png", "image/jpeg", "image/gif"]
