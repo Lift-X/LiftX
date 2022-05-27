@@ -1,6 +1,6 @@
 {
     "name": "wlrs-svelte",
-    "version": "0.1.5",
+    "version": "0.1.0",
     "scripts": {
         "build": "rollup -c",
         "dev": "rollup -c -w",

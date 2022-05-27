@@ -29,10 +29,11 @@
 
 {#if login_status}
 <div id="content">
-    <div id="recentpanel" class="separator">
+    <div id="recentpanel" class="separator" style="width: {workouts.length * 320}px;">
         <h1>Recent Workouts</h1>
         <hr>
         <div id="recents" class="subpanel">
+            {#if workouts.length > 0}
             {#each workouts as workout}
             <div class="workout-summary">
                 <h2><a href="/workouts/{workout.uuid}">{workout.title} - <Time timestamp="{workout.start_time * 1000}"></Time></a></h2>
@@ -42,6 +43,17 @@
                 {/each}
             </div>
             {/each}
+            {:else if workouts.length == 0}
+            <div class="workout-summary" id="add-panel">
+                <h2>Add a workout</h2>
+                <hr>
+                <a href="/workouts/new"><div id="add">
+                <center>
+                    <p>+</p>
+                </center>
+            </div>
+                </div>
+            {/if}
         </div>
     </div>
 </div>
@@ -69,7 +81,9 @@
         padding: 10px;
         margin: 10px;
         display: block;
-        width: 175px;
+        width: 275px;
+        max-width: 275px;
+        height: 500px;
         max-height: 500px;
         overflow: auto;
         flex:auto;
@@ -87,5 +101,32 @@
         max-width: 960px;
         margin: auto;
         margin-top: 10px;
+    }
+
+    #add p {
+        font-size: 200px;
+        text-align: center;
+        font-weight: bold;
+        color: #fff;
+        height: 200px;
+        width: 200px;
+    }
+
+    #add {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        max-height: 400px;
+        width: inherit;
+    }
+
+    #add-panel {
+        overflow: hidden;
+    }
+
+    #add-panel a {
+        text-decoration: none;
+        color: #fff;
     }
 </style>
