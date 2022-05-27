@@ -8,7 +8,7 @@
     let login_status = false;
     let workouts = [];
     onMount(async () => {
-        get_current_user();
+        await get_current_user();
         let json_data_store = get(json_data);
         login_status = (json_data_store.user != "") ? true : false;
         if (!login_status) {
