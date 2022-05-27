@@ -17,7 +17,7 @@ pub mod util;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
-use rocket_async_compression::Compression;
+use rocket::{fairing::AdHoc, response, form::validate::Contains};
 use rocket_db_pools::Database;
 
 #[rocket::main]
@@ -51,7 +51,18 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     let rocket = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        //.attach(Compression::fairing())
+        .attach(AdHoc::on_response("Compress", |request, response| Box::pin(async {
+            if request.uri().path().contains(".br") {
+                response.set_header(rocket::http::Header::new("content-encoding", "br"));
+                // MIME Types
+                let uri: String = request.uri().to_string();
+                if uri.contains("js") {
+                    response.set_header(rocket::http::Header::new("content-type", "application/javascript"));
+                } else if uri.contains("css") {
+                    response.set_header(rocket::http::Header::new("content-type", "text/css"));
+                }
+            }
+    })))
         //.attach(rocket_dyn_templates::Template::fairing()) // If we ever need SSR again, uncomment this
         .mount(
             "/",
