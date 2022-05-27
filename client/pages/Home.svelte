@@ -3,28 +3,29 @@
     import { onMount } from 'svelte';
     import Time from "svelte-time";
     import Exercise from "../Components/ExerciseView.svelte";
+    import { get } from "svelte/store";
 
     let login_status = false;
     let workouts = [];
     onMount(async () => {
         get_current_user();
-        login_status = (json_data != "") ? true : false;
+        let json_data_store = get(json_data);
+        login_status = (json_data_store.user != "") ? true : false;
+        if (!login_status) {
+            // redirect to login
+            window.location.href = "/login";
+        }
         // Fetch 3 of the latest workouts
         if (login_status) {
             const response = await fetch("/api/user/workouts/3");
             const responseJson = await response.json();
             if (responseJson.error != null) {
-                // Hide workout section
-                console.log(response.status)
-                document.getElementById("workout").style.display = "none";
                 throw new Error(responseJson.error);
             } else {
                 workouts = responseJson.workouts;
             }
-        }});
-    function redirect() {
-        window.location.href = "/login";
-    }
+        }
+        });
 </script>
 
 {#if login_status}
@@ -55,15 +56,6 @@
                 </div>
             {/if}
         </div>
-    </div>
-</div>
-{:else}
-<div display="flex">
-    <div>
-        <h1>Recent Workouts</h1>
-        <hr>
-        <p>You must be logged in to view this page.</p>
-        <button onclick="redirect()">Login</button>
     </div>
 </div>
 {/if}
