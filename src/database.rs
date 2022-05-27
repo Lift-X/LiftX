@@ -2,14 +2,14 @@ use crate::error::WlrsError;
 use crate::exercises::WorkoutEntry;
 use crate::exercises::ExerciseList;
 use rocket_db_pools::Database;
-use sqlx::{Row, SqlitePool};
+use sqlx::{Row, SqlitePool, Pool, Sqlite};
 
 #[derive(Database)]
 #[database("sqlite_db")]
 pub struct Db(sqlx::sqlite::SqlitePool);
 
-pub async fn create_connection() -> sqlx::SqlitePool {
-    let pool = sqlx::SqlitePool::connect("data.db").await.unwrap();
+pub async fn create_connection() -> SqlitePool {
+    let pool: Pool<Sqlite> = SqlitePool::connect("data.db").await.unwrap();
     pool
 }
 
@@ -27,7 +27,7 @@ pub async fn build_tables(conn: SqlitePool) {
 
 pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: &SqlitePool) {
     debug!("Creating ExerciseEntry with id: {}...", uuid.to_string());
-    let query = format!(
+    let query: String = format!(
         "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', '{}', '{}')",
         uuid,
         std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),

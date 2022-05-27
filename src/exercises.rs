@@ -61,7 +61,7 @@ impl ExerciseEntry {
     }
 
     pub fn to_string_summary(&self) -> String {
-        let mut stringified_exercise = self.exercise.clone();
+        let mut stringified_exercise: String = self.exercise.clone();
         for set in &self.sets {
             let a = format!(
                 " - {}x{}{},{}RiR",
@@ -88,9 +88,9 @@ impl ExerciseEntry {
 
 impl std::fmt::Display for ExerciseEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let mut stringified_exercise = self.exercise.clone();
+        let mut stringified_exercise: String = self.exercise.clone();
         for set in &self.sets {
-            let a = format!(
+            let a: String = format!(
                 ";{},{}{},{}",
                 set.reps,
                 set.weight.weight,

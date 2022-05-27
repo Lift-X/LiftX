@@ -6,13 +6,6 @@ use crate::{
     muscles,
 };
 
-/*#[tokio::test]
-async fn test_rocket_and_handlers() {
-    let rocket = launch_web().await;
-    assert!(rocket.is_ok());
-}
-*/
-
 #[test]
 fn test_weight_from_string_lbs() {
     let weight = Weight::from_string("100lbs").unwrap();

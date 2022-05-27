@@ -17,13 +17,14 @@ pub mod util;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
-use rocket::{fairing::AdHoc, form::validate::Contains};
+use rocket::{fairing::AdHoc, form::validate::Contains, Rocket, Build};
 use rocket_db_pools::Database;
+use sqlx::{Pool, Sqlite, SqlitePool};
 
 #[rocket::main]
 async fn main() {
     // connect to DB
-    let conn = sqlx::SqlitePool::connect("data.db").await;
+    let conn: Result<Pool<Sqlite>, sqlx::Error> = SqlitePool::connect("data.db").await;
 
     match conn {
         Ok(conn) => {
@@ -48,7 +49,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
         .enable(rocket::shield::XssFilter::EnableBlock)
         .enable(rocket::shield::NoSniff::Enable);
     #[allow(clippy::no_effect_underscore_binding)]
-    let rocket = rocket::build()
+    let rocket: Rocket<Build> = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
         .attach(AdHoc::on_response("Compress", |request, response| Box::pin(async {
@@ -63,7 +64,6 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 }
             }
     })))
-        //.attach(rocket_dyn_templates::Template::fairing()) // If we ever need SSR again, uncomment this
         .mount(
             "/",
             routes![

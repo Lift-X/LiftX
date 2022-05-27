@@ -67,7 +67,7 @@ pub async fn post_workout_json(
     // "Unwrap" Json<WorkoutEntry> to WorkoutEntry
     let val: WorkoutEntry = data.into_inner();
     // Generate UUID
-    let uuid = Uuid::new_v4();
+    let uuid: Uuid = Uuid::new_v4();
     debug!("Creating workoutentry with {}", uuid);
     crate::database::insert_workout(uuid, val, &**conn).await;
     rocket::response::Redirect::to(format!("/workouts/{}", uuid))

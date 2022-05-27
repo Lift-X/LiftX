@@ -19,7 +19,7 @@ pub fn human_duration(start: u64, end: u64) -> String {
 */
 
 pub fn string_capital_case(word: &str) -> String {
-    let mut capitalized = String::new();
+    let mut capitalized: String = String::new();
     for (i, c) in word.chars().enumerate() {
         if i == 0 {
             capitalized.push(c.to_ascii_uppercase());
