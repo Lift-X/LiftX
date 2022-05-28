@@ -3,7 +3,6 @@
 #![warn(clippy::all, clippy::pedantic)]
 #[macro_use]
 extern crate rocket;
-
 mod api;
 pub mod database;
 pub mod equipment;
@@ -20,6 +19,9 @@ use crate::{database::create_connection, equipment::Weight};
 use rocket::{fairing::AdHoc, form::validate::Contains, Rocket, Build};
 use rocket_db_pools::Database;
 use sqlx::{Pool, Sqlite, SqlitePool};
+
+// Move to enviroment variable/config file once release-ready
+const PROD: bool = true;
 
 #[rocket::main]
 async fn main() {
@@ -52,6 +54,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     let rocket: Rocket<Build> = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
+        // Brotli Compression
         .attach(AdHoc::on_response("Compress", |request, response| Box::pin(async {
             if request.uri().path().contains(".br") {
                 response.set_header(rocket::http::Header::new("content-encoding", "br"));
@@ -64,6 +67,15 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 }
             }
     })))
+    .attach(AdHoc::on_response("Client Cache", |request, response| Box::pin(async {
+        if PROD {
+            let uri: String = request.uri().to_string();
+            // Don't cache api responses
+            if !uri.contains("/api/") {
+                response.set_header(rocket::http::Header::new("cache-control", "public, max-age=31536000"));
+            }
+        }
+})))
         .mount(
             "/",
             routes![
