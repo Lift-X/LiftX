@@ -1,14 +1,17 @@
 <script>
     import Exercise from "../Components/ExerciseView.svelte";
+    const cacheName = "workouts-cache";
     export let id;
     export async function load_json() {
         const response = await fetch("/api/workouts/" + id + "/json");
-        const responseJson = await response.json();
+        const responseJson = await response.clone().json();
         if (responseJson.error != null) {
             // Hide workout section
             document.getElementById("workout").style.display = "none";
             throw new Error(responseJson.error);
         } else {
+            const cache = await caches.open(cacheName);
+            cache.put(id, response.clone());
             return responseJson;
         }
     }
@@ -18,7 +21,25 @@
         let seconds = time - hours * 3600 - minutes * 60;
         return hours + "h " + minutes + "m " + seconds + "s";
     }
-    let json_data = load_json();
+    export async function load_cache() {
+        const cache = await caches.open(cacheName);
+        const response = await cache.match(id);
+        if (response != null) {
+            const responseJson = await response.json();
+            if (responseJson.error != null) {
+                // Hide workout section
+                document.getElementById("workout").style.display = "none";
+                throw new Error(responseJson.error);
+            } else {
+                console.log("Cache hit!")
+                return responseJson;
+            }
+        } else {
+            console.log("Cache miss!");
+            return load_json();
+        }
+    }
+    let json_data = load_cache();
     $: data = json_data;
 </script>
 
