@@ -1,8 +1,8 @@
-use rocket::{fs::NamedFile, response::Redirect};
-use rocket_auth::Auth;
-
+use crate::cache::CachedFile;
 #[allow(unused_imports)]
 use crate::database::Db;
+use rocket::{fs::NamedFile, response::Redirect};
+use rocket_auth::Auth;
 
 #[get("/workouts/<id>")]
 pub async fn workout_view(id: String) -> Option<NamedFile> {
@@ -16,11 +16,18 @@ pub async fn workout_new() -> Option<NamedFile> {
 }
 
 #[get("/public/<file..>")]
-pub async fn static_file(file: std::path::PathBuf) -> Option<NamedFile> {
-    //NamedFile::open(format!("public/{}", file)).await.ok()
+pub async fn static_file(file: std::path::PathBuf) -> Option<CachedFile> {
     let file = std::path::Path::new("public").join(file);
-
-    NamedFile::open(file).await.ok()
+    let cache_time: u32;
+    if crate::PROD {
+        cache_time = 86400;
+    } else {
+        cache_time = 0;
+    }
+    NamedFile::open(file)
+        .await
+        .ok()
+        .and_then(|f| Some(CachedFile(f, cache_time)))
 }
 
 #[get("/register")]

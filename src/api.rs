@@ -2,13 +2,13 @@ use rocket::post;
 use rocket::{response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
+use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
+use crate::cache::WorkoutEntryCache;
 use crate::database::{get_exercises, get_workouts};
 use crate::error::WlrsError;
-//use crate::equipment::Weight;
-//use crate::exercises::{GraphEntry, GraphItem};
 use crate::{database::Db, exercises::WorkoutEntry};
 
 #[get("/workouts/<id>/json")]
@@ -16,7 +16,7 @@ pub async fn workout_json(
     id: String,
     mut db: Connection<Db>,
     user: Option<User>,
-) -> Result<serde_json::Value, serde_json::Value> {
+) -> Result<WorkoutEntryCache, serde_json::Value> {
     match user {
         Some(user) => {
             // Query the database via ID, return data column
@@ -27,10 +27,19 @@ pub async fn workout_json(
             // If workout doesn't exist, 404.
             match wrap_data.await {
                 Ok(wrap_data) => {
-                    let str: &str = wrap_data.try_get("data").unwrap();
-                    Ok(serde_json::from_str(str).unwrap())
+                    let data: WorkoutEntry;
+                    let json: serde_json::Value;
+                    {
+                        let str: &str = wrap_data.try_get("data").unwrap();
+                        data = WorkoutEntry::from_json(str);
+                        json = json!(data);
+                    }
+                    let result = WorkoutEntryCache { data, json };
+                    Ok(result)
                 }
-                Err(_) => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_FOUND })),
+                Err(_) => Err(serde_json::json!({
+                    "error": WlrsError::WLRS_ERROR_NOT_FOUND
+                })),
             }
         }
         None => Err(serde_json::json!({ "error": "You must be logged in to view this workout" })),
@@ -52,10 +61,14 @@ pub async fn workout_delete(
                 .fetch_one(&mut *db);
             match query.await {
                 Ok(_) => Ok(serde_json::json!({ "success": "Workout deleted" })),
-                Err(_) => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_FOUND })),
+                Err(_) => Err(serde_json::json!({
+                    "error": WlrsError::WLRS_ERROR_NOT_FOUND
+                })),
             }
         }
-        None => Err(serde_json::json!({ "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN })),
+        None => Err(serde_json::json!({
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
+        })),
     }
 }
 

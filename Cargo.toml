@@ -25,6 +25,8 @@ sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-fe
 ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
 regex-syntax = { version = "0.6.25" }
 tracing-core = { version = "0.1.26" }
+futures = "0.3.21"
+base64 = "0.13.0"
 # Auth
 rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
 

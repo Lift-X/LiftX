@@ -4,6 +4,7 @@
 #[macro_use]
 extern crate rocket;
 mod api;
+pub mod cache;
 pub mod database;
 pub mod equipment;
 pub mod error;
@@ -16,7 +17,7 @@ pub mod util;
 
 #[allow(unused_imports)]
 use crate::{database::create_connection, equipment::Weight};
-use rocket::{fairing::AdHoc, form::validate::Contains, Rocket, Build};
+use rocket::{fairing::AdHoc, form::validate::Contains, Build, Rocket};
 use rocket_db_pools::Database;
 use sqlx::{Pool, Sqlite, SqlitePool};
 
@@ -55,27 +56,23 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
         .attach(shield)
         .attach(database::Db::init())
         // Brotli Compression
-        .attach(AdHoc::on_response("Compress", |request, response| Box::pin(async {
-            if request.uri().path().contains(".br") {
-                response.set_header(rocket::http::Header::new("content-encoding", "br"));
-                // MIME Types
-                let uri: String = request.uri().to_string();
-                if uri.contains("js") {
-                    response.set_header(rocket::http::Header::new("content-type", "application/javascript"));
-                } else if uri.contains("css") {
-                    response.set_header(rocket::http::Header::new("content-type", "text/css"));
+        .attach(AdHoc::on_response("Compress", |request, response| {
+            Box::pin(async {
+                if request.uri().path().contains(".br") {
+                    response.set_header(rocket::http::Header::new("content-encoding", "br"));
+                    // MIME Types
+                    let uri: String = request.uri().to_string();
+                    if uri.contains("js") {
+                        response.set_header(rocket::http::Header::new(
+                            "content-type",
+                            "application/javascript",
+                        ));
+                    } else if uri.contains("css") {
+                        response.set_header(rocket::http::Header::new("content-type", "text/css"));
+                    }
                 }
-            }
-    })))
-    .attach(AdHoc::on_response("Client Cache", |request, response| Box::pin(async {
-        if PROD {
-            let uri: String = request.uri().to_string();
-            // Don't cache api responses
-            if !uri.contains("/api/") {
-                response.set_header(rocket::http::Header::new("cache-control", "public, max-age=31536000"));
-            }
-        }
-})))
+            })
+        }))
         .mount(
             "/",
             routes![

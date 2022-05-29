@@ -7,5 +7,5 @@ pub enum WlrsError {
     WLRS_ERROR_NOT_LOGGED_IN,
 
     #[error("Not found!")]
-    WLRS_ERROR_NOT_FOUND
+    WLRS_ERROR_NOT_FOUND,
 }
