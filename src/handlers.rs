@@ -24,10 +24,11 @@ pub async fn static_file(file: std::path::PathBuf) -> Option<CachedFile> {
     } else {
         cache_time = 0;
     }
-    NamedFile::open(file)
-        .await
-        .ok()
-        .and_then(|f| Some(CachedFile(f, cache_time)))
+    let cache = CachedFile {
+        data: NamedFile::open(file).await.ok()?,
+        cache_time,
+    };
+    Some(cache)
 }
 
 #[get("/register")]

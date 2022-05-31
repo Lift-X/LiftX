@@ -6,7 +6,7 @@ use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::cache::WorkoutEntryCache;
+use crate::cache::{JsonCache, WorkoutEntryCache};
 use crate::database::{get_exercises, get_workouts};
 use crate::error::WlrsError;
 use crate::{database::Db, exercises::WorkoutEntry};
@@ -111,9 +111,12 @@ pub async fn post_login(
 }
 
 #[get("/user/current")]
-pub fn get_current_user(user: Option<User>) -> Result<serde_json::Value, serde_json::Value> {
+pub fn get_current_user(user: Option<User>) -> Result<JsonCache, serde_json::Value> {
     match user {
-        Some(user) => Ok(serde_json::json!({ "name": user.name() })),
+        Some(user) => Ok(JsonCache {
+            data: serde_json::json!({ "name": user.name() }),
+            cache_control: "private max-age=10".to_string(),
+        }),
         None => Err(serde_json::json!({
             "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
@@ -124,12 +127,15 @@ pub fn get_current_user(user: Option<User>) -> Result<serde_json::Value, serde_j
 pub async fn get_user_workouts(
     user: Option<User>,
     conn: &State<SqlitePool>,
-) -> Result<serde_json::Value, serde_json::Value> {
+) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts = get_workouts(conn, user.name().to_string(), None, None).await;
             match workouts {
-                Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
+                Ok(workouts) => Ok(JsonCache {
+                    data: serde_json::json!({ "workouts": workouts }),
+                    cache_control: "private max-age=10".to_string(),
+                }),
                 Err(workouts) => Err(workouts),
             }
         }
@@ -144,13 +150,13 @@ pub async fn get_user_workouts_dynamic(
     user: Option<User>,
     conn: &State<SqlitePool>,
     limit: usize,
-) -> Result<serde_json::Value, serde_json::Value> {
+) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts =
                 get_workouts(conn, user.name().to_string(), Some(limit as i16), None).await;
             match workouts {
-                Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
+                Ok(workouts) => Ok(JsonCache { data: serde_json::json!({ "workouts": workouts }), cache_control: "private max-age=10".to_string() }),
                 Err(workouts) => Err(workouts),
             }
         }
@@ -165,13 +171,13 @@ pub async fn get_user_workouts_recent(
     user: Option<User>,
     conn: &State<SqlitePool>,
     days: usize,
-) -> Result<serde_json::Value, serde_json::Value> {
+) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts =
                 get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
             match workouts {
-                Ok(workouts) => Ok(serde_json::json!({ "workouts": workouts })),
+                Ok(workouts) => Ok(JsonCache { data: serde_json::json!({ "workouts": workouts }), cache_control: "private max-age=10".to_string() }),
                 Err(workouts) => Err(workouts),
             }
         }
@@ -185,12 +191,15 @@ pub async fn get_user_workouts_recent(
 pub async fn get_exercises_list(
     user: Option<User>,
     conn: &State<SqlitePool>,
-) -> Result<serde_json::Value, serde_json::Value> {
+) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
             let exercises = get_exercises(conn, user.name().to_string()).await;
             match exercises {
-                Ok(exercises) => Ok(serde_json::json!({ "exercises": exercises })),
+                Ok(exercises) => Ok(JsonCache {
+                    data: serde_json::json!({ "exercises": exercises }),
+                    cache_control: "private max-age=10".to_string(),
+                }),
                 Err(exercises) => Err(exercises),
             }
         }
