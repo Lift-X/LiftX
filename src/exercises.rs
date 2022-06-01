@@ -28,6 +28,8 @@ pub struct WorkoutEntry {
     pub end_time: u64,
     pub exercises: Vec<ExerciseEntry>,
     pub user: String,
+    /// Total volume of the workout in the form of a `Weight`
+    pub volume: Weight,
 }
 
 /// `ExerciseList` is a list of exercises, used for the frontend
@@ -124,6 +126,7 @@ impl WorkoutEntry {
             end_time: 0,
             exercises: vec![],
             user: "".to_string(),
+            volume: Weight::default(),
         }
     }
 }

@@ -1,7 +1,7 @@
 use ordered_float::OrderedFloat;
 
 use crate::{
-    equipment::{self, Weight, WeightType, EQUIPMENT_LIST, KILOGRAMS, POUNDS},
+    equipment::{self, Weight, WeightType, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
     muscles,
 };
@@ -61,21 +61,6 @@ fn test_weight_type_from_string() {
     assert_eq!(WeightType::from_string("kgs").unwrap(), KILOGRAMS);
     assert_eq!(WeightType::from_string("lbs").unwrap(), POUNDS);
     assert!(WeightType::from_string("ERROR").is_err());
-}
-
-#[test]
-fn test_parse_equipment() {
-    for equipment in EQUIPMENT_LIST {
-        assert!(equipment.name.is_ascii());
-        match equipment.rep_multiplier {
-            0 => assert_eq!(equipment.rep_multiplier, 0),
-            1 => assert_eq!(equipment.rep_multiplier, 1),
-            2 => assert_eq!(equipment.rep_multiplier, 2),
-            3 => assert_eq!(equipment.rep_multiplier, 3),
-            4 => assert_eq!(equipment.rep_multiplier, 4),
-            _ => panic!("Invalid rep_multiplier!"),
-        }
-    }
 }
 
 #[test]
@@ -167,6 +152,7 @@ fn test_workout() {
         user: "John Doe".to_string(),
         uuid: uuid.to_string(),
         title: "test".to_string(),
+        volume: Weight::default(),
     };
     assert_eq!(bench_workout.start_time, time);
     assert_eq!(bench_workout.end_time, time_1hr);
@@ -175,6 +161,11 @@ fn test_workout() {
     assert_eq!(bench_workout.exercises[0].sets.len(), 3);
     assert_eq!(bench_workout.uuid, uuid.to_string());
     assert_eq!(bench_workout.title, "test".to_string());
+    assert_eq!(bench_workout.volume.weight, 0.0);
+    assert_eq!(
+        WeightType::from_string(&bench_workout.volume.weight_unit).unwrap(),
+        equipment::POUNDS
+    );
 }
 
 #[test]
@@ -183,21 +174,6 @@ fn test_muscles() {
         assert!(muscle.name.is_ascii());
     }
 }
-
-/* unused
-#[test]
-fn test_human_duration() {
-    let human: String = util::human_duration(1652314241, 1652317841);
-    assert_eq!(human, "1h 0m 0s");
-}
-
-#[test]
-fn test_time_iso8601() {
-    let time = 1652314241;
-    let time_iso8601 = util::timestamp_to_iso8601(time);
-    assert_eq!(time_iso8601, "2022-05-12 00:10");
-}
-*/
 
 #[test]
 fn test_workout_entry_from_json() {

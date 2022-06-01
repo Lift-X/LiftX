@@ -64,6 +64,13 @@ impl Weight {
             _ => Err("Invalid Weight Type!".to_string()),
         }
     }
+
+    pub fn default() -> Weight {
+        Weight {
+            weight: 0.0,
+            weight_unit: "lbs".to_string(),
+        }
+    }
 }
 
 impl WeightType<'_> {
@@ -75,41 +82,3 @@ impl WeightType<'_> {
         }
     }
 }
-
-/// EquipmentType allows for accurate total rep count when accounting for various types of equipment
-/// (i.e. dumbbells, kettlebells, barbells, etc.)
-#[derive(Debug, PartialEq, Clone, Copy, Serialize, Deserialize)]
-pub struct EquipmentType<'a> {
-    #[serde(borrow)]
-    pub name: &'a str,
-    pub rep_multiplier: u8, // 1 for barbells, 2 for dumbbells. Could be used for a total rep count. double basically for anything you need to do twice including some cables
-}
-pub const NONE: EquipmentType = EquipmentType {
-    name: "None",
-    rep_multiplier: 0,
-};
-pub const BARBELL: EquipmentType = EquipmentType {
-    name: "Barbell",
-    rep_multiplier: 1,
-};
-// perhaps make equipment struct have an amount of equipment instead of making multiple variants
-// or.. just have the exercise struct have an amount of equipment
-pub const DUMBBELL: EquipmentType = EquipmentType {
-    name: "Dumbbell",
-    rep_multiplier: 1,
-};
-pub const DUMBBELLS: EquipmentType = EquipmentType {
-    name: "Dumbbells",
-    rep_multiplier: 2,
-};
-pub const CABLE: EquipmentType = EquipmentType {
-    name: "Cable",
-    rep_multiplier: 1,
-};
-pub const CABLE_SEPARATE: EquipmentType = EquipmentType {
-    name: "Cables (separate)",
-    rep_multiplier: 2,
-};
-
-pub const EQUIPMENT_LIST: [EquipmentType; 6] =
-    [NONE, BARBELL, DUMBBELL, DUMBBELLS, CABLE, CABLE_SEPARATE];
