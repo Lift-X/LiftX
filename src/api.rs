@@ -156,7 +156,10 @@ pub async fn get_user_workouts_dynamic(
             let workouts =
                 get_workouts(conn, user.name().to_string(), Some(limit as i16), None).await;
             match workouts {
-                Ok(workouts) => Ok(JsonCache { data: serde_json::json!({ "workouts": workouts }), cache_control: "private max-age=10".to_string() }),
+                Ok(workouts) => Ok(JsonCache {
+                    data: serde_json::json!({ "workouts": workouts }),
+                    cache_control: "private max-age=10".to_string(),
+                }),
                 Err(workouts) => Err(workouts),
             }
         }
@@ -177,7 +180,10 @@ pub async fn get_user_workouts_recent(
             let workouts =
                 get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
             match workouts {
-                Ok(workouts) => Ok(JsonCache { data: serde_json::json!({ "workouts": workouts }), cache_control: "private max-age=10".to_string() }),
+                Ok(workouts) => Ok(JsonCache {
+                    data: serde_json::json!({ "workouts": workouts }),
+                    cache_control: "private max-age=10".to_string(),
+                }),
                 Err(workouts) => Err(workouts),
             }
         }
