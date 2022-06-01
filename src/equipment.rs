@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use crate::error::WlrsError;
 
 /// Either `KILOGRAMS` or `POUNDS`.
 /// Contains a long and short name for the weight unit
@@ -36,16 +37,16 @@ impl Weight {
             "kgs" => Ok(Weight {
                 weight: string.split_terminator("kgs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
-                    .expect("Could not parse weight!"),
+                    .unwrap_or(0.0),
                 weight_unit: "kgs".to_string(),
             }),
             "lbs" => Ok(Weight {
                 weight: string.split_terminator("lbs").collect::<Vec<_>>()[0]
                     .parse::<f32>()
-                    .expect("Could not parse weight!"),
+                    .unwrap_or(0.0),
                 weight_unit: "lbs".to_string(),
             }),
-            _ => Err("Invalid weight unit!".to_string()),
+            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE.to_string()),
         }
     }
 
@@ -53,7 +54,7 @@ impl Weight {
         match self.weight_unit.as_str() {
             "kgs" => Ok(self.weight),
             "lbs" => Ok(self.weight * 0.453_592_37),
-            _ => Err("Invalid Weight Type!".to_string()),
+            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE.to_string()),
         }
     }
 
@@ -61,7 +62,7 @@ impl Weight {
         match self.weight_unit.as_str() {
             "kgs" => Ok(self.weight * 2.204_623),
             "lbs" => Ok(self.weight),
-            _ => Err("Invalid Weight Type!".to_string()),
+            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE.to_string()),
         }
     }
 
@@ -78,7 +79,7 @@ impl WeightType<'_> {
         match string {
             "kgs" => Ok(KILOGRAMS),
             "lbs" => Ok(POUNDS),
-            _ => Err("Invalid Weight Type!".to_string()),
+            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE.to_string()),
         }
     }
 }
