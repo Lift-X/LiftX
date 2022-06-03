@@ -174,12 +174,6 @@
         color: #fff;
     }
 
-    #volume {
-        display: inline;
-        width: 100%;
-        height: 100%
-    }
-
     #graphpanel {
         max-width: 650px;
         margin: 0 auto;
