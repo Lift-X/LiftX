@@ -1,48 +1,50 @@
 # rocket_auth
-rocket_auth provides a ready-to-use  backend agnostic API for authentication management.
+
+rocket_auth provides a ready-to-use backend agnostic API for authentication management.
 It supports connections for SQLite and Postgresql. It lets you create, delete, and authenticate users.
 The available features are:
-* `sqlx-sqlite`: for interacting with a SQLite database using `sqlx`.
-* `sqlx-postgres`: for interacting with a Postgresql database with `sqlx`.
-* `sqlx-mysql`: for interacting with a MySql database with `sqlx`.
-* `redis`: for storing sessions on a redis server using `redis`.
-* `rusqlite`: for interacting with a SQLite database using `rusqlite`.
-* `tokio-postgres`: for interacting with a Postgresql database with `tokio-postgres`.
+
+- `sqlx-sqlite`: for interacting with a SQLite database using `sqlx`.
+- `sqlx-postgres`: for interacting with a Postgresql database with `sqlx`.
+- `sqlx-mysql`: for interacting with a MySql database with `sqlx`.
+- `redis`: for storing sessions on a redis server using `redis`.
+- `rusqlite`: for interacting with a SQLite database using `rusqlite`.
+- `tokio-postgres`: for interacting with a Postgresql database with `tokio-postgres`.
 
 `rocket_auth` uses private cookies to store session data.
 This means that in order for cookies to be properly decrypted between launches, a `secret_key` must be set.
 For more information visit rocket's [configuration guide](https://rocket.rs/v0.5-rc/guide/configuration/#configuration).
 
-
-
-
-
 To use `rocket_auth` include it as a dependency in your Cargo.toml file:
+
 ```ini
 [dependencies.rocket_auth]
 version = "0.4.0"
 features = ["sqlx-sqlite"]
 ```
-# Quick overview
-This crate provides three guards:
-* `Auth`: Manages authentication.
-* `Session`: It's used to retrieve session data from client cookies.
-* `User`: It restricts content, so it can be viewed by authenticated clients only.
 
+# Quick overview
+
+This crate provides three guards:
+
+- `Auth`: Manages authentication.
+- `Session`: It's used to retrieve session data from client cookies.
+- `User`: It restricts content, so it can be viewed by authenticated clients only.
 
 It also includes two structs to be parsed from forms and json data:
-* `Signup`: Used to create new users.
-* `Login`: Used to authenticate users.
 
+- `Signup`: Used to create new users.
+- `Login`: Used to authenticate users.
 
 Finally it has two structures for queries:
-* `Users`: It allows to query users to the database.
-* `User`: It is the response of a query.
 
+- `Users`: It allows to query users to the database.
+- `User`: It is the response of a query.
 
 The `Auth` guard allows to log in, log out, sign up, modify, and delete the currently (un)authenticated user.
 For more information see `Auth`.
- A working example:
+A working example:
+
 ```rust
 use rocket::{get, post, form::Form, routes};
 use rocket_auth::{Users, Error, Auth, Signup, Login};
@@ -77,6 +79,7 @@ async fn main() -> Result<(), Error>{
 ```
 
 ## Users struct
+
 The `Users` struct administers interactions with the database.
 It lets you query, create, modify and delete users.
 Unlike the `Auth` guard, a `Users` instance can manage any user in the database.
@@ -97,10 +100,11 @@ async fn see_user(id: i32, users: &State<Users>) -> String {
 A `Users` instance can be constructed by connecting it to the database with the methods `open_sqlite`,
 `open_postgres`. Furthermore, it can be constructed from a working connection.
 
-
 ## User guard
+
 The `User` guard can be used to restrict content so it can only be viewed by authenticated users.
 Additionally, you can use it to render special content if the client is authenticated or not.
+
 ```rust
 #[get("/private-content")]
 fn private_content(user: User) -> &'static str {
@@ -122,8 +126,10 @@ fn admins_only(user: AdminUser) -> &'static str {
 ```
 
 ## AdminUser guard
+
 The `AdminUser` guard can be used analogously to `User`.
 It will restrict content so it can be viewed by admins only.
+
 ```rust
 # use rocket::*;
 # use rocket_auth::AdminUser;
