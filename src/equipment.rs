@@ -23,7 +23,7 @@ pub const POUNDS: WeightType = WeightType {
     short_name: "lbs",
 };
 
-#[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
+#[derive(PartialEq, Debug, Clone, Serialize, Deserialize, PartialOrd)]
 pub struct Weight {
     pub weight: f32,
     pub weight_unit: String,

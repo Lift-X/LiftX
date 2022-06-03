@@ -8,6 +8,7 @@
     let login_status = false;
     let data = {};
     let workouts = [];
+    let topexercises = [];
     function volume_data_to_hashmap(json) {
         for (let i = 0; i < json.length; i++) {
             let item = json[i];
@@ -15,11 +16,19 @@
             if (item.volume.weight_unit == "kgs") {
                 data[item.date] = (item.volume.weight * 2.204623).toFixed(2);
             } else {
-                data[item.date] = (item.volume.weight).toFixed(2);
+                data[item.date] = item.volume.weight.toFixed(2);
             }
-
         }
         console.log(data);
+    }
+    function frequent_data_to_hashmap(json) {
+        let ex = {};
+        for (let i = 0; i < json.length; i++) {
+            let item = json[i];
+            ex[item.date] = item.weight.weight.toFixed(2);
+        }
+        console.log(ex);
+        return ex;
     }
     onMount(async () => {
         await get_current_user();
@@ -40,12 +49,21 @@
         }
 
         // Get graph data for volume
-        const response = await fetch("/api/graphs/volume/30");
-        const responseJson = await response.json();
-        if (responseJson.error != null) {
-            throw new Error(responseJson.error);
+        const response2 = await fetch("/api/graphs/volume/30");
+        const response2Json = await response2.json();
+        if (response2Json.error != null) {
+            throw new Error(response2Json.error);
         } else {
-            volume_data_to_hashmap(responseJson.volume);
+            volume_data_to_hashmap(response2Json.volume);
+        }
+
+        // Get top exercises
+        const response3 = await fetch("/api/graphs/frequent/5");
+        const response3Json = await response3.json();
+        if (response3Json.error != null) {
+            throw new Error(response3Json.error);
+        } else {
+            topexercises = response3Json.top;
         }
     });
 </script>
@@ -92,11 +110,8 @@
             </div>
         </div>
         <div id="graphpanel" class="separator">
-            <h1>Workout Volume - 30 Days</h1>
-            <p>
-                Total workout volume is not a complete sign of progression or
-                not, but can be used to get an <i>idea</i> of effort and progression.
-            </p>
+            <h1 title="Total workout volume is not a complete sign of progression or
+            not, but can be used to get an *idea* of effort and progression.">Workout Volume - 30 Days</h1>
             <hr />
             <div id="volume">
                 <LinkedChart
@@ -108,6 +123,27 @@
                     fill="#ad0600"
                 />
             </div>
+        </div>
+        <div class="separator" id="toppanel">
+            <h1 title="Most frequented exercises">Exercise Progression</h1>
+            {#each topexercises as exercise}
+                {#if exercise.count > 1}
+                <div class="exercise-summary">
+                    <h3>{exercise.name}</h3>
+                    <hr />
+                    <div class="exercise-graph">
+                        <LinkedChart
+                            data={frequent_data_to_hashmap(exercise.entries)}
+                            grow="true"
+                            showValue="true"
+                            valueAppend="lbs"
+                            valuePosition="floating"
+                            fill="#ad0600"
+                        />
+                    </div>
+                </div>
+                {/if}
+                {/each}
         </div>
     </div>
 {/if}
@@ -175,18 +211,23 @@
     }
 
     #graphpanel {
-        max-width: 650px;
-        margin: 0 auto;
+        width: 450px;
         margin-top: 10px;
         max-height: 200px;
+    }
+
+    #toppanel {
+
+        width: 450px;
+        margin-top: 10px;
+        display: block;
     }
 
     #content {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         flex-wrap: wrap;
-        max-width: 1500px;
+        max-width: 1000px;
         margin: auto;
         margin-top: 10px;
     }

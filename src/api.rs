@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use rocket::post;
 use rocket::{response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
@@ -7,7 +9,7 @@ use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::cache::{JsonCache, WorkoutEntryCache, CachedFile};
+use crate::cache::{JsonCache, WorkoutEntryCache,};
 use crate::database::{get_exercises, get_workouts};
 use crate::equipment::Weight;
 use crate::error::WlrsError;
@@ -17,6 +19,19 @@ use crate::{database::Db, exercises::WorkoutEntry};
 struct GraphVolumeEntry {
     date: String,
     volume: Weight,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct GraphExerciseTopEntry {
+    date: String,
+    weight: Weight,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct GraphExerciseTop {
+    name: String,
+    entries: Vec<GraphExerciseTopEntry>,
+    count: usize,
 }
 
 #[get("/workouts/<id>/json")]
@@ -259,11 +274,52 @@ pub async fn get_graph_volume(
     }
 }
 
-#[get("/graphs/schemas/volume")]
-pub async fn get_graph_volume_schema() -> CachedFile {
-    let named = rocket::fs::NamedFile::open("public/schemas/graph_volume.json");
-    return CachedFile {
-        data: named.await.unwrap(),
-        cache_time: 86_400,
-    };
+#[get("/graphs/frequent/<limit>")]
+pub async fn get_graph_frequent(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+    limit: usize,
+) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let mut top: HashMap<String, GraphExerciseTop> = HashMap::new();
+            let wrap_data =
+                get_workouts(conn, user.name().to_string(), None, None).await;
+            match wrap_data {
+                Ok(data) => {
+                    for workout in data {
+                        for exercise in workout.exercises {
+                            let mut count = top.entry(exercise.exercise.clone()).or_insert(
+                                GraphExerciseTop {count:0,entries:Vec::new(), name: exercise.exercise},
+                            );
+                            count.count += 1;
+                            // parse sets and find the highest weight
+                            let mut highest_weight: Weight = Weight {weight:0.0 ,weight_unit: "lbs".to_string() };
+                            for set in exercise.sets {
+                                if set.weight.weight > highest_weight.weight {
+                                    highest_weight.weight = set.weight.weight;
+                                }
+                            }
+                            count.entries.push(GraphExerciseTopEntry {
+                                date: crate::util::timestamp_to_iso8601(
+                                    workout.start_time.try_into().unwrap()
+                                ),
+                                weight: highest_weight,
+                            });
+                        }
+                    }
+                    // sort the top exercises by count
+                    let mut top_sorted: Vec<_> = top.iter().map(|(_, v)| v.clone()).collect();
+                    top_sorted.sort_by(|a, b| b.count.cmp(&a.count));
+                    // Take only the top N exercises
+                    top_sorted.truncate(limit);
+                    Ok(serde_json::json!({ "top": top_sorted }))
+                }
+                Err(data) => Err(data),
+            }
+        }
+        None => Err(serde_json::json!({
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
+        })),
+    }
 }
