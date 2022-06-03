@@ -21,9 +21,5 @@ enabled = true
   msrv = "1.50.0"
 
 [[transformers]]
-name = "rustfmt"
-enabled = true
-
-[[transformers]]
 name = "prettier"
 enabled = true
