@@ -13,10 +13,11 @@
             let item = json[i];
             // TODO: respect user settings
             if (item.volume.weight_unit == "kgs") {
-                data[item.date] = item.volume.weight * 2.204623;
+                data[item.date] = (item.volume.weight * 2.204623).toFixed(2);
             } else {
-                data[item.date] = item.volume.weight;
+                data[item.date] = (item.volume.weight).toFixed(2);
             }
+
         }
         console.log(data);
     }
