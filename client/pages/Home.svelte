@@ -104,6 +104,7 @@
                     showValue="true"
                     valueAppend="lbs"
                     valuePosition="floating"
+                    fill="#ad0600"
                 />
             </div>
         </div>
@@ -175,7 +176,7 @@
     #volume {
         display: inline;
         width: 100%;
-        height: 100%;
+        height: 100%
     }
 
     #graphpanel {

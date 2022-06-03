@@ -18,7 +18,7 @@ export async function get_current_user() {
   // If logged in, don't make uneeded api calls
   // Retrive json_data svelte store
   const json_data_store = get(json_data);
-  if (json_data_store.user != "" && document.cookie.includes("rocket_auth=")) {
+  if (json_data_store.user !== "" && document.cookie.includes("rocket_auth=")) {
     return;
   } else if (
     json_data_store.user == "" &&
@@ -29,7 +29,7 @@ export async function get_current_user() {
 
   const response = await fetch("/api/user/current");
   const data = await response.json();
-  if (data.error === null) {
+  if (data.error == null) {
     json_data.update((old) => {
       old.user = data.name;
       return old;
