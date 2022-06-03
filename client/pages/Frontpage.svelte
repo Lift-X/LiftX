@@ -1,32 +1,47 @@
-
 <svelte:head>
 	<title>WLRS - Workout Tracker</title>
 </svelte:head>
 
 <div>
-<center>
-<h1 class="title is-primary">WLRS</h1>
-<h4 class="subtitle"> An opinionated, free and open-source Workout Tracker.</h4>
-<div class="box">
-	<div>
-		<h3>Fast</h3>
-		<p>WLRS is built with a minimalist and fast design in mind. Don't let your workout tracker slow you down!</p>
-	</div>
-	<div>
-		<h3>Private</h3>
-		<p>We don't keep any data that <span class="italics">isn't</span> your workouts.</p>
-	</div>
-	<div>
-		<h3>Open Source</h3>
-		<p>WLRS is open source and available on <a href="https://github.com/Zusier/wlrs">GitHub</a>.</p>
-	</div>
-	<div>
-		<h3>Self-Hosted</h3>
-		<p>Because we are open source, you can self-host. Your workouts, your control.</p>
-	</div>
-</div>
-<div id="signup"><a href="/signup">Sign Up</a></div>
-</center>
+	<center>
+		<h1 class="title is-primary">WLRS</h1>
+		<h4 class="subtitle">
+			An opinionated, free and open-source Workout Tracker.
+		</h4>
+		<div class="box">
+			<div>
+				<h3>Fast</h3>
+				<p>
+					WLRS is built with a minimalist and fast design in mind.
+					Don't let your workout tracker slow you down!
+				</p>
+			</div>
+			<div>
+				<h3>Private</h3>
+				<p>
+					We don't keep any data that <span class="italics"
+						>isn't</span
+					> your workouts.
+				</p>
+			</div>
+			<div>
+				<h3>Open Source</h3>
+				<p>
+					WLRS is open source and available on <a
+						href="https://github.com/Zusier/wlrs">GitHub</a
+					>.
+				</p>
+			</div>
+			<div>
+				<h3>Self-Hosted</h3>
+				<p>
+					Because we are open source, you can self-host. Your
+					workouts, your control.
+				</p>
+			</div>
+		</div>
+		<div id="signup"><a href="/signup">Sign Up</a></div>
+	</center>
 </div>
 
 <style>
@@ -38,7 +53,11 @@
 	}
 
 	center {
-		background-image: linear-gradient(rgb(0,0,0,0.75), rgba(0,0,0,0.75)), url("/public/home_deadlift.webp");
+		background-image: linear-gradient(
+				rgb(0, 0, 0, 0.75),
+				rgba(0, 0, 0, 0.75)
+			),
+			url("/public/home_deadlift.webp");
 		background-size: cover;
 		background-position: center center;
 		background-attachment: scroll;

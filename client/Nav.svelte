@@ -1,5 +1,5 @@
 <script>
-import { onMount } from "svelte";
+    import { onMount } from "svelte";
 
     import { get } from "svelte/store";
     import { get_current_user, json_data } from "./Components/json_store";
@@ -8,7 +8,7 @@ import { onMount } from "svelte";
     onMount(async () => {
         await get_current_user();
         json_data_store = get(json_data);
-        login_status = (json_data_store.user != "") ? true : false;
+        login_status = json_data_store.user != "" ? true : false;
         console.log(json_data_store);
         console.log(login_status);
     });
@@ -27,10 +27,14 @@ import { onMount } from "svelte";
             <ul class="nav-links">
                 <li><a class="navbar-item" href="/home">Home</a></li>
                 {#if login_status}
-                <li><a class="navbar-item" href="/workouts/new">New Workout</a></li>
-                <li><a class="navbar-item" href="/logout">Logout</a></li>
+                    <li>
+                        <a class="navbar-item" href="/workouts/new"
+                            >New Workout</a
+                        >
+                    </li>
+                    <li><a class="navbar-item" href="/logout">Logout</a></li>
                 {:else}
-                <li><a class="navbar-item" href="/login">Login</a></li>
+                    <li><a class="navbar-item" href="/login">Login</a></li>
                 {/if}
             </ul>
         </div>

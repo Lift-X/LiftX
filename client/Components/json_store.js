@@ -1,5 +1,5 @@
 import { writable } from "svelte/store";
-import {get} from 'svelte/store';
+import { get } from 'svelte/store';
 
 export const json_data = writable({
     user: "",
@@ -36,7 +36,7 @@ export async function get_current_user() {
 }
 
 // Clears data from a previous session
- async function previously_logged_in() {
+async function previously_logged_in() {
     // Clear workouts-cache
     const cache = await caches.open("workouts-cache");
     cache.keys().then((keys) => {

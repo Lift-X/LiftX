@@ -31,7 +31,7 @@
                 document.getElementById("workout").style.display = "none";
                 throw new Error(responseJson.error);
             } else {
-                console.log("Cache hit!")
+                console.log("Cache hit!");
                 return responseJson;
             }
         } else {
@@ -54,34 +54,36 @@
 </svelte:head>
 
 <div id="content">
-<div class="separator" id="metadata">
-    {#await data}
-        <p>Loading... please wait</p>
-    {:then json}
-        <h1>Workout: {json.title}</h1>
-        <hr>
-        <p>Duration: { duration_from_secs( json.end_time - json.start_time )}</p>
-        <p>By: {json.user}</p>
-    {:catch error}
-        <center id="404">
-            <h1>404</h1>
-            <hr>
-            <p>{error}</p>
-        </center>
-    {/await}
-</div>
+    <div class="separator" id="metadata">
+        {#await data}
+            <p>Loading... please wait</p>
+        {:then json}
+            <h1>Workout: {json.title}</h1>
+            <hr />
+            <p>
+                Duration: {duration_from_secs(json.end_time - json.start_time)}
+            </p>
+            <p>By: {json.user}</p>
+        {:catch error}
+            <center id="404">
+                <h1>404</h1>
+                <hr />
+                <p>{error}</p>
+            </center>
+        {/await}
+    </div>
 
-<div class="separator" id="workout">
-    {#await data}
-        <p>Loading... please wait</p>
-    {:then json}
-        <h1>Exercises</h1>
-        <hr>
-        {#each json.exercises as exercise}
-            <Exercise exercise={exercise} view_only=true />
-        {/each}
-    {:catch error}
-        <p>{error}</p>
-    {/await}
-</div>
+    <div class="separator" id="workout">
+        {#await data}
+            <p>Loading... please wait</p>
+        {:then json}
+            <h1>Exercises</h1>
+            <hr />
+            {#each json.exercises as exercise}
+                <Exercise {exercise} view_only="true" />
+            {/each}
+        {:catch error}
+            <p>{error}</p>
+        {/await}
+    </div>
 </div>
