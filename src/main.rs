@@ -98,7 +98,9 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::api::get_user_workouts,
                 crate::api::get_user_workouts_dynamic,
                 crate::api::get_user_workouts_recent,
-                crate::api::get_exercises_list
+                crate::api::get_exercises_list,
+                crate::api::get_graph_volume,
+                crate::api::get_graph_volume_schema
             ],
         )
         .register("/", catchers![crate::handlers::general_404])

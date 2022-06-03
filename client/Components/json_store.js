@@ -8,6 +8,10 @@ export const json_data = writable({
     end_time: 0,
     start_time: 0,
     exercises: [],
+    volume: {
+        weight: 0.0,
+        weight_unit: "lbs",
+    }
 });
 
 export async function get_current_user() {

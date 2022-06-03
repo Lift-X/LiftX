@@ -10,7 +10,6 @@ pub enum WlrsError {
     Custom { message: String },
 }
 
-
 impl fmt::Display for WlrsError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {

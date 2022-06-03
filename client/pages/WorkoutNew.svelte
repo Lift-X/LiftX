@@ -18,7 +18,8 @@ $: end_time = null;
 $: duration_bind = 0;
 
 $: set_count_bind = 0;
-
+$json_data.volume.weight = 0;
+console.log($json_data.volume);
 function handle_time(time) {
     let new_time = Math.floor(new Date(time).getTime() / 1000);
     {start_time = new_time};
@@ -39,30 +40,43 @@ function validate_json() {
     let valid = true;
 
     if ($json_data.exercises.length == 0) {
+        console.log("No exercises");
         valid = false;
     }
 
     if ($json_data.start_time < 10000) {
+        console.log("No start time");
         valid = false;
     }
 
     if ($json_data.end_time < 10000) {
+        console.log("No end time");
         valid = false;
     }
 
     if ($json_data.end_time < $json_data.start_time) {
+        console.log("End time before start time");
         valid = false;
     }
 
     if ($json_data.user == "") {
+        console.log("No user");
         valid = false;
     }
+
+    // Reset volume
+    $json_data.volume.weight = 0.0;
+    // Change weight unit
+    $json_data.volume.weight_unit = $json_data.exercises[0].sets[0].weight.weight_unit;
 
     // Convert any stringed numbers to numbers
     for (let i = 0; i < $json_data.exercises.length; i++) {
         for (let j = 0; j < $json_data.exercises[i].sets.length; j++) {
             $json_data.exercises[i].sets[j].reps = Number($json_data.exercises[i].sets[j].reps);
             $json_data.exercises[i].sets[j].weight.weight = Number($json_data.exercises[i].sets[j].weight.weight);
+            // Build volume of workout
+            // TODO: Find a better way to make a floating point
+            $json_data.volume.weight += parseFloat($json_data.exercises[i].sets[j].weight.weight * $json_data.exercises[i].sets[j].reps + 0.1);
         }
     }
     return valid;

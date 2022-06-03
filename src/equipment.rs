@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use crate::error::WlrsError;
+use serde::{Deserialize, Serialize};
 
 /// Either `KILOGRAMS` or `POUNDS`.
 /// Contains a long and short name for the weight unit

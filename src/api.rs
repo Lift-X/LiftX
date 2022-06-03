@@ -2,14 +2,22 @@ use rocket::post;
 use rocket::{response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
+use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::cache::{JsonCache, WorkoutEntryCache};
+use crate::cache::{JsonCache, WorkoutEntryCache, CachedFile};
 use crate::database::{get_exercises, get_workouts};
+use crate::equipment::Weight;
 use crate::error::WlrsError;
 use crate::{database::Db, exercises::WorkoutEntry};
+
+#[derive(Debug, Serialize, Deserialize)]
+struct GraphVolumeEntry {
+    date: String,
+    volume: Weight,
+}
 
 #[get("/workouts/<id>/json")]
 pub async fn workout_json(
@@ -213,4 +221,49 @@ pub async fn get_exercises_list(
             "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
     }
+}
+
+#[get("/graphs/volume/<days>")]
+pub async fn get_graph_volume(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+    days: usize,
+) -> Result<JsonCache, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let volume: Vec<GraphVolumeEntry>;
+            let wrap_data =
+                get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
+            match wrap_data {
+                Ok(data) => {
+                    volume = data
+                        .iter()
+                        .map(|workout| GraphVolumeEntry {
+                            date: crate::util::timestamp_to_iso8601(
+                                workout.start_time.try_into().unwrap(),
+                            ),
+                            volume: workout.volume.clone(),
+                        })
+                        .collect();
+                    Ok(JsonCache {
+                        data: serde_json::json!({ "volume": volume }),
+                        cache_control: "private max-age=10".to_string(),
+                    })
+                }
+                Err(data) => Err(data),
+            }
+        }
+        None => Err(serde_json::json!({
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
+        })),
+    }
+}
+
+#[get("/graphs/schemas/volume")]
+pub async fn get_graph_volume_schema() -> CachedFile {
+    let named = rocket::fs::NamedFile::open("public/schemas/graph_volume.json");
+    return CachedFile {
+        data: named.await.unwrap(),
+        cache_time: 86_400,
+    };
 }
