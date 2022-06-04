@@ -2,6 +2,7 @@ services:
   wlrs:
     build: .
     ports:
-      - 8000
+      - 8000:8000
     environment:
       - DATABASE_URL="sqlite://data.db"
+    container_name: wlrs
