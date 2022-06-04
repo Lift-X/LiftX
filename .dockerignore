@@ -1,0 +1,4 @@
+/node_modules/
+/target/
+data.db*
+!/target/release/wlrs
