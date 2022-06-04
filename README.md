@@ -4,6 +4,14 @@
 
 WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout tracker.
 
+# Installation
+
+## Docker
+
+1. Clone the repository: ```git clone https://github.com/zusier/wlrs.git```
+2. Configure the `docker-compose.yml`
+3. Build and launch!: ```docker compose up --build -d```
+
 ## TODO
 
 - [x] JSON for data retrieval
@@ -33,6 +41,7 @@ WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout t
 - [ ] [Ratelimiting](https://lib.rs/crates/rocket-governor)
 - [x] Compression
   - [x] Decrease latency/prcoessing times, by pre-compressing assets ( On The Fly compression adds +/-16ms of response time!!!)
+- [X] Docker!
 
 ### Ideas for the future
 
