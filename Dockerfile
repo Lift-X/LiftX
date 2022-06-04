@@ -36,6 +36,8 @@ COPY ./ ./
 # Install dependencies
 # TODO: Move dependencies out of dev-dependencies and try --production (no difference?)
 RUN npm install
+# Build frontend assets
+RUN npm run build
 
 ####################################################################################################
 ## Final image
