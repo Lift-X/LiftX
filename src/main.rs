@@ -28,7 +28,6 @@ const PROD: bool = true;
 async fn main() {
     // connect to DB
     let conn: Result<Pool<Sqlite>, sqlx::Error> = SqlitePool::connect("data.db").await;
-
     match conn {
         Ok(conn) => {
             // Initialize Database tables if they don't exist
@@ -38,7 +37,7 @@ async fn main() {
             launch_web(conn, users).await;
         }
         Err(e) => {
-            error!("Database connection failed: {}", e);
+            panic!("Database connection failed: {}", e);
         }
     }
 }
