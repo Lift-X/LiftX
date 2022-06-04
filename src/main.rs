@@ -26,6 +26,7 @@ const PROD: bool = true;
 
 #[rocket::main]
 async fn main() {
+    flexi_logger::Logger::try_with_env_or_str("info").unwrap().start().unwrap();
     // connect to DB
     let conn: Result<Pool<Sqlite>, sqlx::Error> = SqlitePool::connect("data.db").await;
     match conn {
@@ -33,7 +34,7 @@ async fn main() {
             // Initialize Database tables if they don't exist
             database::build_tables(conn.clone()).await;
             let users: rocket_auth::Users = conn.clone().into();
-            info!("Database connection successful");
+            log::info!("Database connection successful");
             launch_web(conn, users).await;
         }
         Err(e) => {
@@ -109,10 +110,10 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
 
     match rocket {
         Ok(_) => {
-            info!("Rocket web server started");
+            log::info!("Rocket web server started");
         }
         Err(e) => {
-            error!("Rocket server failed to start: {}", e);
+            log::error!("Rocket server failed to start: {}", e);
         }
     }
 }
