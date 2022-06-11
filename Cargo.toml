@@ -4,31 +4,32 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+base64 = "0.13.0"
+chrono = "0.4.19"
+flexi_logger = "0.22.5"
+futures = "0.3.21"
 # Logging
 log = "0.4.0"
-flexi_logger = "0.22.5"
-# Web
-rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
-rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
-tokio = "1.18.1"
-# Time
-time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }
-chrono = "0.4.19"
-# JSON
-serde = { version = "1.0.137", features = ["derive"] }
-serde_json = { version = "1.0.68" }
-## For workout IDs
-uuid = { version = "1.0.0", features = ["v4", "fast-rng"] }
-#DB
-sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
 # Misc
 ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
 regex-syntax = { version = "0.6.25" }
-tracing-core = { version = "0.1.26" }
-futures = "0.3.21"
-base64 = "0.13.0"
+# Web
+rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
 # Auth
 rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
+rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
+# JSON
+serde = { version = "1.0.137", features = ["derive"] }
+serde_json = { version = "1.0.81" }
+#DB
+sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
+# Time
+time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }
+tokio = "1.18.1"
+tracing = { version = "0.1.35" }
+tracing-core = { version = "0.1.26" }
+## For workout IDs
+uuid = { version = "1.0.0", features = ["v4", "fast-rng"] }
 
 [profile.release]
 panic = "abort"
@@ -39,3 +40,4 @@ opt-level = 3
 [package.metadata.hackerman.stash.dependencies]
 regex-syntax = false
 tracing-core = false
+tracing = false
