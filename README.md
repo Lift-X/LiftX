@@ -1,6 +1,8 @@
 ![](public/logo.png)
 
 # WLRS
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FZusier%2Fwlrs.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FZusier%2Fwlrs?ref=badge_shield)
+
 
 WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout tracker.
 
@@ -48,3 +50,7 @@ WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout t
 - [ ] GPX Support
 - [ ] Exercise lists, with muscle group visualization (like wger)
 - [ ] Native mobile applications (Svelte-native?)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FZusier%2Fwlrs.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FZusier%2Fwlrs?ref=badge_large)
