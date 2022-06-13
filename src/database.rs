@@ -8,9 +8,9 @@ use sqlx::{Pool, Row, Sqlite, SqlitePool};
 #[database("sqlite_db")]
 pub struct Db(sqlx::sqlite::SqlitePool);
 
-pub async fn create_connection() -> SqlitePool {
-    let pool: Pool<Sqlite> = SqlitePool::connect("data.db").await.unwrap();
-    pool
+pub async fn create_connection() -> Result<SqlitePool, Box<dyn std::error::Error>> {
+    let pool: Pool<Sqlite> = SqlitePool::connect("data.db").await?;
+    Ok(pool)
 }
 
 pub async fn build_tables(conn: SqlitePool) {
@@ -20,21 +20,26 @@ pub async fn build_tables(conn: SqlitePool) {
         .await
         .unwrap();
 
+        // User settings table
+    // TODO: Integrate into rocket_auth
+    sqlx::query("CREATE TABLE if not exists settings (user TINYTEXT PRIMARY KEY, updated int, data MEDIUMTEXT)")
+        .execute(&conn)
+        .await
+        .unwrap();
+
     // User Table
     let users: rocket_auth::Users = conn.into();
     users.create_table().await.unwrap();
 }
 
-pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: &SqlitePool) {
-    debug!("Creating ExerciseEntry with id: {}...", uuid.to_string());
-    let query: String = format!(
-        "INSERT INTO workout (id, created, user, data) VALUES ('{}', '{}', '{}', '{}')",
-        uuid,
-        std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
-        exercise.user.clone(),
-        exercise.to_json(uuid)
-    );
-    sqlx::query(&query).execute(conn).await.unwrap();
+pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: &SqlitePool) -> Result<(), Box<dyn std::error::Error>> {
+    // Have to stringify, but also requires a Uuid type.. TODO: Fix this
+    let stringed: String = uuid.clone().to_string();
+    let created: u32 = std::time::UNIX_EPOCH.elapsed()?.as_secs() as u32;
+    let user: String = exercise.user.clone();
+    let data: String = exercise.to_json(uuid).to_string();
+    sqlx::query!("INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)", stringed, created, user, data).execute(conn).await?;
+    Ok(())
 }
 
 /// Get all workouts (for a certain user) from the database.

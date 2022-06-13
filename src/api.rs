@@ -105,8 +105,11 @@ pub async fn post_workout_json(
     // Generate UUID
     let uuid: Uuid = Uuid::new_v4();
     debug!("Creating workoutentry with {}", uuid);
-    crate::database::insert_workout(uuid, val, &**conn).await;
-    rocket::response::Redirect::to(format!("/workouts/{}", uuid))
+    let result = crate::database::insert_workout(uuid, val, &**conn).await;
+    match result {
+        Ok(()) => Redirect::to(format!("/workouts/{}", uuid)),
+        Err(_) => Redirect::to("/404"),
+    }
 }
 
 #[post("/register", data = "<form>")]
