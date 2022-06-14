@@ -19,7 +19,3 @@ enabled = true
 
   [analyzers.meta]
   msrv = "1.50.0"
-
-[[transformers]]
-name = "prettier"
-enabled = true
