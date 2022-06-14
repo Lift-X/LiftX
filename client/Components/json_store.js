@@ -23,7 +23,7 @@ export const settings = writable({
   show_graph_volume: true,
   show_graph_weight: true,
   show_graph_workout_frequency: true,
-})
+});
 
 // TODO: fetch current user api, if it says not logged in run `previously_logged_in()`
 
