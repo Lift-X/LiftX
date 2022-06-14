@@ -35,7 +35,7 @@ async fn main() {
     match conn {
         Ok(conn) => {
             // Initialize Database tables if they don't exist
-            database::build_tables(conn.clone()).await;
+            database::build_tables(&conn).await;
             let users: rocket_auth::Users = conn.clone().into();
             log::info!("Database connection successful");
             launch_web(conn, users).await;
@@ -104,6 +104,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::api::get_exercises_list,
                 crate::api::get_graph_volume,
                 crate::api::get_graph_frequent,
+                crate::api::get_user_settings
             ],
         )
         .register("/", catchers![crate::handlers::general_404])

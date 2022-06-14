@@ -160,8 +160,8 @@ impl<'a> Auth<'a> {
     /// ```
     #[throws(Error)]
     pub async fn signup_for(&self, form: &Signup, time: Duration) {
-        self.users.signup(form).await?;
-        self.login_for(&form.clone().into(), time).await?;
+        self.users.signup(&form).await?;
+        self.login_for(&form.into(), time).await?;
     }
 
     ///

@@ -14,9 +14,22 @@ export const json_data = writable({
   },
 });
 
+export const settings = writable({
+  user: "",
+  updated: 0,
+  language: "en-US",
+  theme: "dark",
+  show_graph_exercise: true,
+  show_graph_volume: true,
+  show_graph_weight: true,
+  show_graph_workout_frequency: true,
+})
+
+// TODO: fetch current user api, if it says not logged in run `previously_logged_in()`
+
 export async function get_current_user() {
-  // If logged in, don't make uneeded api calls
-  // Retrive json_data svelte store
+  // If logged in, don't make unneeded api calls
+  // Retrieve json_data svelte store
   const json_data_store = get(json_data);
   if (json_data_store.user !== "" && document.cookie.includes("rocket_auth=")) {
     return;
@@ -55,4 +68,20 @@ async function previously_logged_in() {
   // Delete rocket_auth cookie
   document.cookie =
     "rocket_auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+}
+
+async function fetch_settings() {
+  const response = await fetch("/api/user/settings");
+  const data = await response.json();
+  settings.update((old) => {
+    old.user = data.user;
+    old.updated = data.updated;
+    old.language = data.language;
+    old.theme = data.theme;
+    old.show_graph_exercise = data.show_graph_exercise;
+    old.show_graph_volume = data.show_graph_volume;
+    old.show_graph_weight = data.show_graph_weight;
+    old.show_graph_workout_frequency = data.show_graph_workout_frequency;
+    return old;
+  });
 }

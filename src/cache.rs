@@ -35,7 +35,7 @@ impl<'r, 'o: 'r> Responder<'r, 'o> for CachedFile {
         Response::build_from(file.respond_to(req)?)
             .raw_header("Cache-control", "max-age=86400") //  24h
             .raw_header("Last-Modified", lastmodified)
-            .raw_header("ETag", etag.clone())
+            .raw_header("ETag", etag)
             .ok()
     }
 }

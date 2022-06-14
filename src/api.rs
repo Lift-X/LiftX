@@ -10,7 +10,7 @@ use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::cache::{JsonCache, WorkoutEntryCache};
-use crate::database::{get_exercises, get_workouts};
+use crate::database::{get_exercises, get_settings, get_workouts};
 use crate::equipment::Weight;
 use crate::error::WlrsError;
 use crate::{database::Db, exercises::WorkoutEntry};
@@ -118,7 +118,7 @@ pub async fn post_register(
     auth: Auth<'_>,
 ) -> Result<Redirect, Error> {
     let form_proc = &form.into_inner();
-    auth.signup(&form_proc.clone()).await.unwrap();
+    auth.signup(&form_proc).await.unwrap();
     auth.login(&form_proc.into()).await.unwrap();
     println!("Signed up!");
     Ok(Redirect::to("/home"))
@@ -325,6 +325,25 @@ pub async fn get_graph_frequent(
                     Ok(serde_json::json!({ "top": top_sorted }))
                 }
                 Err(data) => Err(data),
+            }
+        }
+        None => Err(serde_json::json!({
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
+        })),
+    }
+}
+
+#[get("/user/settings")]
+pub async fn get_user_settings(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+) -> Result<serde_json::Value, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let settings = get_settings(conn, user.name().to_string()).await;
+            match settings {
+                Ok(settings) => Ok(serde_json::json!({ "settings": settings })),
+                _ => Err(serde_json::json!({"error": "Invalid settings!"})),
             }
         }
         None => Err(serde_json::json!({
