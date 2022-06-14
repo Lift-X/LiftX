@@ -20,7 +20,7 @@ pub async fn static_file(file: std::path::PathBuf) -> Option<CachedFile> {
     let file = std::path::Path::new("public").join(file);
     let cache_time: u32;
     if crate::PROD {
-        cache_time =  604800; // 1 week
+        cache_time = 604800; // 1 week
     } else {
         cache_time = 0;
     }

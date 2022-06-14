@@ -26,7 +26,10 @@ const PROD: bool = true;
 
 #[rocket::main]
 async fn main() {
-    flexi_logger::Logger::try_with_env_or_str("info").unwrap().start().unwrap();
+    flexi_logger::Logger::try_with_env_or_str("info")
+        .unwrap()
+        .start()
+        .unwrap();
     // connect to DB
     let conn: Result<Pool<Sqlite>, sqlx::Error> = SqlitePool::connect("data.db").await;
     match conn {

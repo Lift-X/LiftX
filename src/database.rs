@@ -20,7 +20,7 @@ pub async fn build_tables(conn: SqlitePool) {
         .await
         .unwrap();
 
-        // User settings table
+    // User settings table
     // TODO: Integrate into rocket_auth
     sqlx::query("CREATE TABLE if not exists settings (user TINYTEXT PRIMARY KEY, updated int, data MEDIUMTEXT)")
         .execute(&conn)
@@ -32,13 +32,25 @@ pub async fn build_tables(conn: SqlitePool) {
     users.create_table().await.unwrap();
 }
 
-pub async fn insert_workout(uuid: uuid::Uuid, mut exercise: WorkoutEntry, conn: &SqlitePool) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn insert_workout(
+    uuid: uuid::Uuid,
+    mut exercise: WorkoutEntry,
+    conn: &SqlitePool,
+) -> Result<(), Box<dyn std::error::Error>> {
     // Have to stringify, but also requires a Uuid type.. TODO: Fix this
     let stringed: String = uuid.clone().to_string();
     let created: u32 = std::time::UNIX_EPOCH.elapsed()?.as_secs() as u32;
     let user: String = exercise.user.clone();
     let data: String = exercise.to_json(uuid).to_string();
-    sqlx::query!("INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)", stringed, created, user, data).execute(conn).await?;
+    sqlx::query!(
+        "INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)",
+        stringed,
+        created,
+        user,
+        data
+    )
+    .execute(conn)
+    .await?;
     Ok(())
 }
 

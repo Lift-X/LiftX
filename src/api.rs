@@ -9,7 +9,7 @@ use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::cache::{JsonCache, WorkoutEntryCache,};
+use crate::cache::{JsonCache, WorkoutEntryCache};
 use crate::database::{get_exercises, get_workouts};
 use crate::equipment::Weight;
 use crate::error::WlrsError;
@@ -286,18 +286,24 @@ pub async fn get_graph_frequent(
     match user {
         Some(user) => {
             let mut top: HashMap<String, GraphExerciseTop> = HashMap::new();
-            let wrap_data =
-                get_workouts(conn, user.name().to_string(), None, None).await;
+            let wrap_data = get_workouts(conn, user.name().to_string(), None, None).await;
             match wrap_data {
                 Ok(data) => {
                     for workout in data {
                         for exercise in workout.exercises {
-                            let mut count = top.entry(exercise.exercise.clone()).or_insert(
-                                GraphExerciseTop {count:0,entries:Vec::new(), name: exercise.exercise},
-                            );
+                            let mut count =
+                                top.entry(exercise.exercise.clone())
+                                    .or_insert(GraphExerciseTop {
+                                        count: 0,
+                                        entries: Vec::new(),
+                                        name: exercise.exercise,
+                                    });
                             count.count += 1;
                             // parse sets and find the highest weight
-                            let mut highest_weight: Weight = Weight {weight:0.0 ,weight_unit: "lbs".to_string() };
+                            let mut highest_weight: Weight = Weight {
+                                weight: 0.0,
+                                weight_unit: "lbs".to_string(),
+                            };
                             for set in exercise.sets {
                                 if set.weight.weight > highest_weight.weight {
                                     highest_weight.weight = set.weight.weight;
@@ -305,7 +311,7 @@ pub async fn get_graph_frequent(
                             }
                             count.entries.push(GraphExerciseTopEntry {
                                 date: crate::util::timestamp_to_iso8601(
-                                    workout.start_time.try_into().unwrap()
+                                    workout.start_time.try_into().unwrap(),
                                 ),
                                 weight: highest_weight,
                             });
