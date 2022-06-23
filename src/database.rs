@@ -98,15 +98,8 @@ pub async fn insert_workout(
     let created: u32 = std::time::UNIX_EPOCH.elapsed()?.as_secs() as u32;
     let user: String = exercise.user.clone();
     let data: String = exercise.to_json(uuid).to_string();
-    sqlx::query!(
-        "INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)",
-        stringed,
-        created,
-        user,
-        data
-    )
-    .execute(conn)
-    .await?;
+    //sqlx::query!("INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)", stringed, created, user, data).execute(conn).await?;
+    sqlx::query("INSERT INTO workout (id, created, user, data) VALUES (?, ?, ?, ?)").bind(stringed).bind(created).bind(user).bind(data).execute(conn).await?;
     Ok(())
 }
 
@@ -246,13 +239,11 @@ pub async fn insert_settings(
         .as_secs()
         .try_into()
         .unwrap();
-    sqlx::query!(
-        "INSERT INTO settings (user, updated, data) VALUES (?, ?, ?)",
-        user,
-        time,
-        data
-    )
-    .execute(conn)
-    .await?;
+    // compile time checks break everything when a new table is added :eyeroll:
+    //sqlx::query!("INSERT INTO settings (user, updated, data) VALUES (?, ?, ?)", user, time, data).execute(conn).await?;
+    sqlx::query("INSERT INTO settings (user, updated, data) VALUES (?, ?, ?)")
+        .bind(user)
+        .bind(time)
+        .bind(data).execute(conn).await?;
     Ok(())
 }
