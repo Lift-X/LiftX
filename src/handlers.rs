@@ -52,6 +52,11 @@ pub async fn home() -> Option<NamedFile> {
     NamedFile::open("templates/basic.html").await.ok()
 }
 
+#[get("/settings")]
+pub async fn settings() -> Option<NamedFile> {
+    NamedFile::open("templates/basic.html").await.ok()
+}
+
 #[get("/")]
 pub async fn frontpage() -> Option<NamedFile> {
     NamedFile::open("templates/basic.html").await.ok()

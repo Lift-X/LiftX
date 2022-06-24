@@ -99,7 +99,13 @@ pub async fn insert_workout(
     let user: String = exercise.user.clone();
     let data: String = exercise.to_json(uuid).to_string();
     //sqlx::query!("INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)", stringed, created, user, data).execute(conn).await?;
-    sqlx::query("INSERT INTO workout (id, created, user, data) VALUES (?, ?, ?, ?)").bind(stringed).bind(created).bind(user).bind(data).execute(conn).await?;
+    sqlx::query("INSERT INTO workout (id, created, user, data) VALUES (?, ?, ?, ?)")
+        .bind(stringed)
+        .bind(created)
+        .bind(user)
+        .bind(data)
+        .execute(conn)
+        .await?;
     Ok(())
 }
 
@@ -244,6 +250,8 @@ pub async fn insert_settings(
     sqlx::query("INSERT INTO settings (user, updated, data) VALUES (?, ?, ?)")
         .bind(user)
         .bind(time)
-        .bind(data).execute(conn).await?;
+        .bind(data)
+        .execute(conn)
+        .await?;
     Ok(())
 }

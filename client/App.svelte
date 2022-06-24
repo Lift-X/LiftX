@@ -8,6 +8,7 @@
   import Frontpage from "./pages/Frontpage.svelte";
   import Home from "./pages/Home.svelte";
   import Register from "./pages/Register.svelte";
+  import Settings from "./pages/Settings.svelte";
 </script>
 
 <main>
@@ -21,6 +22,7 @@
     <Route exact path="/register"><Register /></Route>
     <Route exact path="/login"><Login /></Route>
     <Route exact path="/home"><Home /></Route>
+    <Route exact path="/settings"><Settings/></Route>
   </Router>
   <Footer />
 </main>

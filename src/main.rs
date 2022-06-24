@@ -104,6 +104,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::handlers::login,
                 crate::handlers::logout,
                 crate::handlers::home,
+                crate::handlers::settings
             ],
         )
         .mount(
