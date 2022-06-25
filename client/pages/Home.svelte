@@ -109,7 +109,7 @@
                 {/if}
             </div>
         </div>
-        {#if workouts.length > 0}
+        {#if workouts.length > 1}
         <div id="graphpanel" class="separator">
             <h1 title="Total workout volume is not a complete sign of progression or
             not, but can be used to get an *idea* of effort and progression.">Workout Volume - 30 Days</h1>
@@ -126,7 +126,7 @@
             </div>
         </div>
         {/if}
-        {#if topexercises.length > 0}
+        {#if workouts.length > 2}
         <div class="separator" id="toppanel">
             <h1 title="Most frequented exercises">Exercise Progression</h1>
             {#each topexercises as exercise}

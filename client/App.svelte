@@ -59,4 +59,20 @@
     max-width: 1200px;
     margin: 0 auto;
   }
+
+  :global(.numberform) {
+    max-width: 150px;
+  }
+
+  :global(.delete-button) {
+    background-color: #fa6464;
+    border: none;
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 15px;
+  }
 </style>

@@ -87,3 +87,9 @@
         {/await}
     </div>
 </div>
+
+<style>
+    #content {
+        max-width: 720px;
+    }
+</style>
