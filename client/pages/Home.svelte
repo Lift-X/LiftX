@@ -94,7 +94,7 @@
                             {/each}
                         </div>
                     {/each}
-                {:else if workouts.length == 0}
+                {:else}
                     <div class="workout-summary" id="add-panel">
                         <h2>Add a workout</h2>
                         <hr />
@@ -109,6 +109,7 @@
                 {/if}
             </div>
         </div>
+        {#if workouts.length > 0}
         <div id="graphpanel" class="separator">
             <h1 title="Total workout volume is not a complete sign of progression or
             not, but can be used to get an *idea* of effort and progression.">Workout Volume - 30 Days</h1>
@@ -124,6 +125,8 @@
                 />
             </div>
         </div>
+        {/if}
+        {#if topexercises.length > 0}
         <div class="separator" id="toppanel">
             <h1 title="Most frequented exercises">Exercise Progression</h1>
             {#each topexercises as exercise}
@@ -145,6 +148,7 @@
                 {/if}
                 {/each}
         </div>
+        {/if}
     </div>
 {/if}
 
@@ -175,9 +179,11 @@
         flex-direction: row;
         display: flex;
         flex-wrap: wrap;
+        justify-content: center;
     }
 
     #recentpanel {
+        min-width: 360px;
         max-width: 960px;
         margin: auto;
         margin-top: 10px;
@@ -199,6 +205,7 @@
         align-items: center;
         max-height: 400px;
         width: inherit;
+        margin: 0 auto;
     }
 
     #add-panel {
