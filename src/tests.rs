@@ -3,7 +3,7 @@ use ordered_float::OrderedFloat;
 use crate::{
     equipment::{self, Weight, WeightType, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
-    muscles,
+    muscles, util::string_capital_case,
 };
 
 #[test]
@@ -192,4 +192,10 @@ fn test_workout_entry_default() {
     assert_eq!(default.end_time, 0);
     assert_eq!(default.exercises.len(), 0);
     assert_eq!(default.user, "");
+}
+
+#[test]
+fn test_string_capital_case() {
+    let s: &str = "hello world";
+    assert_eq!(string_capital_case(s), "Hello World");
 }

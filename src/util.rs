@@ -6,13 +6,14 @@ pub fn timestamp_to_iso8601(timestamp: i64) -> String {
 }
 
 pub fn string_capital_case(word: &str) -> String {
-    let mut capitalized: String = String::new();
-    for (i, c) in word.chars().enumerate() {
-        if i == 0 {
-            capitalized.push(c.to_ascii_uppercase());
-        } else {
-            capitalized.push(c);
-        }
+    // Convert a string to "Capital Case"
+    let mut result: String = String::new();
+    let split = word.split_whitespace();
+    for word in split {
+        result.push_str(&word.chars().next().unwrap().to_uppercase().to_string());
+        result.push_str(&word.chars().skip(1).collect::<String>());
+        result.push(' ');
     }
-    capitalized
+    result.pop();
+    result
 }
