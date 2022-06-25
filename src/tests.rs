@@ -3,7 +3,7 @@ use ordered_float::OrderedFloat;
 use crate::{
     equipment::{self, Weight, WeightType, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
-    muscles, util::string_capital_case,
+    muscles, util::{string_capital_case, timestamp_to_iso8601},
 };
 
 #[test]
@@ -198,4 +198,11 @@ fn test_workout_entry_default() {
 fn test_string_capital_case() {
     let s: &str = "hello world";
     assert_eq!(string_capital_case(s), "Hello World");
+}
+
+#[test]
+fn test_timestamp_iso8601() {
+    let time: i64 = 0;
+    let time_str = timestamp_to_iso8601(time);
+    assert_eq!(time_str, "1970-01-01 00:00");
 }
