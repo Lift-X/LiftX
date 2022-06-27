@@ -21,3 +21,4 @@ node_modules/
 *.js.map
 /public/build/
 package-lock.json
+.svelte-kit
