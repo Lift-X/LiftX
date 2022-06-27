@@ -1,4 +1,5 @@
-import adapter from '@sveltejs/adapter-auto';
+import preprocess from 'svelte-preprocess';
+import adapter from '@sveltejs/adapter-static';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -9,7 +10,7 @@ const config = {
 			router: true
 		},
 		files: {
-			assets: 'static',
+			assets: 'public',
 			hooks: 'client/hooks',
 			lib: 'client/lib',
 			params: 'client/params',
@@ -22,42 +23,45 @@ const config = {
 		csp: {
 			mode: 'auto',
 			directives: {
-			  'default-src': undefined
-			  // ...
+				'default-src': undefined
+				// ...
 			}
-		  },
-		  outDir: '.svelte-kit',
-		  package: {
-			dir: 'package',
-			emitTypes: true,
-			// excludes all .d.ts and files starting with _ as the name
-			exports: (filepath) => !/^_|\/_|\.d\.ts$/.test(filepath),
-			files: () => true
-		  },
-		  paths: {
+		},
+		outDir: '.svelte-kit',
+		paths: {
 			assets: '',
 			base: ''
-		  },
-		  prerender: {
+		},
+		prerender: {
 			concurrency: 1,
 			crawl: true,
-			default: false,
+			default: true,
 			enabled: true,
 			entries: ['*'],
 			onError: 'fail'
-		  },
-		  routes: (filepath) => !/(?:(?:^_|\/_)|(?:^\.|\/\.)(?!well-known))/.test(filepath),
-		  serviceWorker: {
+		},
+		routes: (filepath) => !/(?:(?:^_|\/_)|(?:^\.|\/\.)(?!well-known))/.test(filepath),
+		serviceWorker: {
 			register: true,
 			files: (filepath) => !/\.DS_Store/.test(filepath)
-		  },
-		  trailingSlash: 'never',
-		  version: {
+		},
+		trailingSlash: 'never',
+		version: {
 			name: Date.now().toString(),
 			pollInterval: 0
-		  },
-		  vite: () => ({})
-	}
+		},
+		vite: () => ({
+			fs: {
+				allow: ["./svlete-kit/**/*"]
+			}
+		})
+	},
+
+	preprocess: [
+		preprocess({
+			postcss: true
+		})
+	]
 };
 
 export default config;

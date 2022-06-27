@@ -22,3 +22,4 @@ node_modules/
 /public/build/
 package-lock.json
 .svelte-kit
+/build
