@@ -116,12 +116,30 @@ pub async fn post_workout_json(
 pub async fn post_register(
     form: rocket::form::Form<Signup>,
     auth: Auth<'_>,
-) -> Result<Redirect, Error> {
+) -> Result<Redirect, serde_json::Value> {
     let form_proc = &form.into_inner();
-    auth.signup(&form_proc).await.unwrap();
-    auth.login(&form_proc.into()).await.unwrap();
-    println!("Signed up!");
-    Ok(Redirect::to("/home"))
+    let result = auth.signup(&form_proc).await;
+    match result {
+        Ok(_) => {
+            auth.login(&form_proc.into()).await.unwrap();
+            Ok(Redirect::to("/home"))
+        }
+        Err(e) => {
+            warn!("{}", e);
+            /*if e == rocket_auth::Error::NameAlreadyExists {
+                Err("Username already exists".into())
+            }*/
+            if e.to_string() == "SqlxError: error returned from database: UNIQUE constraint failed: users.name".to_string() {
+                Err(json!({
+                    "error": WlrsError::WLRS_ERROR_USERNAME_EXISTS
+                }))
+            } else {
+                Err(json!({
+                    "error": WlrsError::Custom { message: e.to_string() }
+                }))
+            }
+        }
+    }
 }
 
 #[post("/login", data = "<form>")]

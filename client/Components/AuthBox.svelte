@@ -24,6 +24,8 @@
           response.json().then(data => {
             if (data.status == "error") {
               error = data.message;
+            } else if (data.error != null) {
+              error = data.error;
             }
           });
         }
