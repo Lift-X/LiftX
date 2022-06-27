@@ -48,3 +48,14 @@ WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout t
 - [ ] GPX Support
 - [ ] Exercise lists, with muscle group visualization (like wger)
 - [ ] Native mobile applications (Svelte-native?)
+
+### Contributing
+
+Prerequisites:
+- [Node](https://nodejs.org/)
+- [Rust](https://www.rust-lang.org/tools/install)
+
+1. Clone the repo
+2. Install npm dependencies: `npm install`
+3. Build the web frontend: `npm run build`
+4. Run the backend: `cargo run`
