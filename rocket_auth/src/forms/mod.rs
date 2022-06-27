@@ -116,8 +116,6 @@ fn has_number(password: &str) {
 #[throws(ValidationError)]
 fn no_spaces(input: &str) {
     if input.contains(' ') {
-        throw!(ValidationError::new(
-            "The input cannot contain spaces.\n"
-        ));
+        throw!(ValidationError::new("The input cannot contain spaces.\n"));
     }
 }

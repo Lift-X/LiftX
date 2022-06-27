@@ -3,6 +3,9 @@ mod mysql;
 #[cfg(any(feature = "sqlx-sqlite"))]
 mod sqlite;
 
+#[cfg(any(feature = "skytable"))]
+mod skytable;
+
 use crate::prelude::*;
 
 #[rocket::async_trait]

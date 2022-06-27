@@ -1,10 +1,17 @@
 use crate::error::WlrsError;
 use crate::exercises::ExerciseList;
 use crate::exercises::WorkoutEntry;
-use rocket_db_pools::Database;
+use rocket_sync_db_pools::database;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
-use sqlx::{Pool, Row, Sqlite, SqlitePool};
+use skytable::Query;
+use skytable::actions::Actions;
+use skytable::ddl::Ddl;
+use skytable::ddl::Keymap;
+use skytable::ddl::KeymapType;
+use skytable::pool::Pool;
+use skytable::Connection;
+use skytable::query;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ThemeOptions {
@@ -60,59 +67,69 @@ impl UserSettings {
     }
 }
 
-#[derive(Database)]
-#[database("sqlite_db")]
-pub struct Db(sqlx::sqlite::SqlitePool);
+#[database("skytable_db")]
+pub struct Db(Connection);
 
-pub async fn create_connection() -> Result<SqlitePool, Box<dyn std::error::Error>> {
-    let pool: Pool<Sqlite> = SqlitePool::connect("data.db").await?;
-    Ok(pool)
-}
-
-pub async fn build_tables(conn: &SqlitePool) {
-    // Workout Table
-    sqlx::query("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created int, user TINYTEXT, data MEDIUMTEXT)")
-        .execute(conn)
-        .await
-        .unwrap();
-
-    // User settings table
-    // TODO: Integrate into rocket_auth
-    sqlx::query("CREATE TABLE if not exists settings (user TINYTEXT PRIMARY KEY, updated int, data MEDIUMTEXT)")
-        .execute(conn)
-        .await
-        .unwrap();
-
+pub async fn build_tables(conn: Pool) {
     // User Table
     let users: rocket_auth::Users = conn.clone().into();
     users.create_table().await.unwrap();
+
+    let mut conn = conn.get().unwrap();
+
+    // Workout Table
+    /*sqlx::query("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created int, user TINYTEXT, data MEDIUMTEXT)")
+    .execute(conn)
+    .await
+    .unwrap();*/
+
+    let query: Query = query!("CREATE", "TABLE", "workouts", "keymap(str,list<binstr>)"); // Key being the user, value being a list of workouts (This way we can minimize the number of rows we have to parse)
+    conn.run_query_raw(query).unwrap();
+    // User settings table
+    // TODO: Integrate into rocket_auth
+    /*sqlx::query("CREATE TABLE if not exists settings (user TINYTEXT PRIMARY KEY, updated int, data MEDIUMTEXT)")
+    .execute(conn)
+    .await
+    .unwrap();*/
+    let table = Keymap::new("default:usersettings")
+        .set_ktype(KeymapType::Str)
+        .set_vtype(KeymapType::Binstr);
+    conn.create_table(table).unwrap();
 }
 
 pub async fn insert_workout(
     uuid: uuid::Uuid,
-    mut exercise: WorkoutEntry,
-    conn: &SqlitePool,
+    exercise: WorkoutEntry,
+    conn: &Pool,
 ) -> Result<(), Box<dyn std::error::Error>> {
     // Have to stringify, but also requires a Uuid type.. TODO: Fix this
-    let stringed: &String = &uuid.to_string();
+    let uuid: &String = &uuid.to_string();
     let created: u32 = std::time::UNIX_EPOCH.elapsed()?.as_secs() as u32;
     let user: String = exercise.user.clone();
-    let data: String = exercise.to_json(uuid).to_string();
-    //sqlx::query!("INSERT INTO WORKOUT (id, created, user,data) VALUES (?, ?, ?, ?)", stringed, created, user, data).execute(conn).await?;
-    sqlx::query("INSERT INTO workout (id, created, user, data) VALUES (?, ?, ?, ?)")
-        .bind(stringed)
+    /*sqlx::query("INSERT INTO workout (id, created, user, data) VALUES (?, ?, ?, ?)")
+        .bind(uuid)
         .bind(created)
         .bind(user)
         .bind(data)
         .execute(conn)
-        .await?;
-    Ok(())
+        .await?;*/
+    let mut conn = conn.get().unwrap();
+    conn.switch("default:workouts").unwrap();
+    //let result = conn.set(uuid, exercise);
+    let result;
+    match result {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            error!("Failed to insert workout: {}", e);
+            Err(Box::new(e))
+        },
+    };
 }
 
 /// Get all workouts (for a certain user) from the database.
 /// Optionally provide a max number of workouts to return
 pub async fn get_workouts(
-    conn: &SqlitePool,
+    conn: &Pool,
     user: String,
     mut limit: Option<i16>,
     recent_days: Option<u64>,
@@ -123,7 +140,8 @@ pub async fn get_workouts(
     }
 
     // fyi: Cannot take `recent_days` as a SQL query, as the `created` column is not the start of the workout
-    let wrap_data =
+
+    /*let wrap_data =
         sqlx::query("SELECT * FROM workout WHERE user = ? ORDER BY created DESC LIMIT ?")
             .bind(user)
             .bind(limit)
@@ -156,7 +174,7 @@ pub async fn get_workouts(
         Err(_) => Err(serde_json::json!({
             "error": WlrsError::WLRS_ERROR_NOT_FOUND
         })),
-    }
+    }*/
 }
 
 /// Build a list of exercises a user has done.

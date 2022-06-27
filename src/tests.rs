@@ -3,7 +3,8 @@ use ordered_float::OrderedFloat;
 use crate::{
     equipment::{self, Weight, WeightType, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
-    muscles, util::{string_capital_case, timestamp_to_iso8601},
+    muscles,
+    util::{string_capital_case, timestamp_to_iso8601},
 };
 
 #[test]

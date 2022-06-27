@@ -6,6 +6,9 @@ max_connections = 1024
 connect_timeout = 5
 idle_timeout = 120
 
+[default.databases.skytable_db]
+url = "127.0.0.1:2003"
+
 [default]
 template_dir = "templates"
 address = "0.0.0.0"

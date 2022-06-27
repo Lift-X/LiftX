@@ -16,13 +16,15 @@ regex-syntax = { version = "0.6.25" }
 # Web
 rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
 # Auth
-rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
-rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
+rocket_auth = { path="./rocket_auth", features = ["skytable"] }
+#rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
+rocket_sync_db_pools = { path="./sync_db_pools/lib", features = ["sky"] }
 # JSON
 serde = { version = "1.0.137", features = ["derive"] }
 serde_json = { version = "1.0.81" }
 #DB
-sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
+#sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
+skytable = { version = "0.7.1", features = ["aio", "sync", "bb8", "r2d2"] }
 # Time
 time = { version = "0.3.9", features = ["std", "serde", "serde-human-readable"] }
 tokio = "1.18.1"
@@ -30,6 +32,7 @@ tracing = { version = "0.1.35" }
 tracing-core = { version = "0.1.26" }
 ## For workout IDs
 uuid = { version = "1.0.0", features = ["v4", "fast-rng"] }
+r2d2 = "0.8"
 
 [profile.release]
 panic = "abort"

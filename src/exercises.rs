@@ -1,6 +1,7 @@
 use crate::equipment::{Weight, WeightType};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use skytable::types::{FromSkyhashBytes, IntoSkyhashBytes};
 use uuid::Uuid;
 
 /// "Set" as in a set of reps, not the verb "set"
@@ -32,6 +33,25 @@ pub struct WorkoutEntry {
     pub volume: Weight,
 }
 
+/// Used for adding to db
+impl IntoSkyhashBytes for WorkoutEntry {
+    fn as_bytes(&self) -> Vec<u8> {
+        serde_json::to_string(self).unwrap().into_bytes()
+    }
+}
+
+/// Used for getting from db
+impl FromSkyhashBytes for WorkoutEntry {
+    fn from_element(element: skytable::Element) -> skytable::SkyResult<Self> {
+        // Build json as string
+        let json: String = element.try_element_into()?;
+        // Convert back into `WorkoutEntry`
+        match serde_json::from_str(&json) {
+            Ok(v) => Ok(v),
+            Err(e) => Err(skytable::error::Error::ParseError(e.to_string())),
+        }
+    }
+}
 /// `ExerciseList` is a list of exercises, used for the frontend
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ExerciseList {

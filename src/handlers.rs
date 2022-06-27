@@ -1,6 +1,5 @@
 use crate::cache::CachedFile;
 #[allow(unused_imports)]
-use crate::database::Db;
 use rocket::{fs::NamedFile, response::Redirect};
 use rocket_auth::Auth;
 

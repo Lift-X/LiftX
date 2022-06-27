@@ -4,7 +4,6 @@
 #![deny(
     bad_style,
     const_err,
-    dead_code,
     improper_ctypes,
     non_shorthand_field_patterns,
     no_mangle_generic_items,
@@ -33,13 +32,12 @@ mod tests;
 pub mod util;
 
 #[allow(unused_imports)]
-use crate::{database::create_connection, equipment::Weight};
+use crate::equipment::Weight;
 use rocket::{fairing::AdHoc, form::validate::Contains, Build, Rocket};
-use rocket_db_pools::Database;
-use sqlx::{Pool, Sqlite, SqlitePool};
+use skytable::{pool::ConnectionManager, Connection};
 
 // Move to enviroment variable/config file once release-ready
-const PROD: bool = true;
+const PROD: bool = false;
 
 #[rocket::main]
 async fn main() {
@@ -48,24 +46,27 @@ async fn main() {
         .start()
         .unwrap();
     // connect to DB
-    let conn: Result<Pool<Sqlite>, sqlx::Error> = SqlitePool::connect("data.db").await;
+    /*let conn: Result<Pool<Sqlite>, sqlx::Error> = SqlitePool::connect("data.db").await;
     match conn {
         Ok(conn) => {
             // Initialize Database tables if they don't exist
             database::build_tables(&conn).await;
-            let users: rocket_auth::Users = conn.clone().into();
+            //let users: rocket_auth::Users = conn.clone().into();
             log::info!("Database connection successful");
-            launch_web(conn, users).await;
         }
         Err(e) => {
             panic!("Database connection failed: {}", e);
         }
-    }
+    }*/
+    let sky_conn = skytable::pool::get("127.0.0.1", 2003, 10).unwrap(); // TODO: async (bb8 async pool does not work currently)
+    let users: rocket_auth::Users = sky_conn.clone().into();
+    launch_web(sky_conn, users).await;
+    //s::scrappy_implementation();
 }
 
 /// Launch the rocket web server.
 /// Policies: no mime sniffing, xss filtering, no ref
-async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
+async fn launch_web(conn: r2d2::Pool<ConnectionManager<Connection>>, users: rocket_auth::Users) {
     // launch web server
     let shield = rocket::shield::Shield::default()
         .enable(rocket::shield::Referrer::NoReferrer)
@@ -74,7 +75,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     #[allow(clippy::no_effect_underscore_binding)]
     let rocket: Rocket<Build> = rocket::build()
         .attach(shield)
-        .attach(database::Db::init())
+        .attach(database::Db::fairing())
         // Brotli Compression
         .attach(AdHoc::on_response("Compress", |request, response| {
             Box::pin(async {
@@ -93,7 +94,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 }
             })
         }))
-        .mount(
+        /*.mount(
             "/",
             routes![
                 crate::handlers::frontpage,
@@ -125,7 +126,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::api::get_user_settings
             ],
         )
-        .register("/", catchers![crate::handlers::general_404])
+        .register("/", catchers![crate::handlers::general_404])*/
         .manage(conn)
         .manage(users);
     let rocket = rocket.launch().await;
