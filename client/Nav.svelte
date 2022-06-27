@@ -16,17 +16,15 @@
 
 <nav class="navbar is-primary" aria-label="main navigation">
   <div>
-    <div class="navbar-brand">
-      <div class="nav-logo">
-        <a href="/">
-          <img src="/public/logo.png" alt="WLRS Logo" />
-        </a>
-      </div>
+    <div class="nav-logo">
+      <a href="/">
+        <img src="/public/logo.png" alt="WLRS Logo" />
+      </a>
     </div>
     <div class="navbar-menu">
       <ul class="nav-links">
-        <li><a class="navbar-item" href="/home">Home</a></li>
         {#if login_status}
+          <li><a class="navbar-item" href="/home">Home</a></li>
           <li>
             <a class="navbar-item" href="/workouts/new">New Workout</a>
           </li>
@@ -65,12 +63,12 @@
             </button>
             <div class="dropdown-content">
               {#if login_status}
-              <a href="/settings">Settings</a>
-              <a href="/logout">Logout</a>
+                <a href="/settings">Settings</a>
+                <a href="/logout">Logout</a>
               {:else}
                 <a href="/login">Login</a>
                 <a href="/register">Register</a>
-            {/if}
+              {/if}
             </div>
           </div>
         </li>
@@ -134,7 +132,6 @@
     margin: 0;
   }
 
-  .navbar a:hover,
   .dropdown:hover .dropbtn {
     background-color: red;
   }
