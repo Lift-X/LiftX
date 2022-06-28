@@ -8,6 +8,7 @@ use rocket::{fs::NamedFile, response::Redirect};
 use rocket_auth::Auth;
 
 const BASIC_HTML: &str = "build/index.html";
+const WEB_DIR: &str = "build";
 
 #[get("/_app/<file..>")]
 pub async fn get_app(file: PathBuf) -> Option<NamedFile> {
@@ -28,7 +29,7 @@ pub async fn workout_new() -> Option<NamedFile> {
 
 #[get("/static/<file..>")]
 pub async fn static_file(file: PathBuf) -> Option<CachedFile> {
-    let file = Path::new("static").join(file);
+    let file: PathBuf = Path::new("static").join(file);
     let cache_time: u32;
     if crate::PROD {
         cache_time = 604800; // 1 week
@@ -44,18 +45,20 @@ pub async fn static_file(file: PathBuf) -> Option<CachedFile> {
 
 #[get("/<file..>", rank = 2)]
 pub async fn get_asset(file: PathBuf) -> Option<NamedFile> {
-    let file = Path::new("build").join(file);
+    let file:PathBuf = Path::new(WEB_DIR).join(file);
     NamedFile::open(file).await.ok()
 }
 
 #[get("/register")]
 pub async fn register() -> Option<NamedFile> {
-    NamedFile::open(BASIC_HTML).await.ok()
+    let file: PathBuf = Path::new(WEB_DIR).join("register.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[get("/login")]
 pub async fn login() -> Option<NamedFile> {
-    NamedFile::open(BASIC_HTML).await.ok()
+    let file: PathBuf = Path::new(WEB_DIR).join("login.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[get("/logout")]

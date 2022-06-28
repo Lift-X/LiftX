@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
-title,h1,h2,h3,h4,p {
+:root {
+    --p: #a50b00;
+}
+
+title,span,h1,h2,h3,h4,p {
     color: white;
 }
