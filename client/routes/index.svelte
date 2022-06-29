@@ -38,7 +38,7 @@
         </p>
       </div>
     </div>
-    <!--<div id="register"><a href="/register">Sign Up</a></div>-->
+    <a class="btn bg-primary-500 hover:bg-primary-700" href="/register">Sign Up</a>
   </center>
 </div>
 
@@ -76,20 +76,5 @@
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-  }
-
-  #register {
-    border-radius: 10px;
-    background-color: #a50b00;
-    padding: 20px;
-    color: white;
-    width: 100px;
-    max-width: 100px;
-    margin-top: 50px;
-    margin-bottom: 50px;
-  }
-
-  #register a {
-    color: white;
   }
 </style>

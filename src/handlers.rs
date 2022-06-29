@@ -69,12 +69,14 @@ pub fn logout(auth: Auth<'_>) -> Result<Redirect, rocket_auth::Error> {
 
 #[get("/home")]
 pub async fn home() -> Option<NamedFile> {
-    NamedFile::open(BASIC_HTML).await.ok()
+    let file: PathBuf = Path::new(WEB_DIR).join("home.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[get("/settings")]
 pub async fn settings() -> Option<NamedFile> {
-    NamedFile::open(BASIC_HTML).await.ok()
+    let file: PathBuf = Path::new(WEB_DIR).join("settings.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[get("/")]

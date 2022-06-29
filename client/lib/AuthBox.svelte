@@ -34,19 +34,19 @@
     }
   </script>
 
-  <div class="card w-96 m-auto">
+  <div class="card w-96 m-auto mt-5">
     <div class="card-body items-center text-center">
       <h2 class="card-title">{auth_type}</h2>
       <div class="form-control w-full max-w-xs">
         <label class="label">
           <span class="label-text">Username</span>
         </label>
-        <input type="name" name="name" bind:value="{name}" placeholder="What's your name?" class="input input-bordered focus:outline-primary border-primary w-full max-w-xs" />
+        <input type="name" name="name" bind:value="{name}" placeholder="Enter your username" class="input input-bordered focus:outline-primary border-primary w-full max-w-xs bg-black-400 text-white" />
         <label class="label">
           <span class="label-text">Password</span>
         </label>
-        <input type="password" name="password" bind:value="{password}" placeholder="Enter your password" class="input input-bordered focus:outline-primary border-primary w-full max-w-xs" />
-        <input class="submit btn btn-outline text-white hover:bg-primary max-w-20 mt-5" type="submit" value={auth_type} on:click="{handleSubmit}"/>
+        <input type="password" name="password" bind:value="{password}" placeholder="Enter your password" class="input input-bordered focus:outline-primary border-primary w-full max-w-xs bg-black-400 text-white" />
+        <input class="submit btn btn-outline text-white hover:bg-primary-500 max-w-20 mt-5" type="submit" value={auth_type} on:click="{handleSubmit}"/>
       </div>
     </div>
   </div>

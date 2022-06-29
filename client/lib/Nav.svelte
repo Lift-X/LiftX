@@ -13,7 +13,7 @@
 		console.log(login_status);
 	});
 </script>
-<div class="navbar bg-primary">
+<div class="navbar bg-primary-500">
 	<div class="flex-none max-w-5">
 		<a id="logo" class="btn btn-ghost normal-case" href="/">
 			<img src="/logo.png" alt="WLRS Logo" />
@@ -29,8 +29,8 @@
     </label>
     <ul tabindex="0" class="mt-3 p-2 shadow menu menu-compact dropdown-content rounded-box w-52 bg-black-500">
 			{#if login_status}
-      <li><a>Home</a></li>
-      <li><a>Settings</a></li>
+      <li><a href="/home">Home</a></li>
+      <li><a href="/settings">Settings</a></li>
       <li><a href="/logout" rel="external">Logout</a></li>
       {:else}
       <li><a href="/register">Register</a></li>
