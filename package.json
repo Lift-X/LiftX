@@ -30,6 +30,8 @@
 		"@sveltejs/adapter-static": "^1.0.0-next.34",
 		"cssnano": "^5.1.12",
 		"cssnano-preset-advanced": "^5.3.8",
-		"daisyui": "^2.17.0"
+		"daisyui": "^2.17.0",
+		"svelte-time": "^0.7.1",
+		"svelty-picker": "^1.3.0"
 	}
 }

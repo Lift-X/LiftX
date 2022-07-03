@@ -10,3 +10,13 @@
 title,span,h1,h2,h3,h4,p {
     color: white;
 }
+
+h1 {
+    @apply text-2xl;
+  }
+  h2 {
+    @apply text-xl;
+  }
+  h3 {
+    @apply text-lg;
+  }

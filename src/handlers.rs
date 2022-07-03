@@ -7,7 +7,7 @@ use crate::database::Db;
 use rocket::{fs::NamedFile, response::Redirect};
 use rocket_auth::Auth;
 
-const BASIC_HTML: &str = "build/index.html";
+const INDEX: &str = "build/index.html";
 const WEB_DIR: &str = "build";
 
 #[get("/_app/<file..>")]
@@ -18,13 +18,14 @@ pub async fn get_app(file: PathBuf) -> Option<NamedFile> {
 
 #[get("/workouts/<id>")]
 pub async fn workout_view(id: String) -> Option<NamedFile> {
-    debug!("Viewing {}", id);
-    NamedFile::open(BASIC_HTML).await.ok()
+    let file: PathBuf = Path::new(WEB_DIR).join("workoutview.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[get("/workouts/new")]
 pub async fn workout_new() -> Option<NamedFile> {
-    NamedFile::open(BASIC_HTML).await.ok()
+    let file: PathBuf = Path::new(WEB_DIR).join("workoutnew.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[get("/static/<file..>")]
@@ -81,7 +82,7 @@ pub async fn settings() -> Option<NamedFile> {
 
 #[get("/")]
 pub async fn frontpage() -> Option<NamedFile> {
-    NamedFile::open(BASIC_HTML).await.ok()
+    NamedFile::open(INDEX).await.ok()
 }
 
 #[catch(404)]
