@@ -39,6 +39,11 @@ pub async fn register() -> Option<NamedFile> {
     NamedFile::open(file).await.ok()
 }
 
+#[get("/signup")]
+pub async fn signup_redirect() -> Redirect {
+    Redirect::to("/register")
+}
+
 #[get("/login")]
 pub async fn login() -> Option<NamedFile> {
     let file: PathBuf = Path::new(WEB_DIR).join("login.html");

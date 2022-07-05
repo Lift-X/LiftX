@@ -84,6 +84,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::handlers::workout_view,
                 crate::handlers::workout_new,
                 crate::handlers::register,
+                crate::handlers::signup_redirect,
                 crate::handlers::login,
                 crate::handlers::logout,
                 crate::handlers::home,
