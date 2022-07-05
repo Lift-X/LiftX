@@ -50,9 +50,6 @@
             return;
         }
 
-        // Hidden at the start when exercises are empty, unhide.
-        document.getElementById("exercises").classList.remove("hidden");
-
         json_data.update(function (data) {
             data.exercises.push(exercise);
             return data;

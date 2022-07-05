@@ -1,4 +1,4 @@
-#![forbid(unsafe_code)]
+//#![forbid(unsafe_code)]
 // Use all clippy lints (just to get an idea)
 #![warn(clippy::all, clippy::pedantic)]
 #![deny(
@@ -39,7 +39,7 @@ use rocket_db_pools::Database;
 use sqlx::{Pool, Sqlite, SqlitePool};
 
 // Move to enviroment variable/config file once release-ready
-const PROD: bool = true;
+//const PROD: bool = true;
 
 #[rocket::main]
 async fn main() {
@@ -100,7 +100,6 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::handlers::get_asset,
                 crate::handlers::frontpage,
                 crate::handlers::workout_view,
-                crate::handlers::static_file,
                 crate::handlers::workout_new,
                 crate::handlers::register,
                 crate::handlers::login,

@@ -30,7 +30,11 @@ const config = {
 			}
 		}
 	},
-	plugins: [require('daisyui')]
+	plugins: [require('daisyui')],
+	purge: {
+		enabled: true,
+		content: content
+	}
 };
 
 module.exports = config;

@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 use std::path::Path;
 
-use crate::cache::CachedFile;
 #[allow(unused_imports)]
 use crate::database::Db;
 use rocket::{fs::NamedFile, response::Redirect};
@@ -26,22 +25,6 @@ pub async fn workout_view(id: String) -> Option<NamedFile> {
 pub async fn workout_new() -> Option<NamedFile> {
     let file: PathBuf = Path::new(WEB_DIR).join("workoutnew.html");
     NamedFile::open(file).await.ok()
-}
-
-#[get("/static/<file..>")]
-pub async fn static_file(file: PathBuf) -> Option<CachedFile> {
-    let file: PathBuf = Path::new("static").join(file);
-    let cache_time: u32;
-    if crate::PROD {
-        cache_time = 604800; // 1 week
-    } else {
-        cache_time = 0;
-    }
-    let cache = CachedFile {
-        data: NamedFile::open(file).await.ok()?,
-        cache_time,
-    };
-    Some(cache)
 }
 
 #[get("/<file..>", rank = 2)]

@@ -6,13 +6,14 @@
 	import SetEntryForm from '$lib/SetEntryForm.svelte';
 	import { get_current_user } from '$lib/json_store.js';
 	import { onMount } from 'svelte';
+	import {get_iso8601 } from '$lib/util.js';
 	let login_status = false;
 	onMount(async () => {
 		get_current_user();
 		login_status = json_data.user != '' ? true : false;
 	});
 
-	$: start_time_bind = null;
+	$: start_time_bind = get_iso8601();
 	$: start_time = null;
 	$: end_time = null;
 	$: duration_bind = 0;
@@ -139,6 +140,7 @@
 		New Workout: <input
 			type="text"
 			name="title"
+			class="border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			placeholder="Push Day"
 			bind:value={$json_data.title}
 		/>
@@ -147,8 +149,9 @@
 	<p>By: {$json_data.user}</p>
 	<p>
 		Start: <SveltyPicker
-			inputClasses="form-control"
+			inputClasses="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			format="yyyy-mm-dd hh:ii"
+			style="border:white 1px;"
 			bind:value={start_time_bind}
 			on:change={handle_time(start_time_bind)}
 		/>
@@ -156,7 +159,7 @@
 	<p>
 		Duration: <input
 			type="number"
-			class="form-control"
+			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			id="duration"
 			placeholder="Duration in minutes"
 			min="0"
@@ -164,44 +167,44 @@
 			required
 			bind:value={duration_bind}
 			on:change={handle_duration(start_time_bind, duration_bind)}
-		/><span class="validity" />
+		/><span class="validity inline" />
 	</p>
 </div>
 
 <div class="separator" id="create">
 	<h1>Add Exercise</h1>
 	<hr />
-	<p>
+	<p class="mt-5">
 		Exercise: <input
 			type="text"
-			class="form-control"
+			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			id="exercisename"
 			placeholder="Bench Press"
 			maxlength="100"
 			required
-		/><span class="validity" />
+		/><span class="validity inline" />
 	</p>
-	<p>
+	<p class="mt-5">
 		Comments: <input
 			type="text"
-			class="form-control"
+			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			id="comments"
-			placeholder="Comments (optional)"
+			placeholder="(optional)"
 			maxlength="5000"
-		/><span class="validity" />
+		/><span class="validity inline" />
 	</p>
-	<p>
+	<label class="mt-5">
 		Sets: <input
 			type="number"
-			class="form-control numberform"
+			class="form-control inline max-w-3 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			id="sets"
 			placeholder="Sets"
 			min="0"
 			max="25"
 			required
 			bind:value={set_count_bind}
-		/><span class="validity" />
-	</p>
+		/><span class="validity inline" />
+	</label>
 	<div id="setsdiv">
 		{#if set_count_bind > 0 && set_count_bind <= 25}
 			{#each { length: set_count_bind } as _}
@@ -209,22 +212,25 @@
 			{/each}
 		{/if}
 	</div>
-	<button type="submit" class="btn btn-primary" id="add-exercise" on:click={addexercise}
-		>Submit</button
+	<button type="submit" class="btn btn-primary hover:bg-primary-500 mt-5" id="add-exercise" on:click={addexercise}
+		>Add</button
 	>
 </div>
-<div class="separator hidden" id="exercises">
+
+{#if $json_data.exercises.length != 0}
+<div class="separator" id="exercises">
 	<h1>Exercises</h1>
 	<hr />
 	{#each $json_data.exercises as exercise}
 		<Exercise {exercise} on:delete={deleteExercise(exercise)} />
 	{/each}
 </div>
+{/if}
 
 <div class="separator" id="submit">
 	<h1>Submit</h1>
 	<hr />
-	<button type="submit" class="btn btn-primary" id="submit-workout" on:click={post}>Submit</button>
+	<button type="submit" class="btn btn-primary hover:bg-primary-500 mt-5" id="submit-workout" on:click={post}>Submit</button>
 </div>
 
 <hr />
@@ -241,20 +247,6 @@
 		padding: 15px;
 		margin: 10px;
 	}
-
-	input:invalid + span:after {
-		content: '⛔';
-		padding-left: 5px;
-	}
-
-	input:valid + span:after {
-		content: '✅';
-		padding-left: 5px;
-	}
-
-    input {
-        color: black;
-    }
 
 	:global(.numberform) {
 		max-width: 150px;

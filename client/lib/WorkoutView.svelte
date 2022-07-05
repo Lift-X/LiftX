@@ -12,9 +12,9 @@
 
 <div class="exercise">
     <h3>{exercise.exercise}</h3>
-    <ul>
+    <ul class="list-disc">
         {#each exercise.sets as set}
-            <li>
+            <li class="ml-4">
                 {set.reps} x {set.weight.weight}{set.weight.weight_unit}
                 {#if set.reps_in_reserve != "" && set.reps_in_reserve != null}
                     - {set.reps_in_reserve}RiR{/if}
@@ -25,6 +25,6 @@
         <p>Comments: {exercise.comments}</p>
     {/if}
     {#if !view_only}
-        <button class="button delete-button" on:click={onDelete}>Delete</button>
+        <button class="btn btn-primary hover:bg-primary-500 mt-5" on:click={onDelete}>Delete</button>
     {/if}
 </div>
