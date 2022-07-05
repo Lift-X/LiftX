@@ -10,8 +10,8 @@
     }
 </script>
 
-<div class="exercise">
-    <h3>{exercise.exercise}</h3>
+<div class="exercise mb-3">
+    <h2 class="font-semibold">{exercise.exercise}</h2>
     <ul class="list-disc">
         {#each exercise.sets as set}
             <li class="ml-4">

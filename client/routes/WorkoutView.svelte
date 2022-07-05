@@ -1,8 +1,13 @@
 <script>
-    import Exercise from "$lib/WorkoutView.svelte";
+    import Exercise from "$lib/WorkoutRawView.svelte";
     const cacheName = "workouts-cache";
     export let id;
     export async function load_json() {
+        if (id == null) {
+            // Get current url, and try that as a workout id
+            const url = new URL(window.location.href);
+            id = url.pathname.split("/").pop();
+        }
         const response = await fetch("/api/workouts/" + id + "/json");
         const responseJson = await response.clone().json();
         if (responseJson.error != null) {

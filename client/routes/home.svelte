@@ -2,7 +2,7 @@
     import { get_current_user, json_data } from "$lib/json_store.js";
     import { onMount } from "svelte";
     import Time from "svelte-time";
-    import Exercise from "$lib/WorkoutView.svelte";
+    import Exercise from "$lib/WorkoutRawView.svelte";
     import { get } from "svelte/store";
     let login_status = false;
     let workouts = [];

@@ -1,6 +1,6 @@
 <script>
 	import SveltyPicker from 'svelty-picker';
-	import Exercise from '$lib/WorkoutView.svelte';
+	import Exercise from '$lib/WorkoutRawView.svelte';
 	import { addexercise } from '$lib/Exercise.svelte';
 	import { json_data } from '$lib/json_store.js';
 	import SetEntryForm from '$lib/SetEntryForm.svelte';
@@ -174,7 +174,7 @@
 <div class="separator" id="create">
 	<h1>Add Exercise</h1>
 	<hr />
-	<p class="mt-5">
+	<p class="mt-3">
 		Exercise: <input
 			type="text"
 			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
@@ -184,7 +184,7 @@
 			required
 		/><span class="validity inline" />
 	</p>
-	<p class="mt-5">
+	<p class="mt-3">
 		Comments: <input
 			type="text"
 			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
@@ -193,7 +193,7 @@
 			maxlength="5000"
 		/><span class="validity inline" />
 	</p>
-	<label class="mt-5">
+	<p class="mt-3">
 		Sets: <input
 			type="number"
 			class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
@@ -204,7 +204,7 @@
 			required
 			bind:value={set_count_bind}
 		/><span class="validity inline" />
-	</label>
+	</p>
 	<div id="setsdiv">
 		{#if set_count_bind > 0 && set_count_bind <= 25}
 			{#each { length: set_count_bind } as _}
@@ -239,20 +239,3 @@
                         {JSON.stringify($json_data, null, 2)}
                     </pre>
 </code>
-
-<style>
-	.separator {
-		background: #2b2b2b;
-		border-radius: 33px;
-		padding: 15px;
-		margin: 10px;
-	}
-
-	:global(.numberform) {
-		max-width: 150px;
-	}
-
-    code {
-        color: white;
-    }
-</style>
