@@ -159,7 +159,7 @@
 	<p>
 		Duration: <input
 			type="number"
-			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+			class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			id="duration"
 			placeholder="Duration in minutes"
 			min="0"
@@ -196,7 +196,7 @@
 	<label class="mt-5">
 		Sets: <input
 			type="number"
-			class="form-control inline max-w-3 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+			class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
 			id="sets"
 			placeholder="Sets"
 			min="0"

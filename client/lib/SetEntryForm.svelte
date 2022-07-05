@@ -13,7 +13,7 @@
             <label
                 >Reps:<input
                     type="number"
-                    class="reps numberform inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+                    class="reps numberform inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
                     placeholder="Reps"
                     min="0"
                     max="100"
@@ -25,7 +25,7 @@
             <label
                 >Weight:<input
                     type="number"
-                    class="weight numberform inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+                    class="weight numberform inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
                     placeholder="Weight"
                     min="0"
                     max="5000"
