@@ -39,7 +39,7 @@ use rocket_db_pools::Database;
 use sqlx::{Pool, Sqlite, SqlitePool};
 
 // Move to enviroment variable/config file once release-ready
-//const PROD: bool = true;
+const PROD: bool = true;
 
 #[rocket::main]
 async fn main() {

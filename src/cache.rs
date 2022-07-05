@@ -40,6 +40,18 @@ impl<'r, 'o: 'r> Responder<'r, 'o> for CachedFile {
     }
 }
 
+impl CachedFile {
+    pub async fn new(data: NamedFile, mut cache_time: u32) -> CachedFile {
+        if !crate::PROD {
+            cache_time = 0;
+        }
+        CachedFile {
+            data,
+            cache_time,
+        }
+    }
+}
+
 /// Caching for `WorkoutEntry`
 pub struct WorkoutEntryCache {
     pub data: WorkoutEntry,

@@ -1,13 +1,14 @@
 use std::path::PathBuf;
 use std::path::Path;
 
+use crate::cache::CachedFile;
 #[allow(unused_imports)]
 use crate::database::Db;
 use rocket::{fs::NamedFile, response::Redirect};
 use rocket_auth::Auth;
 
-const INDEX: &str = "build/index.html";
 const WEB_DIR: &str = "build";
+const TEMPLATES_DIR: &str = "templates";
 
 #[get("/_app/<file..>")]
 pub async fn get_app(file: PathBuf) -> Option<NamedFile> {
@@ -70,10 +71,13 @@ pub async fn settings() -> Option<NamedFile> {
 
 #[get("/")]
 pub async fn frontpage() -> Option<NamedFile> {
-    NamedFile::open(INDEX).await.ok()
+   let file: PathBuf = Path::new(WEB_DIR).join("index.html");
+    NamedFile::open(file).await.ok()
 }
 
 #[catch(404)]
-pub async fn general_404() -> Option<NamedFile> {
-    NamedFile::open("templates/404.html").await.ok()
+pub async fn general_404() -> Option<CachedFile> {
+    let file: PathBuf = Path::new(TEMPLATES_DIR).join("404.html");
+    let file = NamedFile::open(file).await.ok().expect("404 Template should exist");
+    Some(CachedFile::new(file, 86400).await)
 }
