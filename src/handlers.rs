@@ -16,8 +16,8 @@ pub async fn get_app(file: PathBuf) -> Option<NamedFile> {
     NamedFile::open(file).await.ok()
 }
 
-#[get("/workouts/<id>")]
-pub async fn workout_view(id: String) -> Option<NamedFile> {
+#[get("/workouts/<_>")]
+pub async fn workout_view() -> Option<NamedFile> {
     let file: PathBuf = Path::new(WEB_DIR).join("workoutview.html");
     NamedFile::open(file).await.ok()
 }
@@ -41,7 +41,8 @@ pub async fn register() -> Option<NamedFile> {
 }
 
 #[get("/signup")]
-pub async fn signup_redirect() -> Redirect {
+#[must_use]
+pub fn signup_redirect() -> Redirect {
     Redirect::to("/register")
 }
 

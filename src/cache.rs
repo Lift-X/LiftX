@@ -6,7 +6,7 @@ use rocket::{fs::NamedFile, response, response::Responder, response::Response};
 use crate::exercises::WorkoutEntry;
 
 /// Caching for static files
-/// https://github.com/SergioBenitez/Rocket/issues/95
+/// <https://github.com/SergioBenitez/Rocket/issues/95>
 pub struct CachedFile {
     pub data: NamedFile,
     // Time, in seconds, to cache the file
