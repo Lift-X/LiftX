@@ -118,7 +118,7 @@ pub async fn post_register(
     auth: Auth<'_>,
 ) -> Result<Redirect, serde_json::Value> {
     let form_proc = &form.into_inner();
-    let result = auth.signup(&form_proc).await;
+    let result = auth.signup(form_proc).await;
     match result {
         Ok(_) => {
             auth.login(&form_proc.into()).await.unwrap();
@@ -198,7 +198,7 @@ pub async fn get_user_workouts_dynamic(
     match user {
         Some(user) => {
             let workouts =
-                get_workouts(conn, user.name().to_string(), Some(limit as i16), None).await;
+                get_workouts(conn, user.name().to_string(), Some(limit.try_into().unwrap_or(1)), None).await;
             match workouts {
                 Ok(workouts) => Ok(JsonCache {
                     data: serde_json::json!({ "workouts": workouts }),
