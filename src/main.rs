@@ -133,12 +133,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
         .manage(users);
     let rocket = rocket.launch().await;
 
-    match rocket {
-        Ok(_) => {
-            log::info!("Rocket web server started");
-        }
-        Err(e) => {
-            log::error!("Rocket server failed to start: {}", e);
-        }
+    if let Err(rocket) = rocket {
+        log::error!("Rocket failed to launch: {}", rocket);
     }
 }
