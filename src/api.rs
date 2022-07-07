@@ -4,17 +4,17 @@ use rocket::post;
 use rocket::{response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
+use rocket_governor::RocketGovernor;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
-use rocket_governor::RocketGovernor;
 
-use crate::RateLimitGuard;
 use crate::cache::{JsonCache, WorkoutEntryCache};
 use crate::database::{get_exercises, get_settings, get_workouts};
 use crate::equipment::Weight;
 use crate::error::WlrsError;
+use crate::RateLimitGuard;
 use crate::{database::Db, exercises::WorkoutEntry};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -41,7 +41,7 @@ pub async fn workout_json(
     id: String,
     mut db: Connection<Db>,
     user: Option<User>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<WorkoutEntryCache, serde_json::Value> {
     match user {
         Some(user) => {
@@ -77,7 +77,7 @@ pub async fn workout_delete(
     id: String,
     mut db: Connection<Db>,
     user: Option<User>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
@@ -103,7 +103,7 @@ pub async fn workout_delete(
 pub async fn post_workout_json(
     data: rocket::serde::json::Json<WorkoutEntry>,
     conn: &State<SqlitePool>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> rocket::response::Redirect {
     // "Unwrap" Json<WorkoutEntry> to WorkoutEntry
     let val: WorkoutEntry = data.into_inner();
@@ -121,7 +121,7 @@ pub async fn post_workout_json(
 pub async fn post_register(
     form: rocket::form::Form<Signup>,
     auth: Auth<'_>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<Redirect, serde_json::Value> {
     let form_proc = &form.into_inner();
     let result = auth.signup(form_proc).await;
@@ -135,10 +135,11 @@ pub async fn post_register(
             /*if e == rocket_auth::Error::NameAlreadyExists {
                 Err("Username already exists".into())
             }*/
-            if e.to_string() == "SqlxError: error returned from database: UNIQUE constraint failed: users.name".to_string() {
-                Err(json!({
-                    "error": WlrsError::WLRS_ERROR_USERNAME_EXISTS
-                }))
+            if e.to_string()
+                == "SqlxError: error returned from database: UNIQUE constraint failed: users.name"
+                    .to_string()
+            {
+                Err(json!({ "error": WlrsError::WLRS_ERROR_USERNAME_EXISTS }))
             } else {
                 Err(json!({
                     "error": WlrsError::Custom { message: e.to_string() }
@@ -152,7 +153,7 @@ pub async fn post_register(
 pub async fn post_login(
     form: rocket::form::Form<Signup>,
     auth: Auth<'_>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<Redirect, Error> {
     let result = auth.login(&form.into_inner().into()).await;
     match result {
@@ -162,7 +163,10 @@ pub async fn post_login(
 }
 
 #[get("/user/current")]
-pub fn get_current_user(user: Option<User>, _limitguard: RocketGovernor<'_, RateLimitGuard>) -> Result<JsonCache, serde_json::Value> {
+pub fn get_current_user(
+    user: Option<User>,
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
+) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => Ok(JsonCache {
             data: serde_json::json!({ "name": user.name() }),
@@ -178,7 +182,7 @@ pub fn get_current_user(user: Option<User>, _limitguard: RocketGovernor<'_, Rate
 pub async fn get_user_workouts(
     user: Option<User>,
     conn: &State<SqlitePool>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
@@ -202,12 +206,17 @@ pub async fn get_user_workouts_dynamic(
     user: Option<User>,
     conn: &State<SqlitePool>,
     limit: usize,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
-            let workouts =
-                get_workouts(conn, user.name().to_string(), Some(limit.try_into().unwrap_or(1)), None).await;
+            let workouts = get_workouts(
+                conn,
+                user.name().to_string(),
+                Some(limit.try_into().unwrap_or(1)),
+                None,
+            )
+            .await;
             match workouts {
                 Ok(workouts) => Ok(JsonCache {
                     data: serde_json::json!({ "workouts": workouts }),
@@ -227,7 +236,7 @@ pub async fn get_user_workouts_recent(
     user: Option<User>,
     conn: &State<SqlitePool>,
     days: usize,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
@@ -251,7 +260,7 @@ pub async fn get_user_workouts_recent(
 pub async fn get_exercises_list(
     user: Option<User>,
     conn: &State<SqlitePool>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
@@ -275,7 +284,7 @@ pub async fn get_graph_volume(
     user: Option<User>,
     conn: &State<SqlitePool>,
     days: usize,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<JsonCache, serde_json::Value> {
     match user {
         Some(user) => {
@@ -312,7 +321,7 @@ pub async fn get_graph_frequent(
     user: Option<User>,
     conn: &State<SqlitePool>,
     limit: usize,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {
@@ -368,7 +377,7 @@ pub async fn get_graph_frequent(
 pub async fn get_user_settings(
     user: Option<User>,
     conn: &State<SqlitePool>,
-    _limitguard: RocketGovernor<'_, RateLimitGuard>
+    _limitguard: RocketGovernor<'_, RateLimitGuard>,
 ) -> Result<serde_json::Value, serde_json::Value> {
     match user {
         Some(user) => {

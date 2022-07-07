@@ -35,8 +35,8 @@ pub mod util;
 use crate::{database::create_connection, equipment::Weight};
 use rocket::{Build, Rocket};
 use rocket_db_pools::Database;
+use rocket_governor::{rocket_governor_catcher, Method, Quota, RocketGovernable};
 use sqlx::{Pool, Sqlite, SqlitePool};
-use rocket_governor::{Method, Quota, RocketGovernable, rocket_governor_catcher};
 
 // Rate Limiting
 /// Usage:
@@ -51,7 +51,7 @@ impl<'r> RocketGovernable<'r> for RateLimitGuard {
             "post_register" => Quota::per_hour(Self::nonzero(10)),
             "post_login" => Quota::per_hour(Self::nonzero(10)),
             "post_workout_json" => Quota::per_hour(Self::nonzero(5)),
-            _ => Quota::per_second(Self::nonzero(10u32))
+            _ => Quota::per_second(Self::nonzero(10u32)),
         }
     }
 }
