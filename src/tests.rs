@@ -3,7 +3,7 @@ use ordered_float::OrderedFloat;
 use crate::{
     equipment::{self, Weight, WeightType, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
-    muscles, util::{string_capital_case, timestamp_to_iso8601},
+    util::{string_capital_case, timestamp_to_iso8601},
 };
 
 #[test]
@@ -166,13 +166,6 @@ fn test_workout() {
         WeightType::from_string(&bench_workout.volume.weight_unit).unwrap(),
         equipment::POUNDS
     );
-}
-
-#[test]
-fn test_muscles() {
-    for muscle in muscles::MUSCLE_SUB_GROUPS.iter() {
-        assert!(muscle.name.is_ascii());
-    }
 }
 
 #[test]

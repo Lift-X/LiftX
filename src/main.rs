@@ -27,7 +27,6 @@ pub mod equipment;
 pub mod error;
 mod exercises;
 pub mod handlers;
-pub mod muscles;
 #[cfg(test)]
 mod tests;
 pub mod util;
