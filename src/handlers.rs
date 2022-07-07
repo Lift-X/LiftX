@@ -41,7 +41,6 @@ pub async fn register() -> Option<NamedFile> {
 }
 
 #[get("/signup")]
-#[must_use]
 pub fn signup_redirect() -> Redirect {
     Redirect::to("/register")
 }
