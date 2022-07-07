@@ -15,6 +15,7 @@ ordered-float = { version = "3.0", default-features = false, features = ["serde"
 regex-syntax = { version = "0.6.25" }
 # Web
 rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
+rocket-governor = "0.1.0-rc.4"
 # Auth
 rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
 rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }

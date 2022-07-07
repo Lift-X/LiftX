@@ -37,6 +37,25 @@ use crate::{database::create_connection, equipment::Weight};
 use rocket::{Build, Rocket};
 use rocket_db_pools::Database;
 use sqlx::{Pool, Sqlite, SqlitePool};
+use rocket_governor::{Method, Quota, RocketGovernable, rocket_governor_catcher};
+
+// Rate Limiting
+/// Usage:
+/// ```rust
+/// fn route(_limitguard: RocketGovernor<'_, RateLimitGuard>)...
+/// ```
+/// This might cause issues if the server is, for example routed through cloudflare. Suggest users look into: https://support.cloudflare.com/hc/en-us/articles/200170786-Restoring-original-visitor-IPs
+pub struct RateLimitGuard;
+impl<'r> RocketGovernable<'r> for RateLimitGuard {
+    fn quota(_method: Method, _route_name: &str) -> Quota {
+        match _route_name {
+            "post_register" => Quota::per_hour(Self::nonzero(10)),
+            "post_login" => Quota::per_hour(Self::nonzero(10)),
+            "post_workout_json" => Quota::per_hour(Self::nonzero(5)),
+            _ => Quota::per_second(Self::nonzero(10u32))
+        }
+    }
+}
 
 // Move to enviroment variable/config file once release-ready
 const PROD: bool = true;
@@ -110,6 +129,7 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
             ],
         )
         .register("/", catchers![crate::handlers::general_404])
+        .register("/", catchers![rocket_governor_catcher])
         .manage(conn)
         .manage(users);
     let rocket = rocket.launch().await;
