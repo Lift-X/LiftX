@@ -1,5 +1,5 @@
-use std::path::PathBuf;
 use std::path::Path;
+use std::path::PathBuf;
 
 use crate::cache::CachedFile;
 #[allow(unused_imports)]
@@ -30,7 +30,7 @@ pub async fn workout_new() -> Option<NamedFile> {
 
 #[get("/<file..>", rank = 2)]
 pub async fn get_asset(file: PathBuf) -> Option<NamedFile> {
-    let file:PathBuf = Path::new(WEB_DIR).join(file);
+    let file: PathBuf = Path::new(WEB_DIR).join(file);
     NamedFile::open(file).await.ok()
 }
 
@@ -41,7 +41,6 @@ pub async fn register() -> Option<NamedFile> {
 }
 
 #[get("/signup")]
-#[must_use]
 pub fn signup_redirect() -> Redirect {
     Redirect::to("/register")
 }
@@ -72,13 +71,15 @@ pub async fn settings() -> Option<NamedFile> {
 
 #[get("/")]
 pub async fn frontpage() -> Option<NamedFile> {
-   let file: PathBuf = Path::new(WEB_DIR).join("index.html");
+    let file: PathBuf = Path::new(WEB_DIR).join("index.html");
     NamedFile::open(file).await.ok()
 }
 
 #[catch(404)]
 pub async fn general_404() -> Option<CachedFile> {
     let file: PathBuf = Path::new(TEMPLATES_DIR).join("404.html");
-    let file = NamedFile::open(file).await.expect("404 Template should exist");
+    let file = NamedFile::open(file)
+        .await
+        .expect("404 Template should exist");
     Some(CachedFile::new(file, 86400).await)
 }

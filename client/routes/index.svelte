@@ -5,7 +5,7 @@
 <div>
   <center>
     <h1 class="title is-primary text-center font-extrabold ">WLRS</h1>
-    <h4 class="subtitle">
+    <h4 class="subtitle mt-8">
       An opinionated, free and open-source Workout Tracker.
     </h4>
     <div class="box">

@@ -45,10 +45,7 @@ impl CachedFile {
         if !crate::PROD {
             cache_time = 0;
         }
-        CachedFile {
-            data,
-            cache_time,
-        }
+        CachedFile { data, cache_time }
     }
 }
 

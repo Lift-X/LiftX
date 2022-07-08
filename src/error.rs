@@ -18,7 +18,7 @@ impl fmt::Display for WlrsError {
             Self::WLRS_ERROR_NOT_LOGGED_IN => f.write_str("Not logged in!"),
             Self::WLRS_ERROR_INVALID_TYPE => f.write_str("Invalid type found!"),
             Self::WLRS_ERROR_USERNAME_EXISTS => f.write_str("Username already exists!"),
-            
+
             Self::Custom { message } => write!(f, "{}", message),
         }
     }
