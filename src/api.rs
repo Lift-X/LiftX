@@ -131,7 +131,7 @@ pub async fn post_register(
             Ok(Redirect::to("/home"))
         }
         Err(e) => {
-            warn!("{}", e);
+            warn!("{e}");
             /*if e == rocket_auth::Error::NameAlreadyExists {
                 Err("Username already exists".into())
             }*/

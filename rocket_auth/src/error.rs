@@ -69,7 +69,7 @@ impl Error {
     fn message(&self) -> String {
         match self {
             InvalidNameAddressError | NameAlreadyExists | UnauthorizedError | UserNotFoundError => {
-                format!("{}", self)
+                format!("{self}")
             }
             FormValidationErrors(source) => {
                 source

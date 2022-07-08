@@ -76,7 +76,7 @@ async fn main() {
             launch_web(conn, users).await;
         }
         Err(e) => {
-            panic!("Database connection failed: {}", e);
+            panic!("Database connection failed: {e}");
         }
     }
 }
@@ -134,6 +134,6 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     let rocket = rocket.launch().await;
 
     if let Err(rocket) = rocket {
-        log::error!("Rocket failed to launch: {}", rocket);
+        log::error!("Rocket failed to launch: {rocket}");
     }
 }
