@@ -68,7 +68,10 @@ pub async fn workout_json(
                 })),
             }
         }
-        None => Err(serde_json::json!({ "error": "You must be logged in to view this workout" })),
+        None => Err(serde_json::json!({
+                "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
+                "message": "You must be logged in to view this workout."
+        })),
     }
 }
 
@@ -89,12 +92,14 @@ pub async fn workout_delete(
             match query.await {
                 Ok(_) => Ok(serde_json::json!({ "success": "Workout deleted" })),
                 Err(_) => Err(serde_json::json!({
-                    "error": WlrsError::WLRS_ERROR_NOT_FOUND
+                    "error": WlrsError::WLRS_ERROR_NOT_FOUND,
+                    "message": "Workout not found!"
                 })),
             }
         }
         None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
+            "message": "You must be logged in to delete a workout!"
         })),
     }
 }
@@ -139,7 +144,10 @@ pub async fn post_register(
                 == "SqlxError: error returned from database: UNIQUE constraint failed: users.name"
                     .to_string()
             {
-                Err(json!({ "error": WlrsError::WLRS_ERROR_USERNAME_EXISTS }))
+                Err(json!({
+                    "error": WlrsError::WLRS_ERROR_USERNAME_EXISTS,
+                    "message": "User already exists!"
+                }))
             } else {
                 Err(json!({
                     "error": WlrsError::Custom { message: e.to_string() }
@@ -162,7 +170,7 @@ pub async fn post_login(
     }
 }
 
-#[get("/user/current")]
+#[get("/user")]
 pub fn get_current_user(
     user: Option<User>,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
@@ -173,7 +181,8 @@ pub fn get_current_user(
             cache_control: "private max-age=10".to_string(),
         }),
         None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
+            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
+            "message": "You are not logged in!"
         })),
     }
 }

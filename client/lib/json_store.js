@@ -40,7 +40,7 @@ export async function get_current_user() {
     previously_logged_in();
   }
 
-  const response = await fetch("/api/user/current");
+  const response = await fetch("/api/user/");
   const data = await response.json();
   if (data.error == null) {
     json_data.update((old) => {

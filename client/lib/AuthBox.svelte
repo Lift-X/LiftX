@@ -1,10 +1,11 @@
 <script>
+    import Error from "$lib/Error.svelte";
     // Login or Register
     export let auth_type = "";
     export let endpoint = "";
     let name = "";
     let password = "";
-    let error = "";
+    let error = null;
 
     function handleSubmit() {
       // Post to {endpoint}
@@ -24,8 +25,8 @@
             response.json().then(data => {
               if (data.status == "error") {
                 error = data.message;
-              } else if (data.error != null) {
-                error = data.error;
+              } else if (data.error !== null) {
+                error = data.message;
               }
             });
           }
@@ -37,6 +38,9 @@
   <div class="card w-96 m-auto mt-5">
     <div class="card-body items-center text-center">
       <h2 class="card-title">{auth_type}</h2>
+      {#if error != null}
+      <Error message="{error}"/>
+      {/if}
       <div class="form-control w-full max-w-xs">
         <label class="label">
           <span class="label-text">Username</span>
