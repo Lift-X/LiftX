@@ -6,10 +6,6 @@ exclude_patterns = [
 ]
 
 [[analyzers]]
-name = "javascript"
-enabled = true
-
-[[analyzers]]
 name = "test-coverage"
 enabled = true
 
