@@ -1,5 +1,4 @@
-import { writable } from "svelte/store";
-import { get } from "svelte/store";
+import { writable, get } from "svelte/store";
 
 export const json_data = writable({
   user: "",
