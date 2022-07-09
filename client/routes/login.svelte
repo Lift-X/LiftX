@@ -10,6 +10,10 @@
     });
 </script>
 
+<svelte:head>
+	<title>WLRS - Login</title>
+</svelte:head>
+
 {#if login_status}
     <AuthBox auth_type="Login" endpoint="/api/login" />
 {:else}

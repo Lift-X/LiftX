@@ -26,6 +26,10 @@
     });
 </script>
 
+<svelte:head>
+	<title>WLRS - Home</title>
+</svelte:head>
+
 {#if login_status}
     <div id="content">
         <div
