@@ -71,6 +71,12 @@ input {
 	margin: 10px;
 }
 
+.toggle {
+	@apply border-primary-500 bg-primary-500;
+	top: 5px;
+	position: relative;
+}
+
 .btn {
 	@apply hover:bg-primary-500 hover:border-primary-500;
 }

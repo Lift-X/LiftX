@@ -19,10 +19,11 @@
 <div class="separator">
 	<h1 class="font-bold">Settings</h1>
 	<hr />
-	<label
-		>Show Exercise Graph: <input
-			type="checkbox"
-			class="toggle border-primary-500 bg-primary-500"
-		/></label
-	>
+	<div id="visual">
+		<label class="block">Dark Mode: <input type="checkbox" class="toggle relative mt-2"/></label>
+		<label class="block">Show Exercise Volume Graph: <input type="checkbox" class="toggle relative mt-2"/></label>
+		<label class="block">Show Exercise PR Graph: <input type="checkbox" class="toggle relative mt-2"/></label>
+		<label class="block">Show Body Weight Graph: <input type="checkbox" class="toggle mt-2"/></label>
+		<label class="block">Show Workout Frequency Graph: <input type="checkbox" class="toggle relative mt-2"/></label>
+	</div>
 </div>
