@@ -41,6 +41,23 @@ input:valid + span:after {
 	padding-left: 5px;
 }
 
+.un {
+	display: inline-block;
+  }
+
+  .un::after {
+	content: '';
+	width: 0px;
+	height: 1px;
+	display: block;
+	background: var(--p);
+	transition: 300ms;
+  }
+
+  .un:hover::after {
+	width: 100%;
+  }
+
 select,
 input {
 	color: white;

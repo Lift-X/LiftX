@@ -38,6 +38,12 @@
   <div class="card w-96 m-auto mt-5">
     <div class="card-body items-center text-center">
       <h2 class="card-title">{auth_type}</h2>
+      {#if auth_type == "Login"}
+      <p class="italic text-sm"><a class="un" href="/register">Register</a> instead?</p>
+      {/if}
+      {#if auth_type == "Register"}
+      <p class="italic text-sm"><a class="un" href="/login">Login</a> instead?</p>
+      {/if}
       {#if error != null}
       <Error message="{error}"/>
       {/if}
