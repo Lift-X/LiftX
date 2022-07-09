@@ -23,7 +23,7 @@
 	<div class="flex-1" />
 	<!--<svg height="20px" width="20px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve"><style type="text/css">.st0 {fill: none;}.st1 {fill: #ffffff;}</style><path class="st0" d="M0,0h24v24H0V0z" /><path class="st1" d="M12,12c3.3,0,6-2.7,6-6s-2.7-6-6-6S6,2.7,6,6S8.7,12,12,12z M12,15c-4,0-12,2-12,6v3h24v-3C24,17,16,15,12,15z"/></svg>-->
 	<div class="dropdown dropdown-end">
-		<label tabindex="0" class="btn btn-ghost btn-circle avatar">
+		<div tabindex="0" class="btn btn-ghost btn-circle avatar">
 			<div>
 				<svg
 					height="20px"
@@ -50,7 +50,7 @@
 					/></svg
 				>
 			</div>
-		</label>
+		</div>
 		<ul
 			tabindex="0"
 			class="mt-3 p-2 shadow menu menu-compact dropdown-content rounded-box w-52 bg-black-500"

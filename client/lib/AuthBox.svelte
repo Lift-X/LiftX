@@ -46,7 +46,7 @@
 			<Error message={error} />
 		{/if}
 		<div class="form-control w-full max-w-xs">
-			<label class="label">
+			<label for="name" class="label">
 				<span class="label-text">Username</span>
 			</label>
 			<input
@@ -56,7 +56,7 @@
 				placeholder="Enter your username"
 				class="input input-bordered border-primary w-full max-w-xs bg-black-400 text-white"
 			/>
-			<label class="label">
+			<label for="password" class="label">
 				<span class="label-text">Password</span>
 			</label>
 			<input
