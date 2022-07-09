@@ -1,5 +1,16 @@
 <script>
 	import Error from '$lib/Error.svelte';
+	import { get_current_user, json_data } from '$lib/json_store.js';
+	import { onMount } from 'svelte';
+	let login_status = true; // render the `AuthBox` by defauly to prevent flashes
+	onMount(() => {
+		get_current_user();
+		login_status = json_data != '' ? true : false;
+		if (login_status) {
+			window.location.href = '/home';
+		}
+	});
+
 	// Login or Register
 	export let auth_type = '';
 	export let endpoint = '';
