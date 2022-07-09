@@ -1,14 +1,14 @@
 <script>
 	import { onMount } from 'svelte';
-    import {json_data, get_current_user } from "$lib/json_store.js";
+	import { json_data, get_current_user } from '$lib/json_store.js';
 
 	onMount(() => {
 		get_current_user();
 		let login_status = json_data != '' ? true : false;
-        console.log(login_status);
-        if (!login_status) {
-            window.location.href = "/login"
-        }
+		console.log(login_status);
+		if (!login_status) {
+			window.location.href = '/login';
+		}
 	});
 </script>
 

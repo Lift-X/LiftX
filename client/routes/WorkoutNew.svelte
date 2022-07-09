@@ -6,7 +6,7 @@
 	import SetEntryForm from '$lib/SetEntryForm.svelte';
 	import { get_current_user } from '$lib/json_store.js';
 	import { onMount } from 'svelte';
-	import {get_iso8601 } from '$lib/util.js';
+	import { get_iso8601 } from '$lib/util.js';
 	let login_status = false;
 	onMount(async () => {
 		get_current_user();
@@ -212,25 +212,33 @@
 			{/each}
 		{/if}
 	</div>
-	<button type="submit" class="btn btn-primary hover:bg-primary-500 mt-5" id="add-exercise" on:click={addexercise}
-		>Add</button
+	<button
+		type="submit"
+		class="btn btn-primary hover:bg-primary-500 mt-5"
+		id="add-exercise"
+		on:click={addexercise}>Add</button
 	>
 </div>
 
 {#if $json_data.exercises.length != 0}
-<div class="separator" id="exercises">
-	<h1>Exercises</h1>
-	<hr />
-	{#each $json_data.exercises as exercise}
-		<Exercise {exercise} on:delete={deleteExercise(exercise)} />
-	{/each}
-</div>
+	<div class="separator" id="exercises">
+		<h1>Exercises</h1>
+		<hr />
+		{#each $json_data.exercises as exercise}
+			<Exercise {exercise} on:delete={deleteExercise(exercise)} />
+		{/each}
+	</div>
 {/if}
 
 <div class="separator" id="submit">
 	<h1>Submit</h1>
 	<hr />
-	<button type="submit" class="btn btn-primary hover:bg-primary-500 mt-5" id="submit-workout" on:click={post}>Submit</button>
+	<button
+		type="submit"
+		class="btn btn-primary hover:bg-primary-500 mt-5"
+		id="submit-workout"
+		on:click={post}>Submit</button
+	>
 </div>
 
 <hr />
