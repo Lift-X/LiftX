@@ -88,6 +88,21 @@ pub async fn build_tables(conn: &SqlitePool) {
     users.create_table().await.unwrap();
 }
 
+pub async fn delete_user_data(
+    user: &str,
+    conn: &SqlitePool,
+) -> Result<(), Box<dyn std::error::Error>> {
+    sqlx::query("DELETE FROM workout WHERE user = ?")
+        .bind(user)
+        .execute(conn)
+        .await?;
+    sqlx::query("DELETE FROM settings WHERE user = ?")
+        .bind(user)
+        .execute(conn)
+        .await?;
+    Ok(())
+}
+
 pub async fn insert_workout(
     uuid: uuid::Uuid,
     mut exercise: WorkoutEntry,

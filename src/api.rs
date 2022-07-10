@@ -11,7 +11,7 @@ use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
 use crate::cache::{JsonCache, WorkoutEntryCache};
-use crate::database::{get_exercises, get_settings, get_workouts};
+use crate::database::{self, get_exercises, get_settings, get_workouts};
 use crate::equipment::Weight;
 use crate::error::WlrsError;
 use crate::RateLimitGuard;
@@ -399,5 +399,40 @@ pub async fn get_user_settings(
         None => Err(serde_json::json!({
             "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
         })),
+    }
+}
+
+#[get("/user/delete")]
+pub async fn delete_user(
+    auth: Auth<'_>,
+    conn: &State<SqlitePool>,
+) -> Result<serde_json::Value, serde_json::Value> {
+    let user = auth.get_user();
+    match user.await {
+        Some(user) => {
+            let result = auth.delete().await;
+            if let Err(err) = result {
+                return Err(serde_json::json!({
+                    "error": "Failed to delete user".to_string(),
+                    "message": err.to_string()
+                }));
+            }
+            let result = database::delete_user_data(user.name(), conn).await;
+            if let Err(err) = result {
+                return Err(serde_json::json!({
+                    "error": "Failed to delete user".to_string(),
+                    "message": err.to_string()
+                }));
+            }
+            return Ok(serde_json::json!({
+                "success": "User deleted"
+            }));
+        }
+        None => {
+            return Err(json!({
+                "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
+                "message": "You must be logged in to delete your account. Duh."
+            }));
+        }
     }
 }
