@@ -2,7 +2,7 @@ import { writable, get } from 'svelte/store';
 
 export const json_data = writable({
 	user: '',
-	uuid: '', // Will be generated server side
+	uuid: '', // Will be generated server side, anything added to this field will be overwritten
 	title: '',
 	end_time: 0,
 	start_time: 0,
@@ -23,8 +23,6 @@ export const settings = writable({
 	show_graph_weight: true,
 	show_graph_workout_frequency: true
 });
-
-// TODO: fetch current user api, if it says not logged in run `previously_logged_in()`
 
 export async function get_current_user() {
 	// If logged in, don't make unneeded api calls

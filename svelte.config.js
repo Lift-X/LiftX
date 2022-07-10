@@ -7,7 +7,7 @@ const config = {
 		adapter: adapter(),
 		browser: {
 			hydrate: true,
-			router: true
+			router: false
 		},
 		files: {
 			assets: 'public',
