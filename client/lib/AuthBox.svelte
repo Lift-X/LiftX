@@ -1,12 +1,11 @@
 <script>
 	import Error from '$lib/Error.svelte';
-	import { get_current_user, json_data } from '$lib/json_store.js';
+	import { get_current_user } from '$lib/json_store.js';
 	import { onMount } from 'svelte';
-	let login_status = true; // render the `AuthBox` by defauly to prevent flashes
+	let logged_in = true;
 	onMount(() => {
-		get_current_user();
-		login_status = json_data != '' ? true : false;
-		if (login_status) {
+		logged_in = get_current_user();
+		if (logged_in === true) {
 			window.location.href = '/home';
 		}
 	});
