@@ -57,7 +57,7 @@ impl<'r> RocketGovernable<'r> for RateLimitGuard {
 }
 
 // Move to enviroment variable/config file once release-ready
-const PROD: bool = true;
+//const PROD: bool = true;
 
 #[rocket::main]
 async fn main() {

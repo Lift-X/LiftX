@@ -10,7 +10,7 @@ use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::cache::{JsonCache, WorkoutEntryCache};
+use crate::cache::CacheableResponse;
 use crate::database::{self, get_exercises, get_settings, get_workouts};
 use crate::equipment::Weight;
 use crate::error::WlrsError;
@@ -42,7 +42,7 @@ pub async fn workout_json(
     mut db: Connection<Db>,
     user: Option<User>,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<WorkoutEntryCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             // Query the database via ID, return data column
@@ -60,7 +60,10 @@ pub async fn workout_json(
                         data = WorkoutEntry::from_json(str);
                         json = json!(data);
                     }
-                    let result = WorkoutEntryCache { data, json };
+                    let result = CacheableResponse {
+                        data: json,
+                        cache_control: "max-age=86400".to_string(),
+                    };
                     Ok(result)
                 }
                 Err(_) => Err(serde_json::json!({
@@ -174,9 +177,9 @@ pub async fn post_login(
 pub fn get_current_user(
     user: Option<User>,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<JsonCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
-        Some(user) => Ok(JsonCache {
+        Some(user) => Ok(CacheableResponse {
             data: serde_json::json!({ "name": user.name() }),
             cache_control: "private max-age=10".to_string(),
         }),
@@ -192,12 +195,12 @@ pub async fn get_user_workouts(
     user: Option<User>,
     conn: &State<SqlitePool>,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<JsonCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts = get_workouts(conn, user.name().to_string(), None, None).await;
             match workouts {
-                Ok(workouts) => Ok(JsonCache {
+                Ok(workouts) => Ok(CacheableResponse {
                     data: serde_json::json!({ "workouts": workouts }),
                     cache_control: "private max-age=10".to_string(),
                 }),
@@ -216,7 +219,7 @@ pub async fn get_user_workouts_dynamic(
     conn: &State<SqlitePool>,
     limit: usize,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<JsonCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts = get_workouts(
@@ -227,7 +230,7 @@ pub async fn get_user_workouts_dynamic(
             )
             .await;
             match workouts {
-                Ok(workouts) => Ok(JsonCache {
+                Ok(workouts) => Ok(CacheableResponse {
                     data: serde_json::json!({ "workouts": workouts }),
                     cache_control: "private max-age=10".to_string(),
                 }),
@@ -246,13 +249,13 @@ pub async fn get_user_workouts_recent(
     conn: &State<SqlitePool>,
     days: usize,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<JsonCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts =
                 get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
             match workouts {
-                Ok(workouts) => Ok(JsonCache {
+                Ok(workouts) => Ok(CacheableResponse {
                     data: serde_json::json!({ "workouts": workouts }),
                     cache_control: "private max-age=10".to_string(),
                 }),
@@ -270,12 +273,12 @@ pub async fn get_exercises_list(
     user: Option<User>,
     conn: &State<SqlitePool>,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<JsonCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             let exercises = get_exercises(conn, user.name().to_string()).await;
             match exercises {
-                Ok(exercises) => Ok(JsonCache {
+                Ok(exercises) => Ok(CacheableResponse {
                     data: serde_json::json!({ "exercises": exercises }),
                     cache_control: "private max-age=10".to_string(),
                 }),
@@ -294,7 +297,7 @@ pub async fn get_graph_volume(
     conn: &State<SqlitePool>,
     days: usize,
     _limitguard: RocketGovernor<'_, RateLimitGuard>,
-) -> Result<JsonCache, serde_json::Value> {
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             let volume: Vec<GraphVolumeEntry>;
@@ -311,7 +314,7 @@ pub async fn get_graph_volume(
                             volume: workout.volume.clone(),
                         })
                         .collect();
-                    Ok(JsonCache {
+                    Ok(CacheableResponse {
                         data: serde_json::json!({ "volume": volume }),
                         cache_control: "private max-age=10".to_string(),
                     })

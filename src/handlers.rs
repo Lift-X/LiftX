@@ -1,7 +1,7 @@
 use std::path::Path;
 use std::path::PathBuf;
 
-use crate::cache::CachedFile;
+use crate::cache::CacheableResponse;
 #[allow(unused_imports)]
 use crate::database::Db;
 use rocket::{fs::NamedFile, response::Redirect};
@@ -76,10 +76,13 @@ pub async fn frontpage() -> Option<NamedFile> {
 }
 
 #[catch(404)]
-pub async fn general_404() -> Option<CachedFile> {
+pub async fn general_404() -> Option<CacheableResponse<NamedFile>> {
     let file: PathBuf = Path::new(TEMPLATES_DIR).join("404.html");
     let file = NamedFile::open(file)
         .await
         .expect("404 Template should exist");
-    Some(CachedFile::new(file, 86400).await)
+    Some(CacheableResponse {
+        data: file,
+        cache_control: "max-age=86400".to_string(),
+    })
 }
