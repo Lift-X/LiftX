@@ -1,6 +1,7 @@
-use crate::error::WlrsError;
-use crate::exercises::ExerciseList;
-use crate::exercises::WorkoutEntry;
+use crate::{
+    error::WlrsError,
+    exercises::{ExerciseList, WorkoutEntry},
+};
 use rocket_db_pools::Database;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -71,10 +72,12 @@ pub async fn create_connection() -> Result<SqlitePool, Box<dyn std::error::Error
 
 pub async fn build_tables(conn: &SqlitePool) {
     // Workout Table
-    sqlx::query("CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created int, user TINYTEXT, data MEDIUMTEXT)")
-        .execute(conn)
-        .await
-        .unwrap();
+    sqlx::query(
+        "CREATE TABLE if not exists workout (id TINYTEXT PRIMARY KEY, created int, user TINYTEXT, data MEDIUMTEXT)",
+    )
+    .execute(conn)
+    .await
+    .unwrap();
 
     // User settings table
     // TODO: Integrate into rocket_auth
@@ -88,14 +91,12 @@ pub async fn build_tables(conn: &SqlitePool) {
     users.create_table().await.unwrap();
 }
 
-pub async fn delete_user_data(
-    user: &str,
-    conn: &SqlitePool,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn delete_user_data(user: &str, conn: &SqlitePool) -> Result<(), Box<dyn std::error::Error>> {
     sqlx::query("DELETE FROM workout WHERE user = ?")
         .bind(user)
         .execute(conn)
         .await?;
+
     sqlx::query("DELETE FROM settings WHERE user = ?")
         .bind(user)
         .execute(conn)
@@ -138,31 +139,31 @@ pub async fn get_workouts(
     }
 
     // fyi: Cannot take `recent_days` as a SQL query, as the `created` column is not the start of the workout
-    let wrap_data =
-        sqlx::query("SELECT * FROM workout WHERE user = ? ORDER BY created DESC LIMIT ?")
-            .bind(user)
-            .bind(limit)
-            .fetch_all(conn);
+    let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ? ORDER BY created DESC LIMIT ?")
+        .bind(user)
+        .bind(limit)
+        .fetch_all(conn);
 
     match wrap_data.await {
         Ok(wrap_data) => {
             let mut workouts: Vec<WorkoutEntry> = Vec::new();
+
             for row in wrap_data {
                 let str: &str = row.get("data");
                 let json: serde_json::Value = serde_json::from_str(str).unwrap();
                 let w = WorkoutEntry::from_json(&json.to_string());
+
                 // TODO: Might be expensive if we have a lot of workouts, perhaps move  the match statement up a level.
                 match recent_days {
                     Some(days) => {
-                        if w.start_time
-                            > std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() - (days * 86400)
-                        {
+                        if w.start_time > std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() - (days * 86400) {
                             workouts.push(w);
                         }
                     }
                     None => workouts.push(w),
                 }
             }
+
             // Sort workouts in descending order (latest to oldest workout)
             workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
             Ok(workouts)
@@ -174,10 +175,7 @@ pub async fn get_workouts(
 
 /// Build a list of exercises a user has done.
 /// This returns a hashmap with the key as the exercise name and the value as the number of times the user has done that exercise.
-pub async fn get_exercises(
-    conn: &SqlitePool,
-    user: String,
-) -> Result<Vec<ExerciseList>, serde_json::Value> {
+pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<Vec<ExerciseList>, serde_json::Value> {
     let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ?")
         .bind(user)
         .fetch_all(conn);
@@ -190,10 +188,7 @@ pub async fn get_exercises(
                     let str: &str = row.get("data");
                     let json: serde_json::Value = serde_json::from_str(str).unwrap();
                     let w = WorkoutEntry::from_json(&json.to_string());
-                    /*for exercise in w.exercises {
-                        let count = exercises_list.entry(exercise.exercise).or_insert(0);
-                        *count += 1;
-                    }*/
+
                     for exercise in w.exercises {
                         // convert exercise name to kebab case
                         let exercise_name = crate::util::string_capital_case(&exercise.exercise);
@@ -221,10 +216,7 @@ pub async fn get_exercises(
     }
 }
 
-pub async fn get_settings(
-    conn: &SqlitePool,
-    user: String,
-) -> Result<UserSettings, serde_json::Value> {
+pub async fn get_settings(conn: &SqlitePool, user: String) -> Result<UserSettings, serde_json::Value> {
     let wrap_data = sqlx::query("SELECT * FROM settings WHERE user = ?")
         .bind(&user)
         .fetch_one(conn);
@@ -237,6 +229,7 @@ pub async fn get_settings(
             settings.user = user;
             Ok(settings)
         }
+
         Err(_) => {
             // create new settings
             insert_settings(conn, user).await.unwrap();
@@ -245,19 +238,11 @@ pub async fn get_settings(
     }
 }
 
-pub async fn insert_settings(
-    conn: &SqlitePool,
-    user: String,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub async fn insert_settings(conn: &SqlitePool, user: String) -> Result<(), Box<dyn std::error::Error>> {
     let data: String = json!(UserSettings::default()).to_string();
-    let time: i64 = std::time::UNIX_EPOCH
-        .elapsed()
-        .unwrap()
-        .as_secs()
-        .try_into()
-        .unwrap();
+    let time: i64 = std::time::UNIX_EPOCH.elapsed().unwrap().as_secs().try_into().unwrap();
+
     // compile time checks break everything when a new table is added :eyeroll:
-    //sqlx::query!("INSERT INTO settings (user, updated, data) VALUES (?, ?, ?)", user, time, data).execute(conn).await?;
     sqlx::query("INSERT INTO settings (user, updated, data) VALUES (?, ?, ?)")
         .bind(user)
         .bind(time)

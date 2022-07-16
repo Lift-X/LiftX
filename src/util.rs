@@ -1,7 +1,6 @@
 use chrono::{DateTime, NaiveDateTime, Utc};
 pub fn timestamp_to_iso8601(timestamp: i64) -> String {
-    let datetime: DateTime<Utc> =
-        chrono::DateTime::from_utc(NaiveDateTime::from_timestamp(timestamp, 0), Utc);
+    let datetime: DateTime<Utc> = chrono::DateTime::from_utc(NaiveDateTime::from_timestamp(timestamp, 0), Utc);
     datetime.format("%Y-%m-%d %H:%M").to_string()
 }
 

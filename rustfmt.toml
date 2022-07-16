@@ -1,0 +1,5 @@
+brace_style="PreferSameLine"
+max_width=120
+imports_granularity="Crate"
+overflow_delimited_expr=true
+struct_lit_single_line=false

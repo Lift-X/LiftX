@@ -1,5 +1,4 @@
-use std::path::Path;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use crate::cache::CacheableResponse;
 #[allow(unused_imports)]
@@ -78,9 +77,7 @@ pub async fn frontpage() -> Option<NamedFile> {
 #[catch(404)]
 pub async fn general_404() -> Option<CacheableResponse<NamedFile>> {
     let file: PathBuf = Path::new(TEMPLATES_DIR).join("404.html");
-    let file = NamedFile::open(file)
-        .await
-        .expect("404 Template should exist");
+    let file = NamedFile::open(file).await.expect("404 Template should exist");
     Some(CacheableResponse {
         data: file,
         cache_control: "max-age=86400".to_string(),

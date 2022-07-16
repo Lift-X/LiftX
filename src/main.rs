@@ -93,41 +93,35 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
     let rocket: Rocket<Build> = rocket::build()
         .attach(shield)
         .attach(database::Db::init())
-        .mount(
-            "/",
-            routes![
-                crate::handlers::get_app,
-                crate::handlers::get_asset,
-                crate::handlers::frontpage,
-                crate::handlers::workout_view,
-                crate::handlers::workout_new,
-                crate::handlers::register,
-                crate::handlers::signup_redirect,
-                crate::handlers::login,
-                crate::handlers::logout,
-                crate::handlers::home,
-                crate::handlers::settings
-            ],
-        )
-        .mount(
-            "/api",
-            routes![
-                crate::api::workout_json,
-                crate::api::workout_delete,
-                crate::api::post_workout_json,
-                crate::api::post_register,
-                crate::api::post_login,
-                crate::api::delete_user,
-                crate::api::get_current_user,
-                crate::api::get_user_workouts,
-                crate::api::get_user_workouts_dynamic,
-                crate::api::get_user_workouts_recent,
-                crate::api::get_exercises_list,
-                crate::api::get_graph_volume,
-                crate::api::get_graph_frequent,
-                crate::api::get_user_settings
-            ],
-        )
+        .mount("/", routes![
+            crate::handlers::get_app,
+            crate::handlers::get_asset,
+            crate::handlers::frontpage,
+            crate::handlers::workout_view,
+            crate::handlers::workout_new,
+            crate::handlers::register,
+            crate::handlers::signup_redirect,
+            crate::handlers::login,
+            crate::handlers::logout,
+            crate::handlers::home,
+            crate::handlers::settings
+        ])
+        .mount("/api", routes![
+            crate::api::workout_json,
+            crate::api::workout_delete,
+            crate::api::post_workout_json,
+            crate::api::post_register,
+            crate::api::post_login,
+            crate::api::delete_user,
+            crate::api::get_current_user,
+            crate::api::get_user_workouts,
+            crate::api::get_user_workouts_dynamic,
+            crate::api::get_user_workouts_recent,
+            crate::api::get_exercises_list,
+            crate::api::get_graph_volume,
+            crate::api::get_graph_frequent,
+            crate::api::get_user_settings
+        ])
         .register("/", catchers![crate::handlers::general_404])
         .register("/", catchers![rocket_governor_catcher])
         .manage(conn)

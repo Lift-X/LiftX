@@ -10,20 +10,14 @@ use crate::{
 fn test_weight_from_string_lbs() {
     let weight = Weight::from_string("100lbs").unwrap();
     assert_eq!(weight.weight, 100.0);
-    assert_eq!(
-        WeightType::from_string(&weight.weight_unit).unwrap(),
-        POUNDS
-    );
+    assert_eq!(WeightType::from_string(&weight.weight_unit).unwrap(), POUNDS);
 }
 
 #[test]
 fn test_weight_from_string_kgs() {
     let weight = Weight::from_string("100kgs").unwrap();
     assert_eq!(weight.weight, 100.0);
-    assert_eq!(
-        WeightType::from_string(&weight.weight_unit).unwrap(),
-        KILOGRAMS
-    );
+    assert_eq!(WeightType::from_string(&weight.weight_unit).unwrap(), KILOGRAMS);
 }
 
 #[test]
@@ -38,10 +32,7 @@ fn test_weight_to_kilograms() {
         weight: 45.0,
         weight_unit: "lbs".to_string(),
     };
-    assert_eq!(
-        OrderedFloat(weight.to_kilograms().unwrap()),
-        OrderedFloat(20.411655)
-    );
+    assert_eq!(OrderedFloat(weight.to_kilograms().unwrap()), OrderedFloat(20.411655));
 }
 
 #[test]
@@ -50,10 +41,7 @@ fn test_weight_to_pounds() {
         weight: 25.0,
         weight_unit: "kgs".to_string(),
     };
-    assert_eq!(
-        OrderedFloat(weight.to_pounds().unwrap()),
-        OrderedFloat(55.115574)
-    );
+    assert_eq!(OrderedFloat(weight.to_pounds().unwrap()), OrderedFloat(55.115574));
 }
 
 #[test]

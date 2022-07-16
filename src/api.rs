@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
-use rocket::post;
-use rocket::{response::Redirect, State};
+use rocket::{post, response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
 use rocket_governor::RocketGovernor;
@@ -10,12 +9,14 @@ use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
-use crate::cache::CacheableResponse;
-use crate::database::{self, get_exercises, get_settings, get_workouts};
-use crate::equipment::Weight;
-use crate::error::WlrsError;
-use crate::RateLimitGuard;
-use crate::{database::Db, exercises::WorkoutEntry};
+use crate::{
+    cache::CacheableResponse,
+    database::{self, get_exercises, get_settings, get_workouts, Db},
+    equipment::Weight,
+    error::WlrsError,
+    exercises::WorkoutEntry,
+    RateLimitGuard,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 struct GraphVolumeEntry {
@@ -130,8 +131,7 @@ pub async fn post_register(
         Err(e) => {
             warn!("{e}");
             if e.to_string()
-                == "SqlxError: error returned from database: UNIQUE constraint failed: users.name"
-                    .to_string()
+                == "SqlxError: error returned from database: UNIQUE constraint failed: users.name".to_string()
             {
                 Err(WlrsError::WLRS_ERROR_USERNAME_EXISTS.into())
             } else {
@@ -200,13 +200,7 @@ pub async fn get_user_workouts_dynamic(
 ) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
-            let workouts = get_workouts(
-                conn,
-                user.name().to_string(),
-                Some(limit.try_into().unwrap_or(1)),
-                None,
-            )
-            .await;
+            let workouts = get_workouts(conn, user.name().to_string(), Some(limit.try_into().unwrap_or(1)), None).await;
             match workouts {
                 Ok(workouts) => Ok(CacheableResponse {
                     data: serde_json::json!({ "workouts": workouts }),
@@ -228,8 +222,7 @@ pub async fn get_user_workouts_recent(
 ) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
-            let workouts =
-                get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
+            let workouts = get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
             match workouts {
                 Ok(workouts) => Ok(CacheableResponse {
                     data: serde_json::json!({ "workouts": workouts }),
@@ -273,16 +266,13 @@ pub async fn get_graph_volume(
     match user {
         Some(user) => {
             let volume: Vec<GraphVolumeEntry>;
-            let wrap_data =
-                get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
+            let wrap_data = get_workouts(conn, user.name().to_string(), None, Some(days as u64)).await;
             match wrap_data {
                 Ok(data) => {
                     volume = data
                         .iter()
                         .map(|workout| GraphVolumeEntry {
-                            date: crate::util::timestamp_to_iso8601(
-                                workout.start_time.try_into().unwrap(),
-                            ),
+                            date: crate::util::timestamp_to_iso8601(workout.start_time.try_into().unwrap()),
                             volume: workout.volume.clone(),
                         })
                         .collect();
@@ -313,13 +303,11 @@ pub async fn get_graph_frequent(
                 Ok(data) => {
                     for workout in data {
                         for exercise in workout.exercises {
-                            let mut count =
-                                top.entry(exercise.exercise.clone())
-                                    .or_insert(GraphExerciseTop {
-                                        count: 0,
-                                        entries: Vec::new(),
-                                        name: exercise.exercise,
-                                    });
+                            let mut count = top.entry(exercise.exercise.clone()).or_insert(GraphExerciseTop {
+                                count: 0,
+                                entries: Vec::new(),
+                                name: exercise.exercise,
+                            });
                             count.count += 1;
                             // parse sets and find the highest weight
                             let mut highest_weight: Weight = Weight {
@@ -332,9 +320,7 @@ pub async fn get_graph_frequent(
                                 }
                             }
                             count.entries.push(GraphExerciseTopEntry {
-                                date: crate::util::timestamp_to_iso8601(
-                                    workout.start_time.try_into().unwrap(),
-                                ),
+                                date: crate::util::timestamp_to_iso8601(workout.start_time.try_into().unwrap()),
                                 weight: highest_weight,
                             });
                         }
@@ -372,26 +358,25 @@ pub async fn get_user_settings(
 }
 
 #[get("/user/delete")]
-pub async fn delete_user(
-    auth: Auth<'_>,
-    conn: &State<SqlitePool>,
-) -> Result<serde_json::Value, serde_json::Value> {
+pub async fn delete_user(auth: Auth<'_>, conn: &State<SqlitePool>) -> Result<serde_json::Value, serde_json::Value> {
     let user = auth.get_user();
     match user.await {
         Some(user) => {
-            let result = auth.delete().await;
-            if let Err(err) = result {
-                return Err(serde_json::json!({
-                    "error": "Failed to delete user".to_string(),
-                    "message": err.to_string()
-                }));
-            }
-            let result = database::delete_user_data(user.name(), conn).await;
-            if let Err(err) = result {
-                return Err(serde_json::json!({
-                    "error": "Failed to delete user".to_string(),
-                    "message": err.to_string()
-                }));
+            {
+                let result = auth.delete().await;
+                if let Err(err) = result {
+                    return Err(serde_json::json!({
+                        "error": "Failed to delete user".to_string(),
+                        "message": err.to_string()
+                    }));
+                }
+                let result = database::delete_user_data(user.name(), conn).await;
+                if let Err(err) = result {
+                    return Err(serde_json::json!({
+                        "error": "Failed to delete user".to_string(),
+                        "message": err.to_string()
+                    }));
+                }
             }
             return Ok(serde_json::json!({
                 "success": "User deleted"
