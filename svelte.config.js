@@ -19,7 +19,6 @@ const config = {
 			template: 'client/app.html'
 		},
 		inlineStyleThreshold: 300,
-		floc: false,
 		csp: {
 			mode: 'auto',
 			directives: {
@@ -50,11 +49,6 @@ const config = {
 			name: Date.now().toString(),
 			pollInterval: 0
 		},
-		vite: () => ({
-			fs: {
-				allow: ["./svlete-kit/**/*"]
-			}
-		})
 	},
 
 	preprocess: [
