@@ -1,4 +1,7 @@
 /node_modules/
 /target/
 data.db*
+/.github/
+/.svelte-kit/
+/build/
 !/target/release/wlrs

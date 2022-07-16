@@ -1,4 +1,5 @@
 use rocket::response;
+
 /// Allows for a `Cache-Control` header to be used on any response that implements `Responder`.
 /// <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control>.
 /// `cache_control` should be **just** the value of the `Cache-Control` header. "Cache-Control:" should not be included.

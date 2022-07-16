@@ -24,7 +24,7 @@ COPY . /wlrs
 RUN cargo build --release --bin wlrs
 
 ####################################################################################################
-## Svelte/frontend
+## SvelteKit/frontend
 ####################################################################################################
 
 FROM node:latest AS node_builder
@@ -64,7 +64,7 @@ WORKDIR /wlrs
 COPY --from=rust_builder /wlrs/target/release/wlrs /wlrs/wlrs
 COPY ./templates /wlrs/templates
 COPY --from=rust_builder /wlrs/Rocket.toml /wlrs/Rocket.toml
-COPY --from=node_builder /wlrs/public /wlrs/public
+COPY --from=node_builder /wlrs/build /wlrs/build
 COPY .env .env
 
 RUN touch /wlrs/data.db \
