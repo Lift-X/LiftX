@@ -168,9 +168,7 @@ pub async fn get_workouts(
             Ok(workouts)
         }
         // If workout doesn't exist, 404.
-        Err(_) => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_FOUND
-        })),
+        Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
     }
 }
 
@@ -219,9 +217,7 @@ pub async fn get_exercises(
             exercises_list.sort_unstable_by(|a, b| b.count.cmp(&a.count));
             Ok(exercises_list)
         }
-        Err(_) => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_FOUND
-        })),
+        Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
     }
 }
 

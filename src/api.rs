@@ -66,15 +66,10 @@ pub async fn workout_json(
                     };
                     Ok(result)
                 }
-                Err(_) => Err(serde_json::json!({
-                    "error": WlrsError::WLRS_ERROR_NOT_FOUND
-                })),
+                Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
             }
         }
-        None => Err(serde_json::json!({
-                "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
-                "message": "You must be logged in to view this workout."
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -94,16 +89,10 @@ pub async fn workout_delete(
                 .fetch_one(&mut *db);
             match query.await {
                 Ok(_) => Ok(serde_json::json!({ "success": "Workout deleted" })),
-                Err(_) => Err(serde_json::json!({
-                    "error": WlrsError::WLRS_ERROR_NOT_FOUND,
-                    "message": "Workout not found!"
-                })),
+                Err(_) => Err(WlrsError::WLRS_ERROR_WORKOUT_NOT_FOUND.into()),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
-            "message": "You must be logged in to delete a workout!"
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -140,17 +129,11 @@ pub async fn post_register(
         }
         Err(e) => {
             warn!("{e}");
-            /*if e == rocket_auth::Error::NameAlreadyExists {
-                Err("Username already exists".into())
-            }*/
             if e.to_string()
                 == "SqlxError: error returned from database: UNIQUE constraint failed: users.name"
                     .to_string()
             {
-                Err(json!({
-                    "error": WlrsError::WLRS_ERROR_USERNAME_EXISTS,
-                    "message": "User already exists!"
-                }))
+                Err(WlrsError::WLRS_ERROR_USERNAME_EXISTS.into())
             } else {
                 Err(json!({
                     "error": WlrsError::Custom { message: e.to_string() }
@@ -183,10 +166,7 @@ pub fn get_current_user(
             data: serde_json::json!({ "name": user.name() }),
             cache_control: "private max-age=10".to_string(),
         }),
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
-            "message": "You are not logged in!"
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -207,9 +187,7 @@ pub async fn get_user_workouts(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -237,9 +215,7 @@ pub async fn get_user_workouts_dynamic(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -262,9 +238,7 @@ pub async fn get_user_workouts_recent(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -285,9 +259,7 @@ pub async fn get_exercises_list(
                 Err(exercises) => Err(exercises),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -322,9 +294,7 @@ pub async fn get_graph_volume(
                 Err(data) => Err(data),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -379,9 +349,7 @@ pub async fn get_graph_frequent(
                 Err(data) => Err(data),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -399,9 +367,7 @@ pub async fn get_user_settings(
                 _ => Err(serde_json::json!({"error": "Invalid settings!"})),
             }
         }
-        None => Err(serde_json::json!({
-            "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN
-        })),
+        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -432,10 +398,7 @@ pub async fn delete_user(
             }));
         }
         None => {
-            return Err(json!({
-                "error": WlrsError::WLRS_ERROR_NOT_LOGGED_IN,
-                "message": "You must be logged in to delete your account. Duh."
-            }));
+            return Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into());
         }
     }
 }
