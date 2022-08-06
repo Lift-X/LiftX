@@ -17,9 +17,12 @@ data.db-*
 *.sass.map
 *.scss.map
 
+# Frontend
 node_modules/
 *.js.map
-/public/build/
 package-lock.json
 .svelte-kit
 /build
+
+# Docker
+recipe.json
