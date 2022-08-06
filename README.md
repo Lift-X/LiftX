@@ -33,12 +33,15 @@ WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout t
     - [ ] View All page
   - [ ] Progression statistics/graphcs
   - [ ] Body weight graph?
-- [ ] Account Page
+- [x] Account Page
   - [ ] Global unit preference
-- [ ] Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL
+  - [x] Delete account
+  - [ ] Themes (light/dark)
+  - [ ] Home page customization
+- [ ] Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL.. 
 - [x] Extend error handling with global error codes and don't handle `Result<>`s with `unwrap()`s
-- [ ] Organize api
-- [ ] [Ratelimiting](https://lib.rs/crates/rocket-governor)
+- [ ] Organize api (/api/v1), follow some sort of standard like OpenAPI or GraphQL
+- [x] [Ratelimiting](https://lib.rs/crates/rocket-governor)
 - [x] Compression
   - [x] Decrease latency/prcoessing times, by pre-compressing assets ( On The Fly compression adds +/-16ms of response time!!!)
 - [x] Docker!
