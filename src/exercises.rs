@@ -35,8 +35,8 @@ pub struct WorkoutEntry {
 /// `ExerciseList` is a list of exercises, used for the frontend
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct ExerciseList {
-    pub name: String,
-    pub count: i32,
+    pub x: String,
+    pub y: i32,
 }
 
 impl ExerciseEntry {

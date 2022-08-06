@@ -10,7 +10,10 @@ const config = {
 		build: {
 			minify: 'esbuild',
 			cssCodeSplit: true
-		}
+		},
+	ssr: {
+	        noExternal: ['chart.js']
+	}
 };
 
 export default config

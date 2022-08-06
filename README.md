@@ -48,9 +48,14 @@ WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout t
 
 ### Ideas for the future
 
+These ideas either take a lot of work to implement or would change the structure of the app majorly.
+
 - [ ] GPX Support
 - [ ] Exercise lists, with muscle group visualization (like wger)
 - [ ] Native mobile applications (Svelte-native?)
+- [ ] Nutrition Tracking
+- [ ] Cardio support, timers, laps
+- [ ] Calorie estimations?
 
 ### Contributing
 

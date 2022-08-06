@@ -4,6 +4,7 @@
 	import Time from 'svelte-time';
 	import Exercise from '$lib/WorkoutRawView.svelte';
 	import { get } from 'svelte/store';
+	import ExerciseGraph from '$lib/ExerciseGraph.svelte';
 	let login_status = false;
 	let workouts = [];
 	onMount(async () => {
@@ -64,6 +65,11 @@
 					</div>
 				{/if}
 			</div>
+		</div>
+		<div id="exercise-graph" class="separator">
+			<h1>Graphs</h1>
+			<hr/>
+			<ExerciseGraph/>
 		</div>
 	</div>
 {/if}

@@ -192,16 +192,15 @@ pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<Vec<Exerci
                     for exercise in w.exercises {
                         // convert exercise name to kebab case
                         let exercise_name = crate::util::string_capital_case(&exercise.exercise);
-                        let count: Option<&mut ExerciseList> =
-                            exercises_list.iter_mut().find(|x| x.name == exercise_name);
+                        let count: Option<&mut ExerciseList> = exercises_list.iter_mut().find(|x| x.x == exercise_name);
                         match count {
                             Some(count) => {
-                                count.count += 1;
+                                count.y += 1;
                             }
                             None => {
                                 let new_exercise = ExerciseList {
-                                    name: exercise_name,
-                                    count: 1,
+                                    x: exercise_name,
+                                    y: 1,
                                 };
                                 exercises_list.push(new_exercise);
                             }
@@ -209,7 +208,7 @@ pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<Vec<Exerci
                     }
                 }
             }
-            exercises_list.sort_unstable_by(|a, b| b.count.cmp(&a.count));
+            exercises_list.sort_unstable_by(|a, b| b.y.cmp(&a.y));
             Ok(exercises_list)
         }
         Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
