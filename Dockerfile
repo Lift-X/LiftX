@@ -8,20 +8,20 @@ RUN cargo install cargo-chef
 
 FROM chef AS planner
 
-WORKDIR /wlrs
-COPY . /wlrs
+WORKDIR /liftx
+COPY . /liftx
 RUN cargo chef prepare --recipe-path recipe.json
 
 FROM chef AS rust_builder
-WORKDIR /wlrs
+WORKDIR /liftx
 
-COPY --from=planner /wlrs/recipe.json recipe.json
+COPY --from=planner /liftx/recipe.json recipe.json
 # Build dependencies - this is the caching Docker layer!
 RUN cargo chef cook --release --recipe-path recipe.json
 
 # Build application
-COPY . /wlrs
-RUN cargo build --release --bin wlrs
+COPY . /liftx
+RUN cargo build --release --bin liftx
 
 ####################################################################################################
 ## SvelteKit/frontend
@@ -29,7 +29,7 @@ RUN cargo build --release --bin wlrs
 
 FROM node:latest AS node_builder
 
-WORKDIR /wlrs
+WORKDIR /liftx
 
 COPY ./ ./
 
@@ -46,7 +46,7 @@ RUN npm run build
 FROM debian:bullseye-slim
 
 # Create appuser
-ENV USER=wlrs
+ENV USER=liftx
 ENV UID=1000
 
 RUN adduser \
@@ -58,23 +58,23 @@ RUN adduser \
     --uid "${UID}" \
     "${USER}"
 
-WORKDIR /wlrs
+WORKDIR /liftx
 
 # Copy our build
-COPY --from=rust_builder /wlrs/target/release/wlrs /wlrs/wlrs
-COPY ./templates /wlrs/templates
-COPY --from=rust_builder /wlrs/Rocket.toml /wlrs/Rocket.toml
-COPY --from=node_builder /wlrs/build /wlrs/build
+COPY --from=rust_builder /liftx/target/release/liftx /liftx/liftx
+COPY ./templates /liftx/templates
+COPY --from=rust_builder /liftx/Rocket.toml /liftx/Rocket.toml
+COPY --from=node_builder /liftx/build /liftx/build
 COPY .env .env
 
-RUN touch /wlrs/data.db \
-    && chown -R "${USER}:${USER}" /wlrs \
-    && chmod 660 /wlrs/data.db
+RUN touch /liftx/data.db \
+    && chown -R "${USER}:${USER}" /liftx \
+    && chmod 660 /liftx/data.db
 
 # Expose port 8000
 EXPOSE 8000
 
 # Use an unprivileged user.
-USER wlrs:wlrs
+USER liftx:liftx
 
-CMD ["/wlrs/wlrs"]
+CMD ["/liftx/liftx"]

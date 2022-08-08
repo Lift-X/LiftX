@@ -1,5 +1,5 @@
 use crate::{
-    error::WlrsError,
+    error::LiftXError,
     exercises::{ExerciseList, WorkoutEntry},
 };
 use rocket_db_pools::Database;
@@ -169,7 +169,7 @@ pub async fn get_workouts(
             Ok(workouts)
         }
         // If workout doesn't exist, 404.
-        Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
+        Err(_) => Err(LiftXError::LIFTX_ERROR_NOT_FOUND.into()),
     }
 }
 
@@ -211,7 +211,7 @@ pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<Vec<Exerci
             exercises_list.sort_unstable_by(|a, b| b.y.cmp(&a.y));
             Ok(exercises_list)
         }
-        Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
+        Err(_) => Err(LiftXError::LIFTX_ERROR_NOT_FOUND.into()),
     }
 }
 

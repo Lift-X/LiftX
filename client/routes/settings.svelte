@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-	<title>WLRS - Settings</title>
+	<title>LiftX - Settings</title>
 </svelte:head>
 
 <div class="separator">

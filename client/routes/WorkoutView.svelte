@@ -52,9 +52,9 @@
 	{#await data}
 		<title>Loading...</title>
 	{:then json}
-		<title>WLRS - Workout: {json.title}</title>
+		<title>LiftX - Workout: {json.title}</title>
 	{:catch error}
-		<title>WLRS - {error}</title>
+		<title>LiftX - {error}</title>
 	{/await}
 </svelte:head>
 

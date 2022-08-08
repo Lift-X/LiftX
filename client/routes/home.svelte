@@ -28,7 +28,7 @@
 </script>
 
 <svelte:head>
-	<title>WLRS - Home</title>
+	<title>LiftX - Home</title>
 </svelte:head>
 
 {#if login_status}

@@ -1,4 +1,4 @@
-use crate::error::WlrsError;
+use crate::error::LiftXError;
 use serde::{Deserialize, Serialize};
 
 /// Either `KILOGRAMS` or `POUNDS`.
@@ -30,7 +30,7 @@ pub struct Weight {
 }
 
 impl Weight {
-    pub fn from_string(string: &str) -> Result<Weight, WlrsError> {
+    pub fn from_string(string: &str) -> Result<Weight, LiftXError> {
         // collect only alphabetical characters
         let split: String = string.matches(char::is_alphabetic).collect::<String>();
         match split.as_ref() {
@@ -46,23 +46,23 @@ impl Weight {
                     .unwrap_or(0.0),
                 weight_unit: "lbs".to_string(),
             }),
-            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE),
+            _ => Err(LiftXError::LIFTX_ERROR_INVALID_TYPE),
         }
     }
 
-    pub fn to_kilograms(&self) -> Result<f32, WlrsError> {
+    pub fn to_kilograms(&self) -> Result<f32, LiftXError> {
         match self.weight_unit.as_str() {
             "kgs" => Ok(self.weight),
             "lbs" => Ok(self.weight * 0.453_592_37),
-            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE),
+            _ => Err(LiftXError::LIFTX_ERROR_INVALID_TYPE),
         }
     }
 
-    pub fn to_pounds(&self) -> Result<f32, WlrsError> {
+    pub fn to_pounds(&self) -> Result<f32, LiftXError> {
         match self.weight_unit.as_str() {
             "kgs" => Ok(self.weight * 2.204_623),
             "lbs" => Ok(self.weight),
-            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE),
+            _ => Err(LiftXError::LIFTX_ERROR_INVALID_TYPE),
         }
     }
 
@@ -75,11 +75,11 @@ impl Weight {
 }
 
 impl WeightType<'_> {
-    pub fn from_string(string: &str) -> Result<WeightType, WlrsError> {
+    pub fn from_string(string: &str) -> Result<WeightType, LiftXError> {
         match string {
             "kgs" => Ok(KILOGRAMS),
             "lbs" => Ok(POUNDS),
-            _ => Err(WlrsError::WLRS_ERROR_INVALID_TYPE),
+            _ => Err(LiftXError::LIFTX_ERROR_INVALID_TYPE),
         }
     }
 }

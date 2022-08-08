@@ -17,7 +17,7 @@
 <div class="navbar bg-primary-500">
 	<div class="flex-none max-w-5">
 		<a id="logo" class="btn btn-ghost normal-case" href="/">
-			<img src="/logo.png" alt="WLRS Logo" />
+			<img src="/logo.png" alt="LiftX Logo" />
 		</a>
 	</div>
 	<div class="flex-1" />

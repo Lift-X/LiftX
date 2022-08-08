@@ -1,16 +1,16 @@
 <svelte:head>
-	<title>WLRS - Workout Tracker</title>
+	<title>LiftX - Workout Tracker</title>
 </svelte:head>
 
 <div>
 	<center>
-		<h1 class="title is-primary text-center font-extrabold ">WLRS</h1>
+		<h1 class="title is-primary text-center font-extrabold ">LiftX</h1>
 		<h4 class="subtitle mt-8">An opinionated, free and open-source Workout Tracker.</h4>
 		<div class="box">
 			<div>
 				<h3 class="font-extrabold">Fast</h3>
 				<p>
-					WLRS is built with a minimalist and fast design in mind. Don't let your workout tracker
+					LiftX is built with a minimalist and fast design in mind. Don't let your workout tracker
 					slow you down!
 				</p>
 			</div>
@@ -23,7 +23,7 @@
 			<div>
 				<h3 class="font-extrabold">Open Source</h3>
 				<p>
-					WLRS is open source and available on <a href="https://github.com/Zusier/wlrs">GitHub</a>.
+					LiftX is open source and available on <a href="https://github.com/lift-x/LiftX">GitHub</a>.
 				</p>
 			</div>
 			<div>

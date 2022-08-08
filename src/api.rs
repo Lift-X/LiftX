@@ -13,7 +13,7 @@ use crate::{
     cache::CacheableResponse,
     database::{self, get_exercises, get_settings, get_workouts, Db},
     equipment::Weight,
-    error::WlrsError,
+    error::LiftXError,
     exercises::WorkoutEntry,
     RateLimitGuard,
 };
@@ -67,10 +67,10 @@ pub async fn workout_json(
                     };
                     Ok(result)
                 }
-                Err(_) => Err(WlrsError::WLRS_ERROR_NOT_FOUND.into()),
+                Err(_) => Err(LiftXError::LIFTX_ERROR_NOT_FOUND.into()),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -90,10 +90,10 @@ pub async fn workout_delete(
                 .fetch_one(&mut *db);
             match query.await {
                 Ok(_) => Ok(serde_json::json!({ "success": "Workout deleted" })),
-                Err(_) => Err(WlrsError::WLRS_ERROR_WORKOUT_NOT_FOUND.into()),
+                Err(_) => Err(LiftXError::LIFTX_ERROR_WORKOUT_NOT_FOUND.into()),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -133,10 +133,10 @@ pub async fn post_register(
             if e.to_string()
                 == "SqlxError: error returned from database: UNIQUE constraint failed: users.name".to_string()
             {
-                Err(WlrsError::WLRS_ERROR_USERNAME_EXISTS.into())
+                Err(LiftXError::LIFTX_ERROR_USERNAME_EXISTS.into())
             } else {
                 Err(json!({
-                    "error": WlrsError::Custom { message: e.to_string() }
+                    "error": LiftXError::Custom { message: e.to_string() }
                 }))
             }
         }
@@ -166,7 +166,7 @@ pub fn get_current_user(
             data: serde_json::json!({ "name": user.name() }),
             cache_control: "private max-age=10".to_string(),
         }),
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -187,7 +187,7 @@ pub async fn get_user_workouts(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -209,7 +209,7 @@ pub async fn get_user_workouts_dynamic(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -231,7 +231,7 @@ pub async fn get_user_workouts_recent(
                 Err(workouts) => Err(workouts),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -252,7 +252,7 @@ pub async fn get_exercises_list(
                 Err(exercises) => Err(exercises),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -284,7 +284,7 @@ pub async fn get_graph_volume(
                 Err(data) => Err(data),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -335,7 +335,7 @@ pub async fn get_graph_frequent(
                 Err(data) => Err(data),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -353,7 +353,7 @@ pub async fn get_user_settings(
                 _ => Err(serde_json::json!({"error": "Invalid settings!"})),
             }
         }
-        None => Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into()),
+        None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
@@ -383,7 +383,7 @@ pub async fn delete_user(auth: Auth<'_>, conn: &State<SqlitePool>) -> Result<ser
             }));
         }
         None => {
-            return Err(WlrsError::WLRS_ERROR_NOT_LOGGED_IN.into());
+            return Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into());
         }
     }
 }

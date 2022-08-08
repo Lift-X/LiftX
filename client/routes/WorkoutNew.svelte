@@ -132,7 +132,7 @@
 </script>
 
 <svelte:head>
-	<title>WLRS - New Workout</title>
+	<title>LiftX - New Workout</title>
 </svelte:head>
 
 <div class="separator" id="metadata">

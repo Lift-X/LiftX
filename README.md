@@ -2,13 +2,13 @@
 
 # WLRS
 
-WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout tracker.
+LiftX is a WIP workout tracker.
 
-# Installation
+## Installation
 
-## Docker
+### Docker
 
-1. Clone the repository: `git clone https://github.com/zusier/wlrs.git`
+1. Clone the repository: `git clone https://github.com/lift-x/liftx.git`
 2. Configure the `docker-compose.yml`
 3. Build and launch!: `docker compose up --build -d`
 
@@ -42,8 +42,7 @@ WLRS (_[/julərs/](http://ipa-reader.xyz/?text=jul%C9%99rs)_) is a WIP workout t
 - [x] Extend error handling with global error codes and don't handle `Result<>`s with `unwrap()`s
 - [ ] Organize api (/api/v1), follow some sort of standard like OpenAPI or GraphQL
 - [x] [Ratelimiting](https://lib.rs/crates/rocket-governor)
-- [x] Compression
-  - [x] Decrease latency/prcoessing times, by pre-compressing assets ( On The Fly compression adds +/-16ms of response time!!!)
+- [ ] Gzip assets
 - [x] Docker!
 
 ### Ideas for the future

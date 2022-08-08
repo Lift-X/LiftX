@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>WLRS - Login</title>
+	<title>LiftX - Login</title>
 </svelte:head>
 
 <AuthBox auth_type="Login" endpoint="/api/login" />
