@@ -204,7 +204,6 @@ pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<GraphExerc
                 exercises_list.data.push(v);
                 exercises_list.labels.push(k);
             }
-
             Ok(exercises_list)
         }
         Err(_) => Err(LiftXError::LIFTX_ERROR_NOT_FOUND.into()),

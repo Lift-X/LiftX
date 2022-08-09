@@ -261,7 +261,7 @@ pub async fn get_exercises_list(
             let exercises = get_exercises(conn, user.name().to_string()).await;
             match exercises {
                 Ok(exercises) => Ok(CacheableResponse {
-                    data: serde_json::json!({ "datasets": [{ "data": exercises, "backgroundColor": "rgba(165,11,0,0.9)", "borderColor": "rgba(247,18,2)","label": "Most Frequented Exercises" }]}),
+                    data: serde_json::json!({ "labels": exercises.labels, "datasets": [{ "data": exercises.data, "backgroundColor": "rgba(165,11,0,0.9)", "borderColor": "rgba(247,18,2)","label": "Most Frequented Exercises" }]}),
                     cache_control: "private max-age=10".to_string(),
                 }),
                 Err(exercises) => Err(exercises),
