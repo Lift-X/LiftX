@@ -1,27 +1,20 @@
 <script>
-  import { Bar } from "svelte-chartjs";
+  import { Doughnut } from "svelte-chartjs";
   import { onMount } from "svelte";
 
   let data = {};
   let fetched = false;
 
   import {
-    Chart,
+    Chart as ChartJS,
     Title,
     Tooltip,
     Legend,
-    BarElement, 
+    ArcElement,
     CategoryScale,
-    LinearScale
   } from 'chart.js';
-  Chart.register(
-    Title,
-    Tooltip,
-    Legend,
-    BarElement,
-    CategoryScale,
-    LinearScale
-  );
+  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
+  
   onMount(async () => {
     const res = await fetch("/api/user/exercises/list");
     data = await res.json();
@@ -31,5 +24,5 @@
 </script>
 
 {#if fetched}
-<Bar type='bar' data={data} />
+<Doughnut type='bar' data={data} />
 {/if}

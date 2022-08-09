@@ -32,13 +32,6 @@ pub struct WorkoutEntry {
     pub volume: Weight,
 }
 
-/// `ExerciseList` is a list of exercises, used for the frontend
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
-pub struct ExerciseList {
-    pub x: String,
-    pub y: i32,
-}
-
 impl ExerciseEntry {
     // Absolutely scuffed, feel free to PR :D
     pub fn from_string(string: &str) -> ExerciseEntry {

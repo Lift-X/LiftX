@@ -1,11 +1,9 @@
-use crate::{
-    error::LiftXError,
-    exercises::{ExerciseList, WorkoutEntry},
-};
+use crate::{api::GraphExerciseList, error::LiftXError, exercises::WorkoutEntry};
 use rocket_db_pools::Database;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::{Pool, Row, Sqlite, SqlitePool};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum ThemeOptions {
@@ -175,14 +173,17 @@ pub async fn get_workouts(
 
 /// Build a list of exercises a user has done.
 /// This returns a hashmap with the key as the exercise name and the value as the number of times the user has done that exercise.
-pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<Vec<ExerciseList>, serde_json::Value> {
+pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<GraphExerciseList, serde_json::Value> {
     let wrap_data = sqlx::query("SELECT * FROM workout WHERE user = ?")
         .bind(user)
         .fetch_all(conn);
 
     match wrap_data.await {
         Ok(wrap_data) => {
-            let mut exercises_list: Vec<ExerciseList> = Vec::new();
+            // First we will iterate over raw data, pack into hashmap (to ensure no duplicate entries)
+            // Then we will map the hashmap and destructure the data into two separate vecs.
+            let mut exercises_list = GraphExerciseList::new();
+            let mut exercises_hashmap: HashMap<String, u32> = HashMap::new();
             {
                 for row in wrap_data {
                     let str: &str = row.get("data");
@@ -191,24 +192,19 @@ pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<Vec<Exerci
 
                     for exercise in w.exercises {
                         // convert exercise name to kebab case
-                        let exercise_name = crate::util::string_capital_case(&exercise.exercise);
-                        let count: Option<&mut ExerciseList> = exercises_list.iter_mut().find(|x| x.x == exercise_name);
-                        match count {
-                            Some(count) => {
-                                count.y += 1;
-                            }
-                            None => {
-                                let new_exercise = ExerciseList {
-                                    x: exercise_name,
-                                    y: 1,
-                                };
-                                exercises_list.push(new_exercise);
-                            }
-                        }
+                        let exercise_name = crate::util::string_capital_case(&exercise.exercise); 
+                        // If the key already exists, add 1 to the entry. If not make it 1. (Simplified and likely much faster than an if statement)
+                        *exercises_hashmap.entry(exercise_name).or_insert(0) += 1;
                     }
                 }
             }
-            exercises_list.sort_unstable_by(|a, b| b.y.cmp(&a.y));
+
+            // Now we build the usable data from the hashmap... (fyi, this is all because of a javascript library requiring two separate lists for linked data.. :p)
+            for (k, v) in exercises_hashmap {
+                exercises_list.data.push(v);
+                exercises_list.labels.push(k);
+            }
+
             Ok(exercises_list)
         }
         Err(_) => Err(LiftXError::LIFTX_ERROR_NOT_FOUND.into()),

@@ -37,6 +37,21 @@ struct GraphExerciseTop {
     count: usize,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct GraphExerciseList {
+    pub data: Vec<u32>,
+    pub labels: Vec<String>,
+}
+
+impl GraphExerciseList {
+    pub fn new() -> Self {
+        GraphExerciseList {
+            data: vec![],
+            labels: vec![],
+        }
+    }
+}
+
 #[get("/workouts/<id>/json")]
 pub async fn workout_json(
     id: String,
@@ -235,7 +250,7 @@ pub async fn get_user_workouts_recent(
     }
 }
 
-#[get("/user/exercises/list")]
+#[get("/graphs/exercises")]
 pub async fn get_exercises_list(
     user: Option<User>,
     conn: &State<SqlitePool>,

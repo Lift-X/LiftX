@@ -1,6 +1,6 @@
 ![](public/logo.png)
 
-# WLRS
+# LiftX
 
 LiftX is a WIP workout tracker.
 
