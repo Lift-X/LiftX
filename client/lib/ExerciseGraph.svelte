@@ -9,11 +9,10 @@
     Chart as ChartJS,
     Title,
     Tooltip,
-    Legend,
     ArcElement,
     CategoryScale,
   } from 'chart.js';
-  ChartJS.register(Title, Tooltip, Legend, ArcElement, CategoryScale);
+  ChartJS.register(Title, Tooltip, ArcElement, CategoryScale);
   
   onMount(async () => {
     const res = await fetch("/api/graphs/exercises");

@@ -21,6 +21,7 @@
 #[macro_use]
 extern crate rocket;
 mod api;
+mod graph;
 pub mod cache;
 pub mod database;
 pub mod equipment;
@@ -117,9 +118,9 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
             crate::api::get_user_workouts,
             crate::api::get_user_workouts_dynamic,
             crate::api::get_user_workouts_recent,
-            crate::api::get_exercises_list,
-            crate::api::get_graph_volume,
-            crate::api::get_graph_frequent,
+            crate::graph::get_exercises_list,
+            crate::graph::get_graph_volume,
+            crate::graph::get_graph_frequent,
             crate::api::get_user_settings
         ])
         .register("/", catchers![crate::handlers::general_404])

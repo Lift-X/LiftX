@@ -1,4 +1,4 @@
-use crate::{api::GraphExerciseList, error::LiftXError, exercises::WorkoutEntry};
+use crate::{graph::GraphExerciseList, error::LiftXError, exercises::WorkoutEntry};
 use rocket_db_pools::Database;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
