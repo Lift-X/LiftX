@@ -10,7 +10,6 @@ const config = {
 			router: false
 		},
 		files: {
-			assets: 'public',
 			hooks: 'client/hooks',
 			lib: 'client/lib',
 			params: 'client/params',
@@ -26,11 +25,11 @@ const config = {
 				// ...
 			}
 		},
-		outDir: '.svelte-kit',
 		paths: {
 			assets: '',
-			base: ''
+			base: '',
 		},
+		outDir: '.svelte-kit',
 		prerender: {
 			concurrency: 1,
 			crawl: true,
@@ -50,7 +49,6 @@ const config = {
 			pollInterval: 0
 		},
 	},
-
 	preprocess: [
 		preprocess({
 			postcss: true

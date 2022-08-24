@@ -7,6 +7,7 @@ use rocket::{fs::NamedFile, response::Redirect};
 use rocket_auth::Auth;
 
 const WEB_DIR: &str = "build";
+const ASSETS_DIR: &str = "public";
 const TEMPLATES_DIR: &str = "templates";
 
 #[get("/_app/<file..>")]
@@ -24,6 +25,12 @@ pub async fn workout_view() -> Option<NamedFile> {
 #[get("/workouts/new")]
 pub async fn workout_new() -> Option<NamedFile> {
     let file: PathBuf = Path::new(WEB_DIR).join("workoutnew.html");
+    NamedFile::open(file).await.ok()
+}
+
+#[get("/public/<file..>")]
+pub async fn get_static(file: PathBuf) -> Option<NamedFile> {
+    let file: PathBuf = Path::new(ASSETS_DIR).join(file);
     NamedFile::open(file).await.ok()
 }
 
