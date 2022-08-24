@@ -38,7 +38,6 @@ const config = {
 			entries: ['*'],
 			onError: 'fail'
 		},
-		routes: (filepath) => !/(?:(?:^_|\/_)|(?:^\.|\/\.)(?!well-known))/.test(filepath),
 		serviceWorker: {
 			register: true,
 			files: (filepath) => !/\.DS_Store/.test(filepath)
