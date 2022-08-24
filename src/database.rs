@@ -1,4 +1,5 @@
 use crate::{graph::GraphExerciseList, error::LiftXError, exercises::WorkoutEntry};
+use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use rocket_db_pools::Database;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -146,19 +147,27 @@ pub async fn get_workouts(
         Ok(wrap_data) => {
             let mut workouts: Vec<WorkoutEntry> = Vec::new();
 
-            for row in wrap_data {
-                let str: &str = row.get("data");
-                let json: serde_json::Value = serde_json::from_str(str).unwrap();
-                let w = WorkoutEntry::from_json(&json.to_string());
+            match recent_days {
+                Some(days) => {
+                    let time = std::time::UNIX_EPOCH.elapsed().unwrap().as_secs();
+                    wrap_data.iter().for_each(|row| {
+                        let str: &str = row.get("data");
+                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                        let w = WorkoutEntry::from_json(&json.to_string());
 
-                // TODO: Might be expensive if we have a lot of workouts, perhaps move  the match statement up a level.
-                match recent_days {
-                    Some(days) => {
-                        if w.start_time > std::time::UNIX_EPOCH.elapsed().unwrap().as_secs() - (days * 86400) {
-                            workouts.push(w);
+                        if w.start_time > time - (days * 86400) {
+                            workouts.push(w)
                         }
-                    }
-                    None => workouts.push(w),
+                    });
+                }
+                None => {
+                    wrap_data.iter().for_each(|row| {
+                        let str: &str = row.get("data");
+                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                        let w = WorkoutEntry::from_json(&json.to_string());
+
+                        workouts.push(w)
+                    });
                 }
             }
 
@@ -192,7 +201,7 @@ pub async fn get_exercises(conn: &SqlitePool, user: String) -> Result<GraphExerc
 
                     for exercise in w.exercises {
                         // convert exercise name to kebab case
-                        let exercise_name = crate::util::string_capital_case(&exercise.exercise); 
+                        let exercise_name = crate::util::string_capital_case(&exercise.exercise);
                         // If the key already exists, add 1 to the entry. If not make it 1. (Simplified and likely much faster than an if statement)
                         *exercises_hashmap.entry(exercise_name).or_insert(0) += 1;
                     }
