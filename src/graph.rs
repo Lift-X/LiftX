@@ -1,9 +1,15 @@
+use crate::{
+    cache::CacheableResponse,
+    database::{get_exercises, get_workouts},
+    equipment::Weight,
+    error::LiftXError,
+    RateLimitGuard, SqlitePool,
+};
+use rocket::State;
+use rocket_auth::User;
+use rocket_governor::RocketGovernor;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use crate::{cache::CacheableResponse, equipment::Weight, SqlitePool, RateLimitGuard, error::LiftXError, database::{get_exercises, get_workouts}};
-use rocket_auth::User;
-use rocket::State;
-use rocket_governor::RocketGovernor;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct GraphVolumeEntry {

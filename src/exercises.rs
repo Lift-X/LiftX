@@ -122,4 +122,8 @@ impl WorkoutEntry {
             volume: Weight::default(),
         }
     }
+
+    pub fn is_default(&self) -> bool {
+        self == &WorkoutEntry::default()
+    }
 }

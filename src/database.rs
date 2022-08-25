@@ -1,5 +1,8 @@
-use crate::{graph::GraphExerciseList, error::LiftXError, exercises::WorkoutEntry};
-use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
+use crate::{error::LiftXError, exercises::WorkoutEntry, graph::GraphExerciseList};
+use rayon::{
+    prelude::{IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelIterator},
+    slice::ParallelSliceMut,
+};
 use rocket_db_pools::Database;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -145,32 +148,42 @@ pub async fn get_workouts(
 
     match wrap_data.await {
         Ok(wrap_data) => {
-            let mut workouts: Vec<WorkoutEntry> = Vec::new();
-
-            match recent_days {
+            let mut workouts: Vec<WorkoutEntry> = match recent_days {
                 Some(days) => {
                     let time = std::time::UNIX_EPOCH.elapsed().unwrap().as_secs();
-                    wrap_data.iter().for_each(|row| {
-                        let str: &str = row.get("data");
-                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
-                        let w = WorkoutEntry::from_json(&json.to_string());
+                    let workouts: Vec<WorkoutEntry> = wrap_data
+                        .par_iter()
+                        .map(|row| {
+                            let str: &str = row.get("data");
+                            let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                            let w = WorkoutEntry::from_json(&json.to_string());
 
-                        if w.start_time > time - (days * 86400) {
-                            workouts.push(w)
-                        }
-                    });
+                            if w.start_time > time - (days * 86400) {
+                                return w;
+                            } else {
+                                return WorkoutEntry::default();
+                            }
+                        })
+                        .collect();
+                    // Remove default workouts, which are used to filter out workouts that are too old
+                    let workouts: Vec<WorkoutEntry> = workouts.par_iter().cloned().filter(|w| w.is_default()).collect();
+                    workouts
                 }
                 None => {
-                    wrap_data.iter().for_each(|row| {
-                        let str: &str = row.get("data");
-                        let json: serde_json::Value = serde_json::from_str(str).unwrap();
-                        let w = WorkoutEntry::from_json(&json.to_string());
+                    let mut workouts: Vec<WorkoutEntry> = wrap_data
+                        .par_iter()
+                        .map(|row| {
+                            let str: &str = row.get("data");
+                            let json: serde_json::Value = serde_json::from_str(str).unwrap();
+                            let w = WorkoutEntry::from_json(&json.to_string());
 
-                        workouts.push(w)
-                    });
+                            return w;
+                        })
+                        .collect();
+                    workouts.par_sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
+                    workouts
                 }
-            }
-
+            };
             // Sort workouts in descending order (latest to oldest workout)
             workouts.sort_unstable_by(|a, b| b.start_time.cmp(&a.start_time));
             Ok(workouts)

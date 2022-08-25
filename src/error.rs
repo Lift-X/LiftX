@@ -20,9 +20,7 @@ impl fmt::Display for LiftXError {
             Self::LIFTX_ERROR_NOT_LOGGED_IN => f.write_str("Not logged in!"),
             Self::LIFTX_ERROR_INVALID_TYPE => f.write_str("Invalid type found!"),
             Self::LIFTX_ERROR_USERNAME_EXISTS => f.write_str("Username already exists!"),
-            Self::Custom {
-                message,
-            } => write!(f, "{message}"),
+            Self::Custom { message } => write!(f, "{message}"),
         }
     }
 }
