@@ -45,7 +45,7 @@
 
 	center {
 		background-image: linear-gradient(rgb(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)),
-			url('/static/home_deadlift.webp');
+			url('/home_deadlift.webp');
 		background-size: cover;
 		background-position: center center;
 		background-attachment: scroll;
