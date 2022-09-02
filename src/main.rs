@@ -62,7 +62,7 @@ impl<'r> RocketGovernable<'r> for RateLimitGuard {
 
 #[rocket::main]
 async fn main() {
-    flexi_logger::Logger::try_with_env_or_str("info")
+    flexi_logger::Logger::try_with_env_or_str("debug")
         .unwrap()
         .start()
         .unwrap();
@@ -99,7 +99,6 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
             routes![
                 crate::handlers::get_app,
                 crate::handlers::get_asset,
-                crate::handlers::get_static,
                 crate::handlers::frontpage,
                 crate::handlers::workout_view,
                 crate::handlers::workout_new,
@@ -108,7 +107,8 @@ async fn launch_web(conn: sqlx::SqlitePool, users: rocket_auth::Users) {
                 crate::handlers::login,
                 crate::handlers::logout,
                 crate::handlers::home,
-                crate::handlers::settings
+                crate::handlers::settings,
+                // crate::handlers::fix_sveltekit
             ],
         )
         .mount(

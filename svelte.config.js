@@ -16,6 +16,7 @@ const config = {
 		inlineStyleThreshold: 300,
 		outDir: '.svelte-kit',
 	},
+	trailingSlash: 'never',
 	preprocess: [
 		preprocess({
 			postcss: true
