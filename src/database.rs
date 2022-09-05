@@ -1,6 +1,6 @@
 use crate::{error::LiftXError, exercises::WorkoutEntry, graph::GraphExerciseList};
 use rayon::{
-    prelude::{IntoParallelRefIterator, IntoParallelRefMutIterator, ParallelIterator},
+    prelude::{IntoParallelRefIterator, ParallelIterator},
     slice::ParallelSliceMut,
 };
 use rocket_db_pools::Database;

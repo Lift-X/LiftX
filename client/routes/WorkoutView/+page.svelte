@@ -1,14 +1,10 @@
 <script>
 	import Exercise from '$lib/WorkoutRawView.svelte';
-	const cacheName = 'workouts-cache';
 	export let id;
+	const cacheName = 'workouts-cache';
+	let request = '';
 	export async function load_json() {
-		if (id == null) {
-			// Get current url, and try that as a workout id
-			const url = new URL(window.location.href);
-			id = url.pathname.split('/').pop();
-		}
-		const response = await fetch('/api/workouts/' + id + '/json');
+		const response = await fetch(request);
 		const responseJson = await response.clone().json();
 		if (responseJson.error != null) {
 			// Hide workout section
@@ -16,7 +12,7 @@
 			throw new Error(responseJson.error);
 		} else {
 			const cache = await caches.open(cacheName);
-			cache.put(id, response.clone());
+			cache.put(request, response.clone());
 			return responseJson;
 		}
 	}
@@ -27,8 +23,14 @@
 		return hours + 'h ' + minutes + 'm ' + seconds + 's';
 	}
 	export async function load_cache() {
+		if (id == null) {
+			// Get current url, and try that as a workout id
+			const url = new URL(window.location.href);
+			id = url.pathname.split('/').pop();
+		}
+		request = '/api/workouts/' + id + '/json';
 		const cache = await caches.open(cacheName);
-		const response = await cache.match(id);
+		const response = await cache.match(request);
 		if (response != null) {
 			const responseJson = await response.json();
 			if (responseJson.error != null) {
@@ -58,7 +60,7 @@
 	{/await}
 </svelte:head>
 
-<div id="content">
+<div id="content" class="max-w-xl m-auto">
 	<div class="separator" id="metadata">
 		{#await data}
 			<p>Loading... please wait</p>
