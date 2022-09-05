@@ -134,116 +134,110 @@
 <svelte:head>
 	<title>LiftX - New Workout</title>
 </svelte:head>
-
-<div class="separator" id="metadata">
-	<h1>
-		New Workout: <input
-			type="text"
-			name="title"
-			class="border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
-			placeholder="Push Day"
-			bind:value={$json_data.title}
-		/>
-	</h1>
-	<hr />
-	<p>By: {$json_data.user}</p>
-	<p>
-		Start: <SveltyPicker
-			inputClasses="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
-			format="yyyy-mm-dd hh:ii"
-			style="border:white 1px;"
-			bind:value={start_time_bind}
-			on:change={handle_time(start_time_bind)}
-		/>
-	</p>
-	<p>
-		Duration: <input
-			type="number"
-			class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
-			id="duration"
-			placeholder="Duration in minutes"
-			min="0"
-			max="360"
-			required
-			bind:value={duration_bind}
-			on:change={handle_duration(start_time_bind, duration_bind)}
-		/><span class="validity inline" />
-	</p>
-</div>
-
-<div class="separator" id="create">
-	<h1>Add Exercise</h1>
-	<hr />
-	<p class="mt-3">
-		Exercise: <input
-			type="text"
-			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
-			id="exercisename"
-			placeholder="Bench Press"
-			maxlength="100"
-			required
-		/><span class="validity inline" />
-	</p>
-	<p class="mt-3">
-		Comments: <input
-			type="text"
-			class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
-			id="comments"
-			placeholder="(optional)"
-			maxlength="5000"
-		/><span class="validity inline" />
-	</p>
-	<p class="mt-3">
-		Sets: <input
-			type="number"
-			class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
-			id="sets"
-			placeholder="Sets"
-			min="0"
-			max="25"
-			required
-			bind:value={set_count_bind}
-		/><span class="validity inline" />
-	</p>
-	<div id="setsdiv">
-		{#if set_count_bind > 0 && set_count_bind <= 25}
-			{#each { length: set_count_bind } as _}
-				<SetEntryForm />
-			{/each}
-		{/if}
-	</div>
-	<button
-		type="submit"
-		class="btn btn-primary hover:bg-primary-500 mt-5"
-		id="add-exercise"
-		on:click={addexercise}>Add</button
-	>
-</div>
-
-{#if $json_data.exercises.length != 0}
-	<div class="separator" id="exercises">
-		<h1>Exercises</h1>
+<div class="max-w-xl m-auto">
+	<div class="separator" id="metadata">
+		<h1>
+			New Workout: <input
+				type="text"
+				name="title"
+				class="border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+				placeholder="Push Day"
+				bind:value={$json_data.title}
+			/>
+		</h1>
 		<hr />
-		{#each $json_data.exercises as exercise}
-			<Exercise {exercise} on:delete={deleteExercise(exercise)} />
-		{/each}
+		<p>By: {$json_data.user}</p>
+		<p>
+			Start: <SveltyPicker
+				inputClasses="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+				format="yyyy-mm-dd hh:ii"
+				style="border:white 1px;"
+				bind:value={start_time_bind}
+				on:change={handle_time(start_time_bind)}
+			/>
+		</p>
+		<p>
+			Duration: <input
+				type="number"
+				class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+				id="duration"
+				placeholder="Duration in minutes"
+				min="1"
+				max="360"
+				required
+				bind:value={duration_bind}
+				on:change={handle_duration(start_time_bind, duration_bind)}
+			/><span class="validity inline" />
+		</p>
 	</div>
-{/if}
 
-<div class="separator" id="submit">
-	<h1>Submit</h1>
-	<hr />
-	<button
-		type="submit"
-		class="btn btn-primary hover:bg-primary-500 mt-5"
-		id="submit-workout"
-		on:click={post}>Submit</button
-	>
+	<div class="separator" id="create">
+		<h1>Add Exercise</h1>
+		<hr />
+		<p class="mt-3">
+			Exercise: <input
+				type="text"
+				class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+				id="exercisename"
+				placeholder="Bench Press"
+				maxlength="100"
+				required
+			/><span class="validity inline" />
+		</p>
+		<p class="mt-3">
+			Comments: <input
+				type="text"
+				class="form-control inline border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+				id="comments"
+				placeholder="(optional)"
+				maxlength="5000"
+			/><span class="validity inline" />
+		</p>
+		<p class="mt-3">
+			Sets: <input
+				type="number"
+				class="form-control inline w-12 border-0 border-b-2 mb-1 border-primary-500 hover:border-primary-500 focus:hover:border-primary-500"
+				id="sets"
+				placeholder="Sets"
+				min="1"
+				max="25"
+				required
+				bind:value={set_count_bind}
+			/><span class="validity inline" />
+		</p>
+		<div id="setsdiv">
+			{#if set_count_bind > 0 && set_count_bind <= 25}
+				{#each { length: set_count_bind } as _}
+					<SetEntryForm />
+				{/each}
+			{/if}
+		</div>
+		<button
+			type="submit"
+			class="btn btn-primary hover:bg-primary-500 mt-5"
+			id="add-exercise"
+			on:click={addexercise}>Add</button
+		>
+	</div>
+
+	{#if $json_data.exercises.length != 0}
+		<div class="separator" id="exercises">
+			<h1>Exercises</h1>
+			<hr />
+			{#each $json_data.exercises as exercise}
+				<Exercise {exercise} on:delete={deleteExercise(exercise)} />
+			{/each}
+		</div>
+	{/if}
+
+	<div class="separator" id="submit">
+		<h1>Submit</h1>
+		<hr />
+		<button
+			type="submit"
+			class="btn btn-primary hover:bg-primary-500 mt-5"
+			id="submit-workout"
+			on:click={post}>Submit</button
+		>
+	</div>
 </div>
-
-<hr />
-<code lang="json">
-	<pre>
-                        {JSON.stringify($json_data, null, 2)}
-                    </pre>
-</code>
