@@ -10,28 +10,28 @@
 			<div>
 				<h3 class="font-extrabold">Fast</h3>
 				<p>
-					LiftX is built with a minimalist and fast design in mind. Don't let your workout tracker
+					LiftX is built with minimalism and speed in mind. Don't let your workout tracker
 					slow you down!
 				</p>
 			</div>
 			<div>
 				<h3 class="font-extrabold">Private</h3>
 				<p>
-					We don't keep any data that <span class="italics">isn't</span> your workouts.
+					We don't keep any data that <span class="italic">isn't</span> your workouts.
 				</p>
 			</div>
 			<div>
 				<h3 class="font-extrabold">Open Source</h3>
 				<p>
-					LiftX is open source and available on <a href="https://github.com/lift-x/LiftX">GitHub</a>.
+					LiftX is open source and available on <a class="underline" href="https://github.com/lift-x/LiftX">GitHub</a>!
 				</p>
 			</div>
 			<div>
 				<h3 class="font-extrabold">Self-Hosted</h3>
-				<p>Because we are open source, you can self-host. Your workouts, your control.</p>
+				<p>Because we are open source, you can self-host LiftX! Your workouts, your control.</p>
 			</div>
 		</div>
-		<a class="btn bg-primary-500 hover:bg-primary-700" href="/register">Sign Up</a>
+		<a class="btn bg-primary-500 hover:bg-primary-700" href="/register">Get Started</a>
 	</center>
 </div>
 
