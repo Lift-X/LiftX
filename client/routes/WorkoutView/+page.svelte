@@ -20,7 +20,17 @@
 		let hours = Math.floor(time / 3600);
 		let minutes = Math.floor((time - hours * 3600) / 60);
 		let seconds = time - hours * 3600 - minutes * 60;
-		return hours + 'h ' + minutes + 'm ' + seconds + 's';
+		let total = '';
+		if (hours > 0) {
+			total += hours + 'h ';
+		}
+		if (minutes > 0) {
+			total += minutes + 'm ';
+		}
+		if (seconds > 0) {
+			total += seconds + 's';
+		}
+		return total;
 	}
 	export async function load_cache() {
 		if (id == null) {
