@@ -14,6 +14,17 @@ use crate::{
     RateLimitGuard,
 };
 
+// pub type TableViewData = Vec<TableViewRow>;
+// pub type TableViewRow = Vec<TableViewColumns>;
+// pub struct TableViewColumns {
+//      
+// }
+// pub struct TableViewColumnTemplate<T> {
+//     pub editable: bool,
+//     pub href: Option<&str>,
+//     pub value: T
+// }
+
 #[get("/workouts/<id>/json")]
 pub async fn workout_json(
     id: String,
@@ -227,6 +238,22 @@ pub async fn get_user_settings(
             }
         }
         None => Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
+    }
+}
+
+#[get("/workouts/tableview")]
+pub async fn workouts_tableview(user: Option<User>, conn: &State<SqlitePool>) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
+    match user {
+        Some(user) => {
+            let workouts = database::get_workouts(conn, String::from(user.name()), None, None);
+
+
+            return Ok(CacheableResponse {
+                data: json!("{test}"),
+                cache_control: "private max-age=10".to_string(),
+            });
+        }
+        None => {return Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into())}
     }
 }
 

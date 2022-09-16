@@ -17,6 +17,7 @@ label,
 ul,
 li,
 code,
+a,
 p {
 	color: white;
 }
@@ -31,15 +32,15 @@ h3 {
 	@apply text-lg;
 }
 
-input:invalid + span:after {
-	content: '⛔';
-	padding-left: 5px;
-}
-
-input:valid + span:after {
-	content: '✅';
-	padding-left: 5px;
-}
+/* input:invalid + span:after { */
+/* 	content: '⛔'; */
+/* 	padding-left: 5px; */
+/* } */
+/**/
+/* input:valid + span:after { */
+/* 	content: '✅'; */
+/* 	padding-left: 5px; */
+/* } */
 
 .un {
 	display: inline-block;

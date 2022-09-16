@@ -1,10 +1,10 @@
 <script>
+	import Table from "svelte-tailwind-table-ng";
 	import { get_current_user, json_data } from '$lib/json_store.js';
 	import { onMount } from 'svelte';
 	import Time from 'svelte-time';
 	import Exercise from '$lib/WorkoutRawView.svelte';
 	import { get } from 'svelte/store';
-	import ExerciseGraph from '$lib/ExerciseGraph.svelte';
 	let login_status = false;
 	let workouts = [];
 	onMount(async () => {
@@ -25,6 +25,30 @@
 			}
 		}
 	});
+
+	let row = [
+	[
+		{"value": "Pull Day", "editable": false, "data": {}},
+		{"value": "2022-09-01", "editable": false, "data": {}},
+		{"value": "18000lbs", "editable": false, "data": {}}
+	],
+[
+		{"value": "Pull Day", "editable": false, "data": {}},
+		{"value": "2022-09-01", "editable": false, "data": {}},
+		{"value": "18000lbs", "editable": false, "data": {}}
+	],
+[
+		{"value": "Pull Day", "editable": false, "data": {}},
+		{"value": "2022-09-01", "editable": false, "data": {}},
+		{"value": "18000lbs", "editable": false, "data": {}}
+	],
+]
+
+	let col = [
+   ["string", {heading: "Column 1 heading"}],
+  ["Date", {heading: "Column 2 heading"}],
+   ["String", {heading: "Column 3 heading"}],
+]
 </script>
 
 <svelte:head>
@@ -39,7 +63,7 @@
 			<div id="recents" class="subpanel">
 				{#if workouts.length > 0}
 					{#each workouts as workout}
-						<div class="workout-summary">
+	 					<div class="workout-summary">
 							<h2>
 								<a href="/workouts/{workout.uuid}"
 									>{workout.title} - <Time timestamp={workout.start_time * 1000} /></a
@@ -66,13 +90,13 @@
 				{/if}
 			</div>
 		</div>
-		<div id="exercise-graph" class="separator">
-			<h1>Graphs</h1>
-			<hr/>
-			<ExerciseGraph/>
-		</div>
 	</div>
 {/if}
+
+<!-- <div> -->
+	<!-- <Table rowData={row} colData={col}/> -->
+<!-- </div> -->
+
 
 <style>
 	.workout-summary > h2 > a {
