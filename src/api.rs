@@ -2,7 +2,7 @@ use rocket::{post, response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
 use rocket_governor::RocketGovernor;
-use serde_json::json;
+use serde_json::{json, Deserialize, Serialize};
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
@@ -257,8 +257,13 @@ pub async fn workouts_tableview(user: Option<User>, conn: &State<SqlitePool>) ->
     }
 }
 
-#[get("/user/delete")]
-pub async fn delete_user(auth: Auth<'_>, conn: &State<SqlitePool>) -> Result<serde_json::Value, serde_json::Value> {
+#[derive(Deserialize, Serialize)]
+pub struct Delete {
+    pub confirm: Option<bool>
+}
+
+#[post("/user/delete", data = "<Delete>")]
+pub async fn delete_user(auth: Auth<'_>, conn: &State<SqlitePool>,) -> Result<serde_json::Value, serde_json::Value> {
     let user = auth.get_user();
     match user.await {
         Some(user) => {

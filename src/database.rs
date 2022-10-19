@@ -27,7 +27,7 @@ impl ThemeOptions {
         match s.to_lowercase().as_str() {
             "dark" => ThemeOptions::Dark,
             "light" => ThemeOptions::Light,
-            _ => ThemeOptions::Dark, // default to dark if invalid
+            _ => ThemeOptions::Dark, // POSSIBLE BUG: default to dark if invalid
         }
     }
 }
@@ -38,10 +38,7 @@ pub struct UserSettings {
     pub updated: u64,
     pub language: String,
     pub theme: ThemeOptions,
-    pub show_graph_exercise: bool,
-    pub show_graph_volume: bool,
-    pub show_graph_weight: bool,
-    pub show_graph_workout_frequency: bool,
+    pub show_reps_in_reserve: bool
 }
 
 impl UserSettings {
@@ -51,10 +48,7 @@ impl UserSettings {
             updated: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
             language: "en-US".to_string(),
             theme: ThemeOptions::Dark,
-            show_graph_exercise: true,
-            show_graph_volume: true,
-            show_graph_weight: true,
-            show_graph_workout_frequency: true,
+            show_reps_in_reserve: true
         }
     }
 

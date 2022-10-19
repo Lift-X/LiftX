@@ -1,15 +1,19 @@
 <script>
 	import { onMount } from 'svelte';
-	import { json_data, get_current_user } from '$lib/json_store.js';
+	import { json_data, settings, get_current_settings, get_current_user } from '$lib/json_store.js';
 
 	onMount(() => {
 		get_current_user();
-		let login_status = json_data != '' ? true : false;
-		console.log(login_status);
+		get_current_settings();
+		let login_status = json_data.user != '' ? true : false;
 		if (!login_status) {
 			window.location.href = '/login';
 		}
 	});
+
+	function save_settings() {
+		console.log({$settings});
+	}
 </script>
 
 <svelte:head>
@@ -25,10 +29,8 @@
 	<hr/>
 	<div id="visual">
 		<label class="block">Dark Mode: <input type="checkbox" class="toggle relative mt-2"/></label>
-		<label class="block">Show Exercise Volume Graph: <input type="checkbox" class="toggle relative mt-2"/></label>
-		<label class="block">Show Exercise PR Graph: <input type="checkbox" class="toggle relative mt-2"/></label>
-		<label class="block">Show Body Weight Graph: <input type="checkbox" class="toggle mt-2"/></label>
-		<label class="block">Show Workout Frequency Graph: <input type="checkbox" class="toggle relative mt-2"/></label>
+		<label class="block">Show Reps In Reserve Entry: <input type="checkbox" bind:checked={settings.show_reps_in_reserve} class="toggle relative mt-2"/></label>
+		<button on:click={save_settings} class="btn btn-primary mt-5">Save</button>
 	</div>
 </div>
 

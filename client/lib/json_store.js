@@ -18,10 +18,7 @@ export const settings = writable({
 	updated: 0,
 	language: 'en-US',
 	theme: 'dark',
-	show_graph_exercise: true,
-	show_graph_volume: true,
-	show_graph_weight: true,
-	show_graph_workout_frequency: true
+	show_reps_in_reserve: true,
 });
 
 export async function get_current_user() {
@@ -46,6 +43,21 @@ export async function get_current_user() {
 	} else {
 		previously_logged_in();
 		return false;
+	}
+}
+
+export async function get_current_settings() {
+	let settings_store = get(settings);
+	const response = await fetch('/api/user/settings');
+	const data = await response.json();
+	if (data.error == null) {
+		settings.update((old) => {
+			old = data;
+			console.log(old);
+			return old;
+		});
+	} else {
+		throw new Error('Could not fetch settings: ' + data.error);
 	}
 }
 
