@@ -2,7 +2,8 @@ use rocket::{post, response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
 use rocket_governor::RocketGovernor;
-use serde_json::{json, Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
+use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
 
@@ -17,7 +18,7 @@ use crate::{
 // pub type TableViewData = Vec<TableViewRow>;
 // pub type TableViewRow = Vec<TableViewColumns>;
 // pub struct TableViewColumns {
-//      
+//
 // }
 // pub struct TableViewColumnTemplate<T> {
 //     pub editable: bool,
@@ -242,44 +243,58 @@ pub async fn get_user_settings(
 }
 
 #[get("/workouts/tableview")]
-pub async fn workouts_tableview(user: Option<User>, conn: &State<SqlitePool>) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
+pub async fn workouts_tableview(
+    user: Option<User>,
+    conn: &State<SqlitePool>,
+) -> Result<CacheableResponse<serde_json::Value>, serde_json::Value> {
     match user {
         Some(user) => {
             let workouts = database::get_workouts(conn, String::from(user.name()), None, None);
-
 
             return Ok(CacheableResponse {
                 data: json!("{test}"),
                 cache_control: "private max-age=10".to_string(),
             });
         }
-        None => {return Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into())}
+        None => return Err(LiftXError::LIFTX_ERROR_NOT_LOGGED_IN.into()),
     }
 }
 
-#[derive(Deserialize, Serialize)]
-pub struct Delete {
-    pub confirm: Option<bool>
-}
-
-#[post("/user/delete", data = "<Delete>")]
-pub async fn delete_user(auth: Auth<'_>, conn: &State<SqlitePool>,) -> Result<serde_json::Value, serde_json::Value> {
+#[post("/user/delete", data = "<data>")]
+pub async fn delete_user(
+    auth: Auth<'_>,
+    conn: &State<SqlitePool>,
+    data: rocket::Data<'_>,
+) -> Result<serde_json::Value, serde_json::Value> {
     let user = auth.get_user();
     match user.await {
         Some(user) => {
-            {
-                let result = auth.delete().await;
-                if let Err(err) = result {
-                    return Err(serde_json::json!({
-                        "error": "Failed to delete user".to_string(),
-                        "message": err.to_string()
-                    }));
+            let confirm: String = data
+                .open(8.try_into().unwrap())
+                .into_string()
+                .await
+                .unwrap()
+                .to_string();
+            match &*confirm {
+                "true" => {
+                    let result = auth.delete().await;
+                    if let Err(err) = result {
+                        return Err(serde_json::json!({
+                            "error": "Failed to delete user".to_string(),
+                            "message": err.to_string()
+                        }));
+                    }
+                    let result = database::delete_user_data(user.name(), conn).await;
+                    if let Err(err) = result {
+                        return Err(serde_json::json!({
+                            "error": "Failed to delete user".to_string(),
+                            "message": err.to_string()
+                        }));
+                    }
                 }
-                let result = database::delete_user_data(user.name(), conn).await;
-                if let Err(err) = result {
-                    return Err(serde_json::json!({
-                        "error": "Failed to delete user".to_string(),
-                        "message": err.to_string()
+                _ => {
+                    return Err(serde_json::json!({"error": "Failed to delete user".to_string(),
+                    "message": "Invalid confirmation data".to_string()
                     }));
                 }
             }

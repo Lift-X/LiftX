@@ -38,7 +38,7 @@ pub struct UserSettings {
     pub updated: u64,
     pub language: String,
     pub theme: ThemeOptions,
-    pub show_reps_in_reserve: bool
+    pub show_reps_in_reserve: bool,
 }
 
 impl UserSettings {
@@ -48,7 +48,7 @@ impl UserSettings {
             updated: std::time::UNIX_EPOCH.elapsed().unwrap().as_secs(),
             language: "en-US".to_string(),
             theme: ThemeOptions::Dark,
-            show_reps_in_reserve: true
+            show_reps_in_reserve: true,
         }
     }
 

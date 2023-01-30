@@ -20,8 +20,8 @@ rocket-governor = "0.1.0-rc.4"
 rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
 rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
 # JSON
-serde = { version = "1.0.139", features = ["derive"] }
-serde_json = { version = "1.0.82" }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = { version = "1.0" }
 #DB
 sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
 # Time
