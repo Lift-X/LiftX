@@ -3,7 +3,7 @@ use ordered_float::OrderedFloat;
 use crate::{
     equipment::{self, Weight, WeightType, KILOGRAMS, POUNDS},
     exercises::{self, ExerciseEntry, SetEntry, WorkoutEntry},
-    util::{string_capital_case, timestamp_to_iso8601},
+    util::{string_capital_case, timestamp_to_iso8601, self},
 };
 
 #[test]
@@ -186,4 +186,11 @@ fn test_timestamp_iso8601() {
     let time: i64 = 0;
     let time_str = timestamp_to_iso8601(time);
     assert_eq!(time_str, "1970-01-01 00:00");
+}
+
+#[test]
+fn test_one_rep_max() {
+    let reps: f32 = 4.0;
+    let weight: f32 = 225.0;
+    assert_eq!(util::one_rep_max(weight, reps), 255);
 }
