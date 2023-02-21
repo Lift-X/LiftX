@@ -16,7 +16,7 @@ const config = {
 	},
 	experimental: {
 		useVitePreprocess: true
-	},
+	}
 };
 
 export default config;

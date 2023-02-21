@@ -11,7 +11,7 @@ const config = {
 		autoprefixer,
 
 		cssnano({
-			preset: preset,
+			preset: preset
 		})
 	]
 };

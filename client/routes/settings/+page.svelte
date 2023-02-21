@@ -12,7 +12,7 @@
 	});
 
 	function save_settings() {
-		console.log({$settings});
+		console.log({ $settings });
 	}
 </script>
 
@@ -26,20 +26,30 @@
 	<div id="account">
 		<a href="#delete-modal" class="btn btn-primary mt-5">Delete Account</a>
 	</div>
-	<hr/>
+	<hr />
 	<div id="visual">
-		<label class="block">Dark Mode: <input type="checkbox" class="toggle relative mt-2"/></label>
-		<label class="block">Show Reps In Reserve Entry: <input type="checkbox" bind:checked={settings.show_reps_in_reserve} class="toggle relative mt-2"/></label>
+		<label class="block">Dark Mode: <input type="checkbox" class="toggle relative mt-2" /></label>
+		<label class="block"
+			>Show Reps In Reserve Entry: <input
+				type="checkbox"
+				bind:checked={settings.show_reps_in_reserve}
+				class="toggle relative mt-2"
+			/></label
+		>
 		<button on:click={save_settings} class="btn btn-primary mt-5">Save</button>
 	</div>
 </div>
 
 <div class="modal" id="delete-modal">
 	<div class="modal-box">
-	  <h3 class="font-bold text-lg">Are you sure you want to delete your account?</h3>
-	  <p class="py-4">This action is <span class="font-bold">permanent</span> and not reversible!</p>
-	  <div class="modal-action">
-	   <a href="#" class="btn btn-primary">No, take me back!</a><a href="/api/user/delete" rel="external" class="btn btn-primary">Yes, delete my account.</a>
-	  </div>
+		<h3 class="font-bold text-lg">Are you sure you want to delete your account?</h3>
+		<p class="py-4">This action is <span class="font-bold">permanent</span> and not reversible!</p>
+		<div class="modal-action">
+			<a href="#" class="btn btn-primary">No, take me back!</a><a
+				href="/api/user/delete"
+				rel="external"
+				class="btn btn-primary">Yes, delete my account.</a
+			>
+		</div>
 	</div>
-  </div>
+</div>

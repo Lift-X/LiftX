@@ -10,8 +10,8 @@
 			<div>
 				<h3 class="font-extrabold">Fast</h3>
 				<p>
-					LiftX is built with minimalism and speed in mind. Don't let your workout tracker
-					slow you down!
+					LiftX is built with minimalism and speed in mind. Don't let your workout tracker slow you
+					down!
 				</p>
 			</div>
 			<div>
@@ -23,7 +23,10 @@
 			<div>
 				<h3 class="font-extrabold">Open Source</h3>
 				<p>
-					LiftX is open source and available on <a class="underline" href="https://github.com/lift-x/LiftX">GitHub</a>!
+					LiftX is open source and available on <a
+						class="underline"
+						href="https://github.com/lift-x/LiftX">GitHub</a
+					>!
 				</p>
 			</div>
 			<div>

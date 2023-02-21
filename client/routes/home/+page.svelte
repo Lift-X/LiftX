@@ -57,6 +57,19 @@
 
 {#if login_status}
 	<div id="content">
+		{#if workouts.length <= 0}
+					<div class="workout-summary" id="add-panel">
+						<h2 class="font-bold">Add your first workout:</h2>
+						<hr />
+						<a href="/workouts/new"
+							><div id="add">
+								<center>
+									<p>+</p>
+								</center>
+							</div>
+						</a>
+					</div>
+		{:else}
 		<div id="recentpanel" class="separator" style="width: {workouts.length * 320}px;">
 			<h1>Recent Workouts</h1>
 			<hr />
@@ -75,21 +88,10 @@
 							{/each}
 						</div>
 					{/each}
-				{:else}
-					<div class="workout-summary" id="add-panel">
-						<h2>Add a workout</h2>
-						<hr />
-						<a href="/workouts/new"
-							><div id="add">
-								<center>
-									<p>+</p>
-								</center>
-							</div>
-						</a>
-					</div>
 				{/if}
 			</div>
 		</div>
+		{/if}
 	</div>
 {/if}
 
@@ -156,6 +158,7 @@
 
 	#add-panel {
 		overflow: hidden;
+		margin: auto;
 	}
 
 	#add-panel a {

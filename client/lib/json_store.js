@@ -18,7 +18,7 @@ export const settings = writable({
 	updated: 0,
 	language: 'en-US',
 	theme: 'dark',
-	show_reps_in_reserve: true,
+	show_reps_in_reserve: true
 });
 
 export async function get_current_user() {

@@ -38,7 +38,7 @@ LiftX is a WIP workout tracker.
   - [x] Delete account
   - [ ] Themes (light/dark)
   - [ ] Home page customization
-- [ ] Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL.. 
+- [ ] Add Support for other DB types (diesel?) such as MariaDB, Postgres, MySQL..
 - [x] Extend error handling with global error codes and don't handle `Result<>`s with `unwrap()`s
 - [ ] Organize api (/api/v1), follow some sort of standard like OpenAPI or GraphQL
 - [x] [Ratelimiting](https://lib.rs/crates/rocket-governor)
@@ -59,6 +59,7 @@ These ideas either take a lot of work to implement or would change the structure
 ### Contributing
 
 Prerequisites:
+
 - [Node](https://nodejs.org/)
 - [Rust](https://www.rust-lang.org/tools/install)
 

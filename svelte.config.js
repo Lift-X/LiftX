@@ -14,7 +14,7 @@ const config = {
 			appTemplate: 'client/app.html'
 		},
 		inlineStyleThreshold: 300,
-		outDir: '.svelte-kit',
+		outDir: '.svelte-kit'
 	},
 	trailingSlash: 'never',
 	preprocess: [
