@@ -1,4 +1,5 @@
 <script>
+	import { error } from '@sveltejs/kit';
 	import SveltyPicker from 'svelty-picker';
 	import Exercise from '$lib/WorkoutRawView.svelte';
 	import { addexercise } from '$lib/Exercise.svelte';
@@ -49,7 +50,8 @@
 		let valid = true;
 
 		if ($json_data.exercises.length == 0) {
-			console.log('No exercises');
+			throw error(400, "No exercises added.");
+			// console.log('No exercises');
 			valid = false;
 		}
 

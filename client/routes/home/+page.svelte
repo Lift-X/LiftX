@@ -1,7 +1,7 @@
 <script>
-	import Table from "svelte-tailwind-table-ng";
 	import { get_current_user, json_data } from '$lib/json_store.js';
 	import { onMount } from 'svelte';
+	import Datatable from '$lib/datatable.svelte'
 	import Time from 'svelte-time';
 	import Exercise from '$lib/WorkoutRawView.svelte';
 	import { get } from 'svelte/store';
@@ -26,29 +26,6 @@
 		}
 	});
 
-	let row = [
-	[
-		{"value": "Pull Day", "editable": false, "data": {}},
-		{"value": "2022-09-01", "editable": false, "data": {}},
-		{"value": "18000lbs", "editable": false, "data": {}}
-	],
-[
-		{"value": "Pull Day", "editable": false, "data": {}},
-		{"value": "2022-09-01", "editable": false, "data": {}},
-		{"value": "18000lbs", "editable": false, "data": {}}
-	],
-[
-		{"value": "Pull Day", "editable": false, "data": {}},
-		{"value": "2022-09-01", "editable": false, "data": {}},
-		{"value": "18000lbs", "editable": false, "data": {}}
-	],
-]
-
-	let col = [
-   ["string", {heading: "Column 1 heading"}],
-  ["Date", {heading: "Column 2 heading"}],
-   ["String", {heading: "Column 3 heading"}],
-]
 </script>
 
 <svelte:head>
@@ -98,6 +75,9 @@
 <!-- <div> -->
 	<!-- <Table rowData={row} colData={col}/> -->
 <!-- </div> -->
+<div>
+	<Datatable/>
+</div>
 
 
 <style>

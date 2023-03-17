@@ -2,7 +2,6 @@ use rocket::{post, response::Redirect, State};
 use rocket_auth::{Auth, Error, Signup, User};
 use rocket_db_pools::Connection;
 use rocket_governor::RocketGovernor;
-use serde::{Deserialize, Serialize};
 use serde_json::json;
 use sqlx::{Row, SqlitePool};
 use uuid::Uuid;
@@ -17,7 +16,7 @@ use crate::{
 
 // pub type TableViewData = Vec<TableViewRow>;
 // pub type TableViewRow = Vec<TableViewColumns>;
-// pub struct TableViewColumns {
+// pub struct TableViewColumns {
 //
 // }
 // pub struct TableViewColumnTemplate<T> {
