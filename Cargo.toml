@@ -14,8 +14,8 @@ log = "0.4.17"
 ordered-float = { version = "3.0", default-features = false, features = ["serde", "std"] }
 regex-syntax = { version = "0.6.27" }
 # Web
-rocket = { version = "0.5.0-rc.2", features = ["json", "secrets"] }
-rocket-governor = "0.1.0-rc.4"
+rocket = { version = "0.5.0-rc", features = ["json", "secrets"] }
+rocket-governor = "0.1.0-rc"
 # Auth
 rocket_auth = { path="./rocket_auth", features = ["sqlx-sqlite"] }
 rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
@@ -23,10 +23,10 @@ rocket_db_pools = { version = "0.1.0-rc.2", features = ["sqlx_sqlite"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0" }
 #DB
-sqlx = { version = "0.5", features = ["macros", "migrate", "sqlite"], default-features = false }
+sqlx = { version = "0.6", features = ["macros", "migrate", "sqlite", "runtime-tokio-rustls"], default-features = false }
 # Time
 time = { version = "0.3.11", features = ["std", "serde", "serde-human-readable"] }
-tokio = "1.20.0"
+tokio = "1.26.0"
 tracing = { version = "0.1.35" }
 tracing-core = { version = "0.1.28" }
 ## For workout IDs

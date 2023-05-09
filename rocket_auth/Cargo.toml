@@ -35,11 +35,11 @@ chrono = "0.4.19"
 validator = { version = "0.14.0", features = ["derive"] }
 
 [dependencies.sqlx]
-version = "0.5.5"
+version = "0.6"
 optional = true
 
 [dependencies.rocket]
-version = "0.5.0-rc.2"
+version = "0.5.0-rc"
 features = ["secrets"]
 
 [dependencies.serde]
@@ -67,7 +67,7 @@ version = "0.1.0-rc.2"
 features = ["tera"]
 
 [dev-dependencies.sqlx]
-version = "0.5.5"
+version = "0.6"
 features = ["runtime-tokio-rustls"]
 
 [dev-dependencies.rocket_auth]
